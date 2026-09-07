@@ -2,31 +2,15 @@ asttokens==3.0.2
 certifi==2026.7.22
 cffi==2.1.1
 charset-normalizer==3.5.1
-<<<<<<< HEAD
-colorama==0.4.6
-comm==0.2.3
-contourpy==1.3.3
-cryptography==50.0.0
-=======
 comm==0.2.3
 contourpy==1.3.3
 cryptography==50.0.1
->>>>>>> a0730d355 (ok)
 cycler==0.12.1
 debugpy==1.8.21
 et_xmlfile==2.0.0
 executing==2.2.1
 feedparser==6.0.14
 feedparser-sgmllib==2.1.0
-<<<<<<< HEAD
-fonttools==4.63.0
-google-api-core==2.34.0
-google-api-python-client==2.198.0
-google-auth==2.56.3
-google-auth-httplib2==0.4.1
-google-auth-oauthlib==1.4.0
-googleapis-common-protos==1.75.1
-=======
 fonttools==4.64.0
 google-api-core==2.34.0
 google-api-python-client==2.200.0
@@ -34,21 +18,10 @@ google-auth==2.57.0
 google-auth-httplib2==0.4.2
 google-auth-oauthlib==1.4.1
 googleapis-common-protos==1.75.2
->>>>>>> a0730d355 (ok)
 gspread==6.2.1
 gspread-dataframe==4.0.0
 gspread-formatting==1.2.1
 httplib2==0.32.0
-<<<<<<< HEAD
-idna==3.18
-ipykernel==7.3.0
-ipython==9.16.1
-ipython_pygments_lexers==1.1.1
-jedi==0.20.0
-jupyter_client==8.9.1
-jupyter_core==5.9.1
-kiwisolver==1.5.0
-=======
 idna==3.19
 ipykernel==7.3.0
 ipython==9.17.1
@@ -57,7 +30,6 @@ jedi==0.20.0
 jupyter_client==8.10.0
 jupyter_core==5.9.1
 kiwisolver==1.5.1
->>>>>>> a0730d355 (ok)
 matplotlib==3.11.1
 matplotlib-inline==0.2.2
 missingno==0.5.2
@@ -69,21 +41,14 @@ openpyxl==3.1.5
 packaging==26.3
 pandas==3.0.5
 parso==0.8.7
-<<<<<<< HEAD
-pillow==12.3.0
-platformdirs==4.11.3
-prompt_toolkit==3.0.53
-proto-plus==1.28.3
-protobuf==7.35.1
-=======
 pexpect==4.9.0
 pillow==12.3.0
 platformdirs==4.11.7
 prompt_toolkit==3.0.53
 proto-plus==1.28.4
 protobuf==7.36.1
->>>>>>> a0730d355 (ok)
 psutil==7.2.2
+ptyprocess==0.7.0
 pure_eval==0.2.3
 pyasn1==0.6.4
 pyasn1_modules==0.4.2
@@ -93,32 +58,17 @@ pyparsing==3.3.2
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.3
 pytz==2026.3.post1
-<<<<<<< HEAD
-pyzmq==27.1.0
-requests==2.34.2
-requests-oauthlib==2.0.0
-rsa==4.9.1
-scipy==1.18.0
-=======
 pyzmq==27.2.0
 requests==2.34.2
 requests-oauthlib==2.0.0
 rsa==4.9.1
 scipy==1.18.1
->>>>>>> a0730d355 (ok)
 seaborn==0.13.2
 six==1.17.0
 stack-data==0.6.3
 tornado==6.5.8
 traitlets==5.16.1
 typing_extensions==4.16.0
-<<<<<<< HEAD
-tzdata==2026.3
-uritemplate==4.2.0
-urllib3==2.7.0
-wcwidth==0.8.2
-=======
 uritemplate==4.2.0
 urllib3==2.7.0
 wcwidth==0.8.3
->>>>>>> a0730d355 (ok)
