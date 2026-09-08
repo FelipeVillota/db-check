@@ -1,0 +1,734 @@
+---
+title: "gastroic"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Hola 
+```{r} 
+################################################################################
+##                                                                            ##
+##            CSDB — Cocaine Seizures Database — Pipeline v3                  ##
+##                                                                            ##
+##   InsightCrime · MAD Team · Agosto 2026                                    ##
+##                                                                            ##
+################################################################################
+#
+#  CHANGELOG v3:
+#    ✓ bind_rows fix: todos los campos de Claude se convierten a character
+#    ✓ extraer_url_real vectorizado (ifelse en vez de if)
+#    ✓ Timestamp por corrida: nunca se sobrescriben archivos
+#    ✓ Panel acumulado: todas las corridas se juntan en un solo CSV
+#    ✓ Detección de duplicados con _grupo_duplicado
+#    ✓ Segunda llamada a Claude para clasificar Evidence/Potentially/Discard
+#    ✓ year/month/day se llenan desde date_1 (o fallback a fecha_alerta)
+#    ✓ Prompt: date_1 usa fecha de publicación si no hay fecha de decomiso
+#    ✓ Prompt: titulo-only extraction para notas sin texto
+#    ✓ Prompt: minor_involved normalizado a true/false/null
+#    ✓ Prompt: diccionario multiidioma de drug_type
+#    ✓ Filtro título ampliado con portugués truncado, destrucción de labs, CJNG
+#    ✓ Filtro busca en título + URL combinados
+#    ✓ no_new_entry.csv excluye correctamente las Seizure Extracted
+#
+#  QUICKSTART:
+#    1. Instala dependencias (una sola vez, descomenta el bloque INSTALL)
+#    2. Guarda las API keys en ~/.Renviron:
+#         ANTHROPIC_API_KEY=sk-ant-tu-key
+#         GOOGLE_MAPS_API_KEY=AIza-tu-key
+#    3. Edita "URLs A PROCESAR" con tus alertas
+#    4. source("csdb_pipeline.R")
+#
+#  SALIDA en csdb_output/:
+#    corridas/resultado_TIMESTAMP.csv      ← filas para el Sheet
+#    corridas/resumen_TIMESTAMP.csv        ← auditoría por URL
+#    corridas/no_new_entry_TIMESTAMP.csv   ← Evidence/Potentially/Discard
+#    panel_acumulado.csv                   ← todas las corridas juntas
+#    espejos_html/                         ← HTMLs de respaldo
+#
+################################################################################
+
+# --- INSTALACIÓN (una sola vez) -----------------------------------------------
+# install.packages(c("httr2", "rvest", "xml2", "jsonlite", "reticulate",
+#                    "dplyr", "stringr", "purrr", "readr", "glue",
+#                    "openssl", "tibble", "lubridate"))
+# reticulate::py_install("trafilatura", pip = TRUE)
+
+suppressPackageStartupMessages({
+  library(httr2);      library(rvest);      library(xml2);    library(jsonlite)
+  library(reticulate); library(dplyr);      library(stringr); library(purrr)
+  library(readr);      library(glue);       library(openssl); library(tibble)
+  library(lubridate)
+})
+
+
+################################################################################
+##  CONFIGURACIÓN  #############################################################
+################################################################################
+
+DIR_OUT      <- "csdb_output"
+DIR_ESPEJO   <- file.path(DIR_OUT, "espejos_html")
+DIR_CORRIDAS <- file.path(DIR_OUT, "corridas")
+dir.create(DIR_ESPEJO,   recursive = TRUE, showWarnings = FALSE)
+dir.create(DIR_CORRIDAS, recursive = TRUE, showWarnings = FALSE)
+
+MODELO_CLAUDE <- "claude-sonnet-5"
+
+UA <- paste("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36",
+            "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
+
+ANTHROPIC_KEY <- Sys.getenv("ANTHROPIC_API_KEY")
+GOOGLE_KEY    <- Sys.getenv("GOOGLE_MAPS_API_KEY")
+
+if (ANTHROPIC_KEY == "") {
+  stop("\n  Falta ANTHROPIC_API_KEY. Corre:\n",
+       "  Sys.setenv(ANTHROPIC_API_KEY = 'sk-ant-tu-key')\n")
+}
+GEOCODIFICAR <- (GOOGLE_KEY != "")
+if (!GEOCODIFICAR) message("⚠ Sin GOOGLE_MAPS_API_KEY — sin geocodificación.")
+
+
+################################################################################
+##  URLs A PROCESAR  ###########################################################
+################################################################################
+
+entradas <- tribble(
+  ~fecha_alerta, ~titulo, ~url_google,
+
+  # Reemplaza con tus URLs:
+  "2026-08-24", "Prisión comunicada y sin fianza para el líder de Os Fanchos y los otros dos detenidos por el ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.lavozdegalicia.es/noticia/barbanza/2026/08/24/prision-comunicada-fianza-lider-os-fanchos-dos-detenidos-alijo-pobra/00031787581576098866309.htm&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw37zq9UBwzZ2VL0kl-pKdlD",
+  "2026-08-24", "“No vamos a entregar a Colombia”: De la Espriella destaca resultados contra la criminalidad", "https://www.google.com/url?rct=j&sa=t&url=https://www.elespectador.com/judicial/no-vamos-a-entregar-a-colombia-de-la-espriella-destaca-resultados-contra-la-criminalidad/&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw24y_rBnZvatrn7tn7fgLUW",
+  "2026-08-24", "Abelardo De La Espriella anuncia duro golpe a las disidencias y revela que en las últimas ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.ntn24.com/noticias-actualidad/abelardo-de-la-espriella-anuncia-duro-golpe-a-las-disidencias-y-revela-que-en-las-ultimas-24-horas-fueron-capturados-11-integrantes-del-frente-53-de-la-segunda-marquetalia-644106&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw2qvL4VUFa1pVua06F-YWlA",
+  "2026-08-24", "Con ayuda de la DEA, desarticulada organización que enviaba semisumergibles cargados ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.infobae.com/colombia/2026/08/24/con-ayuda-de-la-dea-desarticulada-organizacion-que-enviaba-semisumergibles-cargados-de-droga-desde-el-pacifico-colombiano-a-estados-unidos/&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw2pExxwhfK8nSsb81Djb7rZ",
+  "2026-08-24", "Colombia incauta 12,3 toneladas de cocaína y suma 1.574 capturas en los primeros 15 días ...", "https://www.google.com/url?rct=j&sa=t&url=https://americaeconomica.com/noticia/colombia/colombia-incauta-123-toneladas-de-cocaina-y-suma-1-574-capturas-en-los-primeros-15-dias-de-de-la-espriella.html&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw2Cx_NkhjGu_mm74RuJMiDG",
+  "2026-08-24", "Estados Unidos lanzó un nuevo ataque contra una lancha narco en el Pacífico Oriental: dos muertos", "https://www.google.com/url?rct=j&sa=t&url=https://www.infobae.com/america/america-latina/2026/08/24/estados-unidos-lanzo-un-nuevo-ataque-contra-una-lancha-narco-en-el-pacifico-oriental-dos-muertos/&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw3Uqo6vQduO89_R9JdOEr__",
+  "2026-08-24", "La Guardia Civil desmantela en Mairena una red de droga con diez detenidos y tres puntos de venta", "https://www.google.com/url?rct=j&sa=t&url=https://www.andaluciainformacion.es/articulo/aljarafe/guardia-civil-desmantela-mairena-red-droga-diez-detenidos-tres-puntos-venta/202608241416433460426.html&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw2uSVBuaZCSdFXtrMQtfcA5",
+  "2026-08-24", "El líder de Os Fanchos, un croata y un vecino de A Pobra, ante el juez por el alijo de 1.410 ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.elcorreogallego.es/barbanza-muros-noia/2026/08/24/lider-fanchos-croata-vecino-pobra-133604351.html&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw3HqRyUWpYGpv-rLhWFFsTv",
+  "2026-08-24", "El líder de Os Fanchos capitaneó la descarga y custodia de 1.410 kilos de cocaína en A Pobra", "https://www.google.com/url?rct=j&sa=t&url=https://www.abc.es/espana/galicia/lider-fanchos-capitaneo-descarga-custodia-1410-kilos-20260824123810-nt.html&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw0uZKJ-QBHhvvKfayEdCfiB",
+  "2026-08-24", "Desmantelan un sofisticado escondite de cocaína en Salta - Diario Panorama Movil", "https://www.google.com/url?rct=j&sa=t&url=https://www.diariopanorama.com/noticia/564135/desmantelan-sofisticado-escondite-cocaina-salta&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw3DHLsMj5xcsWZ-Z8lgnWd0",
+  "2026-08-24", "Cae el líder del clan de los Fanchos en A Pobra tras una operación antidroga con 1.400 ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.elconfidencial.com/espana/2026-08-24/clan-fanchos-cocaina-galicia-1tps_4410362/&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw1HWhVph1ELslfboEnX1_s2",
+  "2026-08-24", "280 kilos de cocaína en un vehículo al norte de Ecuador - Narcodiario", "https://www.google.com/url?rct=j&sa=t&url=https://narcodiario.com/2026/08/280-kilos-de-cocaina-en-un-vehiculo-al-norte-de-ecuador/&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw0OGxV_2VMFY3D4PmBO4ggu",
+  "2026-08-24", "Detenido el líder de los Fanchos tras la incautación 1.410 kilos de cocaína en Caramiñal", "https://www.google.com/url?rct=j&sa=t&url=https://theobjective.com/sociedad/suceso/2026-08-24/detenido-lider-fanchos-cocaina/&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw1tZzHkzVpdsafUemqSRvtU",
+  "2026-08-24", "Más de una tonelada de cocaína del CJNG dentro de cuatro máquinas elevadoras", "https://www.google.com/url?rct=j&sa=t&url=https://narcodiario.com/2026/08/mas-de-una-tonelada-de-cocaina-del-cjng-dentro-de-cuatro-maquinas-elevadoras/&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw3tqK-bi-ngeBcpKsciO7x3",
+  "2026-08-24", "Cae el líder del clan de los Fanchos tras la incautación de más de 1.400 kilos de cocaína", "https://www.google.com/url?rct=j&sa=t&url=https://www.diariodesantiago.es/sucesos/cae-el-lider-del-clan-de-los-fanchos-tras-la-incautacion-de-1-410-kilos-de-cocaina-en-a-pobra/&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw0agPBB_gN9SayDVhhwvDLo",
+  "2026-08-24", "Arrestan condenado a 30 años fugó con permiso laboral - La Lupa del Sur", "https://www.google.com/url?rct=j&sa=t&url=https://lalupadelsur.com/2026/08/24/arrestan-condenado-30-anos-fuga-permiso-laboral/&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw3z9cy6JULtbV8EvJVsAX75",
+  "2026-08-24", "Detenidos 26 trabajadores de un puerto en Panamá acusados de traficar cocaína hacia Europa", "https://www.google.com/url?rct=j&sa=t&url=https://laradiodelmercosur.com.ar/mundiales/13427/Detenidos-26-trabajadores-de-un-puerto-en-Panam-acusados-de-traficar-coca-na-hacia-Europa&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw20VoBlJMxlcaitC98DiIV_",
+  "2026-08-24", "CBP asegura más de 10 mil pastillas de fentanilo y 75 libras de cocaína en garitas de Nogales", "https://www.google.com/url?rct=j&sa=t&url=https://infonogales.com/cbp-asegura-mas-de-10-mil-pastillas-de-fentanilo-y-75-libras-de-cocaina-en-garitas-de-nogales/&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw1igXmvxNijgggdH7vOrMNf",
+  "2026-08-24", "Las incautaciones cambian el mapa de las drogas en España - Cáñamo", "https://www.google.com/url?rct=j&sa=t&url=https://canamo.net/noticias/espana/las-incautaciones-cambian-el-mapa-de-las-drogas-en-espana&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw0n7JL06NkhHjaSkXgGN38Y",
+  "2026-08-24", "COLOMBIA: Presidente anuncIa incautación 12 toneladas drogas | AlMomento.net", "https://www.google.com/url?rct=j&sa=t&url=https://almomento.net/colombia-presidente-anuncia-incautacion-12-toneladas-drogas/&ct=ga&cd=CAIyGmJmNjIyODgzYjg4NmQwN2E6Y29tOmVzOlVT&usg=AOvVaw3Q430JzsZiXQI1QR1EJDXK",
+  "2026-08-24", "Ile Maurice: Muzaffar Lallmamode admis en clinique, son interrogatoire reporté", "https://www.google.com/url?rct=j&sa=t&url=https://fr.allafrica.com/stories/202608240280.html&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw0U8-Bb0Yd51x4g_g8ROzv5",
+  "2026-08-24", "Près de 2 millions d euros à la revente : Nerveux, confus et donc suspect... Il transportait 31 ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.lindependant.fr/2026/08/24/pres-de-2-millions-deuros-a-la-revente-nerveux-confus-et-donc-suspect-il-transportait-31-kilos-de-cocaine-dans-ses-valises-depuis-le-mexique-un-13520593.php&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw2DEv6CUJbzVaMAIgQjd2dC",
+  "2026-08-24", "Relations algéro-espagnoles : La dynamique croissante qui fait paniquer le Makhzen", "https://www.google.com/url?rct=j&sa=t&url=https://elwatan.dz/relations-algero-espagnoles-la-dynamique-croissante-qui-fait-paniquer-le-makhzen/&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw3S3puDO3Sg4BB_U7k_dfGJ",
+  "2026-08-24", "Sécurité à Rabat.. Trois suspects arrêtés et déférés devant le parquet dans une affaire de ...", "https://www.google.com/url?rct=j&sa=t&url=https://fesnews.media/321647/2026/08/24/&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw2FtCHu6I1iQhovpZMTYs9k",
+  "2026-08-24", "Axe La-Réunion/Maurice — Saisie de 157 kg de drogue : Un présumé trafiquant soupçonné ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.lemauricien.com/le-mauricien/axe-la-reunion-maurice-saisie-de-157-kg-de-drogue-un-presume-trafiquant-soupconne-davoir-fui-le-pays-pour-leurope/715828/&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw1p6FTRMQNiEh_jIH7Mvj3y",
+  "2026-08-24", "Diourbel : quatre mois de prison pour un jeune arrêté avec de la drogue à Mbacké", "https://www.google.com/url?rct=j&sa=t&url=https://www.ndarinfo.com/Diourbel-quatre-mois-de-prison-pour-un-jeune-arrete-avec-de-la-drogue-a-Mbacke_a46371.html&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw0lJIu6FZwE2cVbURydRVDE",
+  "2026-08-24", "Drogue au Bénin : 806 ghettos démantelés, 1,37 tonne de cannabis saisie - Matin Libre", "https://www.google.com/url?rct=j&sa=t&url=https://matinlibre.com/2026/08/24/drogue-au-benin-806-ghettos-demanteles-137-tonne-de-cannabis-saisie/&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw2aFnuD8LzNpQBz0EkpmAKo",
+  "2026-08-24", "La gendarmerie royale saisit environ 400 kilogrammes de drogues dans les environs de Al Hoceima", "https://www.google.com/url?rct=j&sa=t&url=https://fr.hibapress.com/news-268037.html&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw2tRwGe-iOdk0wb0TGIB5Ql",
+  "2026-08-24", "Plus de 16.000 € de drogues et un arsenal découverts aux Couronneries à Poitiers", "https://www.google.com/url?rct=j&sa=t&url=https://www.lanouvellerepublique.fr/vienne/plus-de-16-000-de-drogues-et-un-arsenal-decouverts-aux-couronneries-a-poitiers-1787502333&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw2wSmDvceQJTrqfj4bx-P-C",
+  "2026-08-24", "un présumé trafiquant de drogue interpellé après une course poursuite avec la gendarmerie", "https://www.google.com/url?rct=j&sa=t&url=https://senego.com/sokone-un-presume-trafiquant-de-drogue-interpelle-apres-une-course-poursuite-avec-la-gendarmerie_1996427.html&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw2egpHdBQGS_tmgD70FoGyr",
+  "2026-08-24", "Bénin : sept suspects interpellés pour trafic de stupéfiants au nouveau marché PK3", "https://www.google.com/url?rct=j&sa=t&url=https://lanouvelletribune.info/2026/08/benin-sept-suspects-interpelles-pour-trafic-de-stupefiants-au-nouveau-marche-pk3/&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw0CokQFiOKGTMahB4x1JtKE",
+  "2026-08-24", "Algérie.. La plus importante saisie de drogues soulève des questions sur l infiltration des ...", "https://www.google.com/url?rct=j&sa=t&url=https://inews.ma/article/8602822-Alg%25C3%25A9rie..%2520La%2520plus%2520importante%2520saisie%2520de%2520drogues%2520soul%25C3%25A8ve%2520des%2520questions%2520sur%2520l%25E2%2580%2599infiltration%2520des%2520r%25C3%25A9seaux%2520de%2520trafic-%25D9%2581%25D8%25A7%25D8%25B3%2520%25D9%2586%25D9%258A%25D9%2588%25D8%25B2%2520%25D9%2585%25D9%258A%25D8%25AF%25D9%258A%25D8%25A7&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw0q51LPkgXnrUJj9-lc4CwC",
+  "2026-08-24", "Saisie record de viandes avariées à Médiouna: le réseau clandestin qui alimentait les ... - Le360", "https://www.google.com/url?rct=j&sa=t&url=https://fr.le360.ma/societe/saisie-record-de-viandes-avariees-a-mediouna-le-reseau-clandestin-qui-alimentait-les-snacks-de_WMG3AUFT3VHEBIUWXQE6TST4S4/&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw2Coj_cUmRM9qTiDMv5IfQi",
+  "2026-08-24", "Pablo Escobar: l ascension et la chute du roi de la cocaïne - Geo.fr", "https://www.google.com/url?rct=j&sa=t&url=https://www.geo.fr/histoire/pablo-escobar-lascension-et-la-chute-du-roi-de-la-cocaine-233038&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw1UIZ-ZQls-pQc8WvV6JmK0",
+  "2026-08-24", "Arrestation d un tiktokeur condamné à la perpétuité pour trafic de drogue - TVA Nouvelles", "https://www.google.com/url?rct=j&sa=t&url=https://www.tvanouvelles.ca/2026/08/23/arrestation-dun-tiktokeur-condamne-a-la-perpetuite-pour-trafic-de-drogue&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw2SgWugN7oPe6h5ntKjKmym",
+  "2026-08-24", "Tunisie : saisie de 8 kg de cocaïne et 18 kg de cannabis - Directinfo", "https://www.google.com/url?rct=j&sa=t&url=https://directinfo.webmanagercenter.com/2026/08/23/tunisie-saisie-de-8-kg-de-cocaine-et-18-kg-de-cannabis/&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw0Z4NECoknhtpPrfQfiqH6o",
+  "2026-08-24", "Le pouvoir a peur du peuple, c est pour ça qu il attaque avant d être attaqué. Omar Ait Mokhtar ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.facebook.com/almagharibiatvchannel/videos/-le-pouvoir-a-peur-du-peuple-cest-pour-%25C3%25A7a-quil-attaque-avant-d%25C3%25AAtre-attaqu%25C3%25A9-omar-/1066219595795823/&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw0Kd2RiOlB0Xgb18A-d-G3i",
+  "2026-08-24", "Kairouan : saisie de 5,3 tonnes de produits non conformes à l approche du Mouled", "https://www.google.com/url?rct=j&sa=t&url=https://www.lapresse.tn/2026/08/23/kairouan-saisie-de-53-tonnes-de-produits-non-conformes-a-lapproche-du-mouled/&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw0yU5mfOuvz0J2gKLRf6190",
+  "2026-08-24", "Quatre ans de prison et 7.200 euros de confiscation requis par le parquet de Namur à l ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.sudinfo.be/id1184468/article/2026-08-23/quatre-ans-de-prison-et-7200-euros-de-confiscation-requis-par-le-parquet-de&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw1FWzwSaXQnkyT19sobI8ol",
+  "2026-08-24", "Les États-Unis lèvent les mesures de surveillance renforcée imposées aux navires en ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.aol.com/articles/%25C3%25A9tats-unis-l%25C3%25A8vent-mesures-surveillance-025818000.html&ct=ga&cd=CAIyGjkyMGEwZjhhZWMwMDhiMGU6Y29tOmZyOlVT&usg=AOvVaw2yF7k5gcwNLZXIba-fuQSN",
+  "2026-08-24", "NDLEA Uncovers Thailand-Nigeria Drug Route, Seizes N4.4bn Loud At Lagos Ports", "https://www.google.com/url?rct=j&sa=t&url=https://www.arise.tv/ndlea-uncovers-thailand-nigeria-drug-route-seizes-n4-4bn-loud-at-lagos-ports/&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw1epMPygE5XXvYacsr2-2UR",
+  "2026-08-24", "Citizen Eye Ghana founder praises DCOP Eric Asiedu Asamoah and his team ... - Asaase Radio", "https://www.google.com/url?rct=j&sa=t&url=https://asaaseradio.com/citizen-eye-ghana-founder-praises-dcop-eric-asiedu-asamoah-and-his-team-following-integrity-in-major-drug-busts/&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw0C2guGIvsP5GOZAV50bXnx",
+  "2026-08-24", "Newcastle Emlyn man fined for drug possession | cambrian-news.co.uk", "https://www.google.com/url?rct=j&sa=t&url=https://www.cambrian-news.co.uk/news/courts/newcastle-emlyn-man-fined-for-drug-possession-940072&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw2Ns7-rtcF_KzwDcsvpaW3y",
+  "2026-08-24", "101-year-old great-grandmother arrested for selling cannabis in Nigeria - BBC", "https://www.google.com/url?rct=j&sa=t&url=https://www.bbc.com/news/articles/c93e5gyejgdo&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw2sB_kwIiST17WnnvDL3ifc",
+  "2026-08-24", "Free State police intensify crackdown on drugs after R300,000 airport seizure | OFM", "https://www.google.com/url?rct=j&sa=t&url=https://www.ofm.co.za/article/centralsa/342928/free-state-police-intensify-crackdown-on-drugs-after-r300-000-airport-seizure&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw04HLwTB2x3apbPcDWEZDYB",
+  "2026-08-24", "Cocaine, Mandrax and guns found in Cape Town raids - Daily Voice", "https://www.google.com/url?rct=j&sa=t&url=https://dailyvoice.co.za/news/2026-08-23-cocaine-mandrax-and-guns-found-in-cape-town-raids/&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw3IdpvnKY8LqqX7KrtQLpbN",
+  "2026-08-24", "Dad has to pay £28,000 because of what he stuffed in his pants - Yahoo News UK", "https://www.google.com/url?rct=j&sa=t&url=https://uk.news.yahoo.com/dad-pay-28-000-because-123430245.html&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw1xJWIXISElqlVCq-eAYQWT",
+  "2026-08-24", "The Murders Resume - Adam Isacson", "https://www.google.com/url?rct=j&sa=t&url=https://adamisacson.com/the-murders-resume/&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw159meylDzSQBS7sEK2pZRz",
+  "2026-08-24", "NDLEA Nabs 101-yr-old Great-gran-ma for Selling Cannabis; Uncovers new Thailand ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.thegazellenews.com/ndlea-nabs-101-yr-old-great-gran-ma-for-selling-cannabis-uncovers-new-thailand-nigeria-drug-route/&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw3U2aGlEizt_SbNrrQbLgaF",
+  "2026-08-24", "ESTACADA MAN SENTENCED TO FEDERAL PRISON FOLLOWING ARREST NEAR ROSEBURG", "https://www.google.com/url?rct=j&sa=t&url=https://kqennewsradio.com/2026/08/24/estacada-man-sentenced-to-federal-prison-following-arrest-near-roseburg/&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw0vRVP4pkPhTbnRVB5T4oX-",
+  "2026-08-24", "Long Beach raid uncovers arsenal of illegal guns, drugs and more than $100K in cash", "https://www.google.com/url?rct=j&sa=t&url=https://longisland.news12.com/2026/08/24/long-beach-raid-uncovers-arsenal-of-illegal-guns-drugs-and-more-than-100k-in-cash/1ScWAsAVJ3z8HP2ZWbIvAV&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw23vgDtDIW2TZKEu0R5qJ3N",
+  "2026-08-24", "NDLEA arrests great-grandma dealing in cocaine, intercepts meth, skunk, opioids in states, FCT", "https://www.google.com/url?rct=j&sa=t&url=https://consumerconnectng.com/%3Fp%3D3456&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw1xqXtOelccHLazOgXFkJBl",
+  "2026-08-24", "South Africans Amazed by R300K Drug Bust as Woman Arrested After Cocaine Is Found ...", "https://www.google.com/url?rct=j&sa=t&url=https://briefly.co.za/south-africa/250884-south-africans-amazed-by-r300k-drug-bust-woman-arrested-cocaine-doll-head/&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw1RQjfJVrAE19aSxsV89iDF",
+  "2026-08-24", "Kuwait drug seizures plunge 68%, psychotropic pills fall 75% in first half of 2026", "https://www.google.com/url?rct=j&sa=t&url=https://timeskuwait.com/kuwait-drug-seizures-plunge-68-psychotropic-pills-fall-75-in-first-half-of-2026/&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw1Z-YWVRFcRAMAYY-vp3V2d",
+  "2026-08-24", "R300 000 crack cocaine found hidden in mannequin head at Bloemfontein airport", "https://www.google.com/url?rct=j&sa=t&url=https://novanews.co.za/r300-000-crack-cocaine-found-hidden-in-mannequin-head-at-bloemfontein-airport/&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw0VxP6QxZcnOLuv0APqNjaN",
+  "2026-08-24", "NDLEA arrests 101-year-old great-grandmother, intercepts N4.4 billion worth of illicit drugs", "https://www.google.com/url?rct=j&sa=t&url=https://nairametrics.com/2026/08/23/ndlea-arrests-101-year-old-great-grandmother-intercepts-n4-4-billion-worth-of-illicit-drugs/&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw3u3eQhmhkFTCF3ZLheb8ad",
+  "2026-08-24", "NDLEA arrests 101-year-old woman for cannabis dealing, seizes cocaine hidden in fufu", "https://www.google.com/url?rct=j&sa=t&url=https://www.qed.ng/ndlea-arrests-101-year-old-woman-for-cannabis-dealing-seizes-cocaine-hidden-in-fufu/&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw0K1AvclbtPJuHv6oi5Qo5U",
+  "2026-08-24", "KINAHAN IS REASON IM  STUCK IN PRISON | Sunday World (Ireland) - PressReader", "https://www.google.com/url?rct=j&sa=t&url=https://www.pressreader.com/ireland/sunday-world-8014/20260823/281496463129705&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw3RCgx41VUyYBiWGgjYF18N",
+  "2026-08-24", "101-Year-Old Woman Arrested as NDLEA Intercepts Cocaine in Fufu", "https://www.google.com/url?rct=j&sa=t&url=https://therealmediang.com/crime/101-year-old-woman-arrested-as-ndlea-intercepts-cocaine-in-fufu&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw26QKmTTIc085uvHaxlHjlh",
+  "2026-08-24", "PICTURES: Police confiscated 232 stones suspected to be crack cocaine or rock, with an ...", "https://www.google.com/url?rct=j&sa=t&url=https://x.com/SABCNews/status/2091570138399010834&ct=ga&cd=CAIyGjI1ZDE2N2I0OTQzNGYwNDc6Y29tOmVuOlVT&usg=AOvVaw0XCehtT5aFNIdsZjYS0RwW",
+  "2026-08-24", "APREENSÃO DE DROGAS I PF prende jovem com 3 kg de cocaína no Aeroporto de Foz ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.instagram.com/p/DcbV4xODhCL/&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw1aIewLPzRvlvVXFsePoluJ",
+  "2026-08-24", "GNR detém 16 pessoas em ações de fiscalização rodoviária nos concelhos de Albufeira e Loulé", "https://www.google.com/url?rct=j&sa=t&url=https://www.algarveprimeiro.com/d/gnr-detem-16-pessoas-em-acoes-de-fiscalizacao-rodoviaria-nos-concelhos-de-albufeira-e-loule/67696-1&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw29bB5dsWfKP00SuXErRqal",
+  "2026-08-24", "Morador encontra capacete com mais de 140 gramas de cocaína próximo da residência", "https://www.google.com/url?rct=j&sa=t&url=https://www.cacodarosa.com/noticia/48074/morador-encontra-capacete-com-mais-de-140-gramas-de-cocaina-proximo-da-residencia&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw3cToR-EwHMJpR2znlBRVpb",
+  "2026-08-24", "Perturbação do sossego termina com dois encaminhamentos e apreensão de droga em Medianeira", "https://www.google.com/url?rct=j&sa=t&url=https://www.guiamedianeira.com.br/noticia/42698/Perturbacao-do-sossego-termina-com-dois-encaminhamentos-e-apreensao-de-droga-em-Medianeira&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw2UEooEvoG-Qt2gHBBJ1lRZ",
+  "2026-08-24", "Dois motoristas de ônibus são presos com cocaína em Puerto Suárez - Capital do Pantanal", "https://www.google.com/url?rct=j&sa=t&url=https://www.capitaldopantanal.com.br/policia/2026/08/24/dois-motoristas-de-onibus-sao-presos-com-cocaina-em-puerto-suarez.html&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw1aDNdcJWXmEE7FVldiR7hs",
+  "2026-08-24", "Adolescente é apreendido com cocaína pronta para venda no bairro Independência, em Medianeira", "https://www.google.com/url?rct=j&sa=t&url=https://www.guiamedianeira.com.br/noticia/42696/Adolescente-e-apreendido-com-cocaina-pronta-para-venda-no-bairro-Independencia,-em-Medianeira&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw3sPZuwGTCp3V6PTx0bE9x_",
+  "2026-08-24", "Abordagem termina com apreensão de cocaína e 69 porções de maconha em Nova Odessa", "https://www.google.com/url?rct=j&sa=t&url=https://portalhortolandia.com.br/noticias/policia/apreensao-de-cocaina-231695/&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw2AiLn4veXBtPeiu60-PVqe",
+  "2026-08-24", "Homem de 42 anos detido por tráfico de droga e posse de arma proibida em Paços de Ferreira", "https://www.google.com/url?rct=j&sa=t&url=https://novumcanal.pt/2026/08/homem-de-42-anos-detido-por-trafico-de-droga-e-posse-de-arma-proibida-em-pacos-de-ferreira/&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw0XEPmDzOZN8Sd61hiUtoOg",
+  "2026-08-24", "Apenas uma semana depois, adolescente volta a ser apreendido com cocaína e crack em ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.radiocacula.com.br/apenas-uma-semana-depois-adolescente-volta-a-ser-apreendido-com-cocaina-e-crack-em-tres-lagoas/&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw3AKMU4ktp-Mat2MBKBGZ5j",
+  "2026-08-24", "Detido por tráfico de estupefacientes e posse de arma proibida - GNR - Noticias", "https://www.google.com/url?rct=j&sa=t&url=https://www.gnr.pt/noticias.aspx%3Flinha%3D32209&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw1FWRnmP5cS8Aye9GCeQ8jc",
+  "2026-08-24", "Ponte da Integração tem apreensão inédita de emagrecedores - H2FOZ", "https://www.google.com/url?rct=j&sa=t&url=https://www.h2foz.com.br/seguranca-publica/ponte-da-integracao-tem-apreensao-inedita-de-emagrecedores/&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw2dIjH2KDXT31no7rFB8Wy8",
+  "2026-08-24", "Paços de Ferreira: Homem detido por tráfico de estupefacientes e armas proibidas", "https://www.google.com/url?rct=j&sa=t&url=https://averdade.com/2915540137/pacos-de-ferreira-homem-detido-por-trafico-de-estupefacientes-e-armas-proibidas/&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw1S1javCNQdUPOig6cvfUmA",
+  "2026-08-24", "Polícia Federal apreendeu quase duas toneladas de cocaína no Aeroporto de Fortaleza em ...", "https://www.google.com/url?rct=j&sa=t&url=https://diariodonordeste.verdesmares.com.br/seguranca/policia-federal-apreendeu-quase-duas-toneladas-de-cocaina-no-aeroporto-de-fortaleza-em-oito-anos-1.3785425&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw0dmszhU9h0ijMcxr7XMif_",
+  "2026-08-24", "Canil do Baep prende homem com mais de 78 quilos de drogas e carro furtado em Marília", "https://www.google.com/url?rct=j&sa=t&url=https://marilianoticia.com.br/canil-do-baep-prende-homem-com-mais-de-78-quilos-de-drogas-e-carro-furtado-em-marilia/&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw0pbTEBsVRO1Q65RE698b96",
+  "2026-08-24", "PM apreende 155 pinos de cocaína após denúncia de violência doméstica em São Bento do Una", "https://www.google.com/url?rct=j&sa=t&url=https://cidade997.com.br/pm-apreende-155-pinos-de-cocaina-apos-denuncia-de-violencia-domestica-em-sao-bento-do-una/&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw2I9K7J0Y_6Ij5vjKOrS1_z",
+  "2026-08-24", "Dentro de perucas e vinhos: exportadora do CE é investigada por envio de cocaína à África e Ásia", "https://www.google.com/url?rct=j&sa=t&url=https://diariodonordeste.verdesmares.com.br/seguranca/dentro-de-perucas-e-vinhos-exportadora-do-ce-e-investigada-por-envio-de-cocaina-a-africa-e-asia-1.3784701&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw07qtsO933COQSct4ltxSid",
+  "2026-08-24", "Três são presos e adolescente é apreendida por tráfico em Santa Cruz - Portal Gaz", "https://www.google.com/url?rct=j&sa=t&url=https://www.gaz.com.br/tres-sao-presos-e-adolescente-e-apreendida-por-trafico-em-santa-cruz/&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw1lIw4T6esgoXeQ6WjPdlat",
+  "2026-08-24", "Nova apreensão de drogas em Simonésia soma mais de 900 porções - Portal Caparaó", "https://www.google.com/url?rct=j&sa=t&url=https://portalcaparao.com.br/2026/08/nova-apreensao-de-drogas-em-simonesia-soma-mais-de-900-porcoes/&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw1ABWcaqmqj4_Y1EuJHs4dB",
+  "2026-08-24", "Brigada Militar prende casal e apreende drogas no Bairro Santo André, em Lajeado", "https://www.google.com/url?rct=j&sa=t&url=https://www.independente.com.br/artigo/brigada-militar-prende-casal-e-apreende-drogas-no-bairro-santo-andre-em-lajeado&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw0cWDdJ0r-QEiQShKLVscT0",
+  "2026-08-24", "PM apreende menor com revólver e cocaína no bairro Padre Tiago - Rádio Muriaé", "https://www.google.com/url?rct=j&sa=t&url=https://radiomuriae.com.br/portal/pm-apreende-menor-com-revolver-e-cocaina-no-bairro-padre-tiago/&ct=ga&cd=CAIyGjE4MDZhODNkZTFjOWMxMjc6Y29tOnB0OlVT&usg=AOvVaw34Rvq39J7AAIwwFHI_I3e-",
+  "2026-08-24", "NDLEA Arrested 101 years old woman for selling cannabis and seized cocaine worth 4.4 ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/watch%3Fv%3DySBgPNah69M&ct=ga&cd=CAIyHDYyOGM1MGZkYTliZWUwMGU6Y29tOmVzOlVTOkw&usg=AOvVaw3vE4ckrL7WtXMS_QAkuyKs",
+  "2026-08-24", "Sean 'Carlo' Carlin: Alleged Belfast INLA chief to face Terrorism Act charge over breach of ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.belfasttelegraph.co.uk/news/alleged-belfast-inla-chief-sean-carlo-carlin-to-face-terrorism-act-charge-over-breach-of-port-and-border-patrols/a/160332417.html&ct=ga&cd=CAIyHDYyOGM1MGZkYTliZWUwMGU6Y29tOmVzOlVTOkw&usg=AOvVaw3wvjjEHfe-0kNYSsXH1Uqs",
+  "2026-08-24", "Mafias 2.0 : les nouvelles méthodes du crime organisé à travers le monde - Geo.fr", "https://www.google.com/url?rct=j&sa=t&url=https://www.geo.fr/histoire/mafias-20-les-nouvelles-methodes-du-crime-organise-a-travers-le-monde-233154&ct=ga&cd=CAIyHDYyOGM1MGZkYTliZWUwMGU6Y29tOmVzOlVTOkw&usg=AOvVaw1Tvu3G1XtRCqmBWMtMyJWf",
+  "2026-08-24", "Budget, cyberattaques, canicules : Sébastien Lecornu réunira son gouvernement en ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.ouest-france.fr/politique/gouvernement/budget-cyberattaques-canicules-sebastien-lecornu-reunira-son-gouvernement-en-seminaire-le-31-aout-80a9b3e4-9fbe-11f1-a8ad-3219df531147&ct=ga&cd=CAIyGmMxM2M1NzY2MjM2OWNlYzg6Y29tOmZyOlVT&usg=AOvVaw2w6fBkKwev176O6Z3ivsw5",
+  "2026-08-24", "Un ressortissant en séjour illégal arrêté à Wanze : Il détenait plus de 12 grammes de ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.dhnet.be/regions/liege/2026/08/24/un-ressortissant-en-sejour-illegal-arrete-a-wanze-il-detenait-plus-de-12-grammes-de-cocaine-et-915-IWLMUWO2JFALLGJLDZDZXO7DJU/&ct=ga&cd=CAIyGmMxM2M1NzY2MjM2OWNlYzg6Y29tOmZyOlVT&usg=AOvVaw39PHkSJDlLXr2iRAKnhDH8",
+"2026-08-24", "Ce dealer du Haut-Rhin se faisait appeler « Walter White » et stockait cocaïne, kétamine et ... - Actu", "https://www.google.com/url?rct=j&sa=t&url=https://actu.fr/grand-est/brunstatt-didenheim_68056/ce-dealer-du-haut-rhin-se-faisait-appeler-walter-white-et-stockait-cocaine-ketamine-et-cannabis-dans-son-frigo_64699627.html&ct=ga&cd=CAIyGmMxM2M1NzY2MjM2OWNlYzg6Y29tOmZyOlVT&usg=AOvVaw0CIzG-TwdhiwjqSCADAY5W",
+"2026-08-24", "Un dealer de cocaïne repéré et arrêté par la police à Wanze : il avait 12 grammes de drogue ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.sudinfo.be/id1184843/article/2026-08-24/un-dealer-de-cocaine-repere-et-arrete-par-la-police-wanze-il-avait-12-grammes-de&ct=ga&cd=CAIyGmMxM2M1NzY2MjM2OWNlYzg6Y29tOmZyOlVT&usg=AOvVaw3nJsXIgpQSr78S9Rb0g6VY",
+"2026-08-24", "The Westies : la fin de la saison 1 expliquée - Télé Star", "https://www.google.com/url?rct=j&sa=t&url=https://www.telestar.fr/serie_tv/the-westies-la-fin-de-la-saison-1-expliquee-1778876&ct=ga&cd=CAIyGmMxM2M1NzY2MjM2OWNlYzg6Y29tOmZyOlVT&usg=AOvVaw2kL2kKWeeHj9lH6k8T0e6S",
+"2026-08-24", "Guerre à Gaza : les Pays-Bas quittent lEurovision, dénonçant un manque de neutralité", "https://www.google.com/url?rct=j&sa=t&url=https://www.laprovence.com/article/france-monde/72536373389967/guerre-a-gaza-les-pays-bas-quittent-leurovision-denoncant-un-manque-de-neutralite&ct=ga&cd=CAIyGmMxM2M1NzY2MjM2OWNlYzg6Y29tOmZyOlVT&usg=AOvVaw17rFsU7TcAhjLGHmTTiEPL",
+"2026-08-24", "Jeudi 3 septembre 2026 sur RMC Story", "https://www.google.com/url?rct=j&sa=t&url=https://tv-programme.com/rmc-story/jeudi-3-septembre-2026/&ct=ga&cd=CAIyGmMxM2M1NzY2MjM2OWNlYzg6Y29tOmZyOlVT&usg=AOvVaw01FD5NCN1QDokRwCJKE2YJ",
+"2026-08-24", "Un si grand soleil du lundi 24 août 2026 : coup de théâtre, Flore innocentée ... - Serie News", "https://www.google.com/url?rct=j&sa=t&url=https://www.serie-news.com/tnt/france-3-tnt/39762-un-si-grand-soleil-du-lundi-24-aout-2026-coup-de-theatre-flore-innocentee-operation-coup-de-poing-de-la-police-spoilers-24-08-2026/&ct=ga&cd=CAIyGmMxM2M1NzY2MjM2OWNlYzg6Y29tOmZyOlVT&usg=AOvVaw3_ngajMZWqoHx5YrOK4AtG",
+"2026-08-24", "Douanes sous haute surveillance : Episode 3 - Linternaute.com", "https://www.google.com/url?rct=j&sa=t&url=https://www.linternaute.com/television/documentaire-douanes-sous-haute-surveillance-p3120389/episode-3-e6833399/&ct=ga&cd=CAIyGmMxM2M1NzY2MjM2OWNlYzg6Y29tOmZyOlVT&usg=AOvVaw02P0ZlrvcrX7XF-aRlLNiO",
+"2026-08-24", "« Je voulais prouver que je pouvais y arriver » : Ludivine Bayon s est imposée dans le ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.ouest-france.fr/economie/transports/transport-maritime/je-voulais-prouver-que-je-pouvais-y-arriver-ludivine-bayon-sest-imposee-dans-le-milieu-maritime-en-normandie-12fb00b6-9d3c-11f1-b6b2-5710555c207e&ct=ga&cd=CAIyGmMxM2M1NzY2MjM2OWNlYzg6Y29tOmZyOlVT&usg=AOvVaw1NyvbgXBCUt6Hin1GK8Pkp",
+"2026-08-24", "Pétition pour le retrait immédiat du spot mettant en scène la consommation de cocaïne - Change.org", "https://www.google.com/url?rct=j&sa=t&url=https://www.change.org/p/p%25C3%25A9tition-pour-le-retrait-imm%25C3%25A9diat-du-spot-mettant-en-sc%25C3%25A8ne-la-consommation-de-coca%25C3%25AFne&ct=ga&cd=CAIyGmMxM2M1NzY2MjM2OWNlYzg6Y29tOmZyOlVT&usg=AOvVaw16YAzbg23w27zZOsTTECWR",
+"2026-08-24", "Access : Il va y a avoir du changement à la rentrée chez Anne-Elisabeth Lemoine, Cyril ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.jeanmarcmorandini.com/article-649981-access-il-va-y-a-avoir-du-changement-a-la-rentree-chez-anne-elisabeth-lemoine-cyril-hanouna-et-yann-barthes-voici-ce-qui-change-et-surtout-leur-date-de-retour-a-l-antenne.html%3Famp&ct=ga&cd=CAIyGmMxM2M1NzY2MjM2OWNlYzg6Y29tOmZyOlVT&usg=AOvVaw3Nk5MmoFQMetv8goCqq3Xn",
+"2026-08-24", "Un violoniste professionnel arrêté avec près de 40 kg de cocaïne cachés - CANAL+", "https://www.google.com/url?rct=j&sa=t&url=https://www.canalplus.com/wf/actualites/un-violoniste-professionnel-arrete-avec-pres-de-40-kg-de-cocaine-caches/h/46537896_50213&ct=ga&cd=CAIyGmMxM2M1NzY2MjM2OWNlYzg6Y29tOmZyOlVT&usg=AOvVaw0KBSVS5Ezve9gw_BdwR9s_",
+"2026-08-24", "150.000 euros, cocaína y maltrato: las conversaciones que destapan el lado más oscuro del ...", "https://www.google.com/url?rct=j&sa=t&url=https://okdiario.com/baleares/150-000-euros-cocaina-maltrato-conversaciones-que-destapan-lado-mas-oscuro-del-prostibulo-formentera-20153679&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw1m2CrQpJho2bWFthpZCbMU",
+"2026-08-24", "La droga pasa por Andalucía - Diario de Sevilla", "https://www.google.com/url?rct=j&sa=t&url=https://www.diariodesevilla.es/opinion/editorial/droga-pasa-andalucia_0_2007780324.html&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw0f7Bu6p3nFDwRZH-Ix8IxP",
+"2026-08-24", "La playa de la última descarga de cocaína en GALICIA, EN ESPAÑA y en EUROPA , y ...", "https://www.google.com/url?rct=j&sa=t&url=https://x.com/narcodiario/status/2091280041430933751&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw1SiRWQQTUVB9atkGm8meex",
+  "2026-08-24", "La red de tráfico de cocaína que dirigían los alumnos de una de las universidades más ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.ecuavisa.com/mundo/estados-unidos-red-trafico-cocaina-dirigian-alumnos-universidad-pensilvania-como-los-atraparon-20260823-0032.html&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw1XzpTZUPN78iL16-PEJj0q",
+  "2026-08-24", "Carbón Blanco: la ruta del dinero de un grupo narco que con Patricio Gorosito ... - Aire de Santa Fe", "https://www.google.com/url?rct=j&sa=t&url=https://www.airedesantafe.com.ar/policiales/carbon-blanco-la-ruta-del-dinero-un-grupo-narco-que-patricio-gorosito-jugo-las-grandes-ligas-n667678&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw3_b0KY-wg2422D_SCw-HPi",
+  "2026-08-24", "Cayó “El Rey de las Pastillas” en Junín: secuestraron éxtasis, ketamina, LSD y cocaína rosa", "https://www.google.com/url?rct=j&sa=t&url=https://www.infobae.com/sociedad/policiales/2026/08/23/cayo-el-rey-de-las-pastillas-en-junin-secuestraron-extasis-ketamina-lsd-y-cocaina-rosa/&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw2BJ8xvGrVxkWMerWg6H--W",
+  "2026-08-24", "En 15 días, Fuerza Pública incautó más de 12 toneladas de cocaína y capturó a 1.574 ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.diariodelsur.com.co/en-15-dias-fuerza-publica-incauto-mas-de-12-toneladas-de-cocaina-y-capturo-a-1-574-narcotraficantes/&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw2bQbict_rCOzXr1iCEEDhx",
+  "2026-08-24", "El espectacular aumento de los alijos de cocaína en Asturias: se disparan de 62 a 807 kilos en 2025", "https://www.google.com/url?rct=j&sa=t&url=https://www.threads.com/%40lanuevaespana_/post/DcYUK-gCCbD/el-espectacular-aumento-de-los-alijos-de-cocaina-en-asturias-se-disparan-de-a/&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw13dMrhmXRp96eRBloN351n",
+  "2026-08-24", "Las cinco noticias más destacadas de este domingo 23 de agosto en Alicante | TodoAlicante", "https://www.google.com/url?rct=j&sa=t&url=https://www.todoalicante.es/alicante-provincia/cinco-noticias-destacadas-domingo-agosto-alicante-20260823213359-nt.html&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw0hcDLBCKmY9UTHf2h2SxFQ",
+  "2026-08-24", "Detienen a dos personas en Ecuador con 280 kilos de cocaína escondidos en un vehículo", "https://www.google.com/url?rct=j&sa=t&url=https://www.swissinfo.ch/spa/detienen-a-dos-personas-en-ecuador-con-280-kilos-de-coca%25C3%25ADna-escondidos-en-un-veh%25C3%25ADculo/91942088&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw2UQNKdINklm7Xtl1HwTwPa",
+  "2026-08-24", "Cuatro detenidos y 1.500 kilos de cocaína incautados en una operación antidroga en A ...", "https://www.google.com/url?rct=j&sa=t&url=https://gaceta.es/espana/cuatro-detenidos-y-1-500-kilos-de-cocaina-incautados-en-una-operacion-antidroga-en-a-pobra-do-caraminal-20260823-1202/&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw1GQ2mS1vV0a1a8GYlkfUAZ",
+  "2026-08-24", "Galicia, el gran coladero de la cocaína en España: los decomisos se disparan un 386", "https://www.google.com/url?rct=j&sa=t&url=https://x.com/eldebate_com/status/2091544742240944590&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw2dPxmiAKqNbGQGvdIlcWb_",
+  "2026-08-24", "Dos de los detenidos en la operación antidroga de A Pobra do Caramiñal pasarán el lunes ...", "https://www.google.com/url?rct=j&sa=t&url=https://gcdiario.com/sociedad/599813-dos-de-los-detenidos-en-la-operacion-antidroga-de-a-pobra-do-caraminal-pasaran-el-lunes-a-disposicion-judicial/&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw29UseBLI38HTR-WWZGX7Mc",
+  "2026-08-24", "En homenaje a Christopher Nolan, la RAE incorpora nolanizar a su diccionario como ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.elconfidencial.com/cultura/2026-08-23/homenaje-christopher-nolan-rae-incorpora-nolanizar_4409510/&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw3zf4f-w_N1V0DzZfgPLWeC",
+  "2026-08-24", "Marruecos pide a España que devuelva a migrantes supervivientes y fallecidos en su paso a Ceuta", "https://www.google.com/url?rct=j&sa=t&url=https://www.diariovasco.com/internacional/marruecos-pide-espaa-devuelva-migrantes-supervivientes-fallecidos-20260823091558-vi.html&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw3IEuptByv1Oeq36xWynEdc",
+  "2026-08-24", "Detienen a un conocido rapero italiano de 26 años tras encontrar droga y una pistola con el ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.larazon.es/actualidad/detienen-conocido-rapero-italiano-26-anos-encontrar-droga-pistola-numero-serie-borrado-casa-b50m_202608236a8b080d71b42a0b5d00df78.html%3FoutputType%3Damp&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw1zFNYw_Xp7Qc3R12faR0us",
+  "2026-08-24", "La cocaína incautada en A Pobra do Caramiñal, al descubierto - Narcodiario", "https://www.google.com/url?rct=j&sa=t&url=https://narcodiario.com/2026/08/la-cocaina-incautada-en-a-pobra-do-caraminal-al-descubierto/&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw1uHJRi1olNXT-U8hkPM6a4",
+  "2026-08-24", "Detienen al rapero italiano Tony Boy tras hallar cocaína, drogas y una pistola en su casa", "https://www.google.com/url?rct=j&sa=t&url=https://www.antena3.com/noticias/mundo/detienen-rapero-italiano-tony-boy-hallar-cocaina-drogas-pistola-casa_202608236a8af381a046ad6ebcc2f234.html&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw0DsYWzCyOg57Uix7lZgIhc",
+  "2026-08-24", "Detenido un hombre de 49 años en Sangüesa (Navarra) con cuatro tipos de droga", "https://www.google.com/url?rct=j&sa=t&url=https://www.diariosigloxxi.com/texto-ep/mostrar/20260823100051/detenido-hombre-49-anos-sanguesa-navarra-cuatro-tipos-droga&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw38Mv_8E0C73AYD1nGyd_YS",
+  "2026-08-24", "Intervenidos en Algeciras cerca de 150 kilos de cocaína", "https://www.google.com/url?rct=j&sa=t&url=https://www.algecirasalminuto.es/sucesos/intervenidos-en-algeciras-cerca-de-150-kilos-de-cocaina/&ct=ga&cd=CAIyGmFlNmJlYzU1MTM3NWE5NjE6Y29tOmVzOlVT&usg=AOvVaw183n3GL-hGRusY9nG54s2f",
+  "2026-08-24", "Cae el líder del clan gallego Os Fanchos con 1.410 kilos de cocaína - Libertad Digital", "https://www.google.com/url?rct=j&sa=t&url=https://www.libertaddigital.com/sucesos/2026-08-24/cae-el-lider-del-clan-gallego-os-fanchos-con-1-410-kilos-de-cocaina-y-100-gramos-de-heroina-7450991/&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw2Ue3eO6N1tjTVrWUL5t4ac",
+  "2026-08-24", "Intervenidos 1.410 kilos de cocaína ocultos en una guardería vinculada al clan de los Fanchos", "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/watch%3Fv%3DcXsN_Q1kCsI&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw3evTlmD9aoz6pDUREXFJsN",
+  "2026-08-24", "Detenido en el aeropuerto de Barcelona un pasajero que llevaba 31 kilos de cocaína", "https://www.google.com/url?rct=j&sa=t&url=https://www.libertaddigital.com/cataluna/2026-08-24/detenido-en-el-aeropuerto-de-barcelona-un-pasajero-que-llevaba-31-kilos-de-cocaina-7450959/&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw1XQh6vzenO5V5PTWaH0QVS",
+  "2026-08-24", "El líder de los Fanchos y otros dos varones, detenidos con más de 1.400 kilos de cocaína", "https://www.google.com/url?rct=j&sa=t&url=https://www.europapress.es/videos/video-lider-fanchos-otros-dos-varones-detenidos-mas-1400-kilos-cocaina-20260824120237.html&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw3ju4HdbtJZ8j9Cu1-u08sW",
+  "2026-08-24", "Capturan en Ecuador a Caballo, señalado como operador financiero de la mafia albanesa", "https://www.google.com/url?rct=j&sa=t&url=https://latinus.us/latam/2026/8/23/capturan-en-ecuador-caballo-senalado-como-operador-financiero-de-la-mafia-albanesa-182395.html&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw0PPhXeXqQX-mXN2drmy_DQ",
+  "2026-08-24", "Cae el líder del clan familiar de los Fanchos en una operación con 1.400 kilos de cocaína", "https://www.google.com/url?rct=j&sa=t&url=https://www.hoy.es/sociedad/lder-clan-familiar-fanchos-operacin-1400-kilos-20260824105533-vi.html&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw03TsPKFgdOF0GD7VID6caA",
+  "2026-08-24", "La policía desmantela el clan de los Fanchos con más de 1.400 kilos de cocaína - YouTube", "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/watch%3Fv%3Dst2zPZwvYNI&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw0S43v_Rx6LRE10HpIGj9Ke",
+  "2026-08-24", "Cae el líder del clan familiar de los Fanchos en una operación con 1.400 kilos de cocaína", "https://www.google.com/url?rct=j&sa=t&url=https://www.laverdad.es/sociedad/lder-clan-familiar-fanchos-operacin-1400-kilos-20260824105533-vi.html&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw3fePwbbvi0I11TVXKIoxr-",
+  "2026-08-24", "Detenidos con 1.410 kilos de cocaína en A Pobra do Caramiñal - El Debate", "https://www.google.com/url?rct=j&sa=t&url=https://www.eldebate.com/espana/20260824/detenidos-1410-kilos-cocaina-pobra-do-caraminal_451759.html&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw2SuLiPPH4jcLm88DOmP4tv",
+  "2026-08-24", "Cae el líder del clan familiar de los Fanchos en una operación con 1.400 kilos de cocaína", "https://www.google.com/url?rct=j&sa=t&url=https://www.diariodesevilla.es/videos/video-cae-lider-clan-familiar-fanchos_8_2007782740.html&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw1S-MzBuvnRv5xzLcpVEeDd",
+  "2026-08-24", "El líder de los Fanchos y otros dos varones, detenidos con más de 1.400 kilos de cocaína | Ideal", "https://www.google.com/url?rct=j&sa=t&url=https://www.ideal.es/sociedad/lder-fanchos-varones-detenidos-1400-kilos-cocana-20260824103511-vi.html&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw1c9QqqMDo7ZnD65igrQr49",
+  "2026-08-24", "Detenido en La Jonquera (Girona) por llevar 21 kilos de hachís y medio kilo de cocaína en el coche", "https://www.google.com/url?rct=j&sa=t&url=https://www.europapress.es/catalunya/noticia-detenido-jonquera-girona-llevar-21-kilos-hachis-medio-kilo-cocaina-coche-20260824125438.html&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw2S74uKTQFjScH3OyJ2Ub8A",
+  "2026-08-24", "Cae el líder del clan familiar de los Fanchos en una operación con 1.400 kilos de cocaína", "https://www.google.com/url?rct=j&sa=t&url=https://www.youtube.com/watch%3Fv%3DCOiRYziTkqs&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw3U5H4OAORQjrzJV8Stvy5t",
+  "2026-08-24", "Cae el líder del clan familiar de los Fanchos en una operación con 1.400 kilos de cocaína", "https://www.google.com/url?rct=j&sa=t&url=https://www.europapress.es/videos/video-cae-lider-clan-familiar-fanchos-operacion-1400-kilos-cocaina-20260824124925.html&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw3GESMQbaME19xT-VDuLN07",
+  "2026-08-24", "Intervenidos 1.410 kilos de cocaína ocultos en una guardería vinculada al clan de los 'Fanchos'", "https://www.google.com/url?rct=j&sa=t&url=https://www.abc.es/espana/intervenidos-1410-kilos-cocaina-ocultos-guarderia-vinculada-20260824111733-nt.html&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw2LcbMAAPu_uaJWk79VhMQd",
+  "2026-08-24", "El líder de Os Fanchos capitaneó la descarga y custodia de 1.410 kilos de cocaína en A Pobra", "https://www.google.com/url?rct=j&sa=t&url=https://www.abc.es/espana/galicia/lider-fanchos-capitaneo-descarga-custodia-1410-kilos-20260824123810-nt.html&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw0uZKJ-QBHhvvKfayEdCfiB",
+  "2026-08-24", "A Pobra de Caramiñal: Detenido el líder del clan de los 'Fanchos' en una ... - Euronews.com", "https://www.google.com/url?rct=j&sa=t&url=https://es.euronews.com/my-europe/2026/08/24/a-pobra-de-caraminal-detenido-el-lider-del-clan-de-los-fanchos-en-una-operacion-con-1410-k&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw0g0ziVL1K8kLjGU522K7W3",
+  "2026-08-24", "La famosa humorista Zarna Garg queda encerrada 80 minutos en un baño de Hermès en Berlín", "https://www.google.com/url?rct=j&sa=t&url=https://es.euronews.com/my-europe/2026/08/24/la-famosa-humorista-zarna-garg-queda-encerrada-80-minutos-en-un-bano-de-hermes-en-berlin&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw21atF5D4ePk0bPKRqcnUhj",
+  "2026-08-24", "De la Espriella ordena un operativo para desmantelar una supuesta red criminal de robo de ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.notimerica.com/politica/noticia-espriella-ordena-operativo-desmantelar-supuesta-red-criminal-robo-combustible-colombia-20260824055237.html&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw0iWv0gN9FRiys83ej0Z2sH",
+  "2026-08-24", "Tres detenidos en la localidad coruñesa de A Pobra cuando trasladaban más de 1.400 kilos ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.eldiario.es/galicia/tres-detenidos-localidad-corunesa-pobra-trasladaban-1-400-kilos-cocaina_1_13463258.html&ct=ga&cd=CAIyGjhjMTI5MGQ3ODFkNGQyYmY6Y29tOmVzOlVT&usg=AOvVaw3c78cSJ3N9IdDAmY_xPtCh",
+  "2026-08-24", "One Man Arrested for Carrying More than 30 Kilos of Cocaine Hidden in His Suitcase at ...", "https://www.google.com/url?rct=j&sa=t&url=https://ground.news/article/arrested-a-passenger-at-barcelona-airport-with-31-kilos-of-cocaine-in-his-suitcases&ct=ga&cd=CAIyGjgyMTQ1NzJlMzAwYzE0NzA6Y29tOmVuOlVT&usg=AOvVaw2ZrrTakx08lcdk7S6bi817",
+  "2026-08-24", "Man Arrested for Driving Under the Influence of Cocaine and THC While Fleeing Police ...", "https://www.google.com/url?rct=j&sa=t&url=https://ground.news/article/the-lake-balaton-rampage-who-was-not-stopped-by-police-shots-between-tihany-and-balatonfured-has-been-arrested&ct=ga&cd=CAIyGjgyMTQ1NzJlMzAwYzE0NzA6Y29tOmVuOlVT&usg=AOvVaw1aLUdA6kypOEx9qq4VwGoH",
+  "2026-08-24", "Nigeria: NDLEA Intercepts Cocaine Hidden in Fufu On Boat Bound for Cameroon", "https://www.google.com/url?rct=j&sa=t&url=https://allafrica.com/stories/202608240123.html&ct=ga&cd=CAIyGjgyMTQ1NzJlMzAwYzE0NzA6Y29tOmVuOlVT&usg=AOvVaw14zlllgwEPW4xb-NKJ2Qcg",
+  "2026-08-24", "HURIWA hands FG three-week ultimatum to probe South-East killings", "https://www.google.com/url?rct=j&sa=t&url=https://guardian.ng/news/nigeria/metro/huriwa-hands-fg-three-week-ultimatum-to-probe-south-east-killings/&ct=ga&cd=CAIyGjgyMTQ1NzJlMzAwYzE0NzA6Y29tOmVuOlVT&usg=AOvVaw3nl66h2TiwHpZu6C5ORSWX",
+  "2026-08-24", "The Makings Of Hossegor Beach Cocaine | StabMic Ep. 28 | Paul Evans", "https://www.google.com/url?rct=j&sa=t&url=https://stabmag.com/stabcinema/the-makings-of-hossegor-beach-cocaine-stabmic-ep-28-paul-evans/&ct=ga&cd=CAIyGjgyMTQ1NzJlMzAwYzE0NzA6Y29tOmVuOlVT&usg=AOvVaw3X5YjuOjfwl22mdWJRZ8yW",
+  "2026-08-24", "Cocaine resurgence threatening hard-won gains | Jamaica Gleaner - PressReader", "https://www.google.com/url?rct=j&sa=t&url=https://www.pressreader.com/jamaica/jamaica-gleaner/20260823/281621017181768&ct=ga&cd=CAIyGjgyMTQ1NzJlMzAwYzE0NzA6Y29tOmVuOlVT&usg=AOvVaw3LUCUVFnJCP5S-PciQBL2f",
+  "2026-08-24", "KINAHAN IS REASON IM STUCK IN PRISON | Sunday World (Ireland) - PressReader", "https://www.google.com/url?rct=j&sa=t&url=https://www.pressreader.com/ireland/sunday-world-8014/20260823/281496463129705&ct=ga&cd=CAIyGjgyMTQ1NzJlMzAwYzE0NzA6Y29tOmVuOlVT&usg=AOvVaw3RCgx41VUyYBiWGgjYF18N",
+  "2026-08-24", "NDLEA arrests 101-year-old woman retailing cannabis, recover cocaine concealed inside fufu", "https://www.google.com/url?rct=j&sa=t&url=https://ground.news/article/ndlea-arrests-101-year-old-woman-retailing-cannabis-recover-cocaine-concealed-inside-fufu_8a49b4&ct=ga&cd=CAIyGjgyMTQ1NzJlMzAwYzE0NzA6Y29tOmVuOlVT&usg=AOvVaw1FllxuDEQCVo5E4XzcoyHA",
+  "2026-08-24", "Macrons Presidential Hopeful Caught in Powder Controversy — News.by", "https://www.google.com/url?rct=j&sa=t&url=https://news.by/eng/news/v_mire/macron-s-presidential-hopeful-caught-in-powder-controversy&ct=ga&cd=CAIyGjgyMTQ1NzJlMzAwYzE0NzA6Y29tOmVuOlVT&usg=AOvVaw3gwo0QGzsveSfhVXuAewtH",
+  "2026-08-24", "NDLEA arrests 101-year-old woman retailing cannabis, recover cocaine concealed inside fufu", "https://www.google.com/url?rct=j&sa=t&url=https://ground.news/article/ndlea-arrests-101-year-old-woman-retailing-cannabis-recover-cocaine-concealed-inside-fufu_413f17&ct=ga&cd=CAIyGjgyMTQ1NzJlMzAwYzE0NzA6Y29tOmVuOlVT&usg=AOvVaw3VfU9Plf62VVZElTzmBT_m",
+  "2026-08-24", "NDLEA Arrests 101-Year-Old Woman, Intercepts Cocaine In Fufu - PM Parrot", "https://www.google.com/url?rct=j&sa=t&url=https://pmparrotng.com/2026/08/23/ndlea-arrests-101-year-old-woman/&ct=ga&cd=CAIyGjgyMTQ1NzJlMzAwYzE0NzA6Y29tOmVuOlVT&usg=AOvVaw2fmUcUblgHfGYiyVHMvkS3",
+  "2026-08-24", "A Moroccan Illegal Immigrant Has Been Arrested in Italy, Accused of Raping a Young ...", "https://www.google.com/url?rct=j&sa=t&url=https://ground.news/article/a-moroccan-illegal-immigrant-has-been-arrested-in-italy-accused-of-raping-a-young-woman-after-forcing-her-to-consume-cocaine-and-alcohol&ct=ga&cd=CAIyGjgyMTQ1NzJlMzAwYzE0NzA6Y29tOmVuOlVT&usg=AOvVaw1mojXgLeaCYUAstBBF5VtP",
+  "2026-08-24", "Garda tells how he routinely searches crack addict who was once his childhood pal", "https://www.google.com/url?rct=j&sa=t&url=https://www.crimeworld.com/ireland/garda-tells-how-he-routinely-searches-crack-addict-who-was-once-his-childhood-pal/a/160266602.html&ct=ga&cd=CAIyGjgyMTQ1NzJlMzAwYzE0NzA6Y29tOmVuOlVT&usg=AOvVaw2vfHiP77WeOt0IWGrWE6Kh",
+  "2026-08-24", "NDLEA arrests 101-year-old woman retailing cannabis, recover cocaine concealed inside fufu", "https://www.google.com/url?rct=j&sa=t&url=https://ground.news/article/ndlea-arrests-101-year-old-woman-retailing-cannabis-recover-cocaine-concealed-inside-fufu&ct=ga&cd=CAIyGjgyMTQ1NzJlMzAwYzE0NzA6Y29tOmVuOlVT&usg=AOvVaw0s3Z-QlSoYHbPl5AJ0KqvG",
+  "2026-08-24", "Spanish police seize around one and a half tons of cocaine - Vijesti", "https://www.google.com/url?rct=j&sa=t&url=https://en.vijesti.me/world-a/evropa/823338/Spanish-police-seize-around-one-and-a-half-tons-of-cocaine&ct=ga&cd=CAIyGjgyMTQ1NzJlMzAwYzE0NzA6Y29tOmVuOlVT&usg=AOvVaw1kVhn-iyUDQyblxcRZQyDS",
+  "2026-08-24", "Weil am Rhein, BW: Zoll entdeckt über zwölf Kilo Kokain im Reserverad - Polizei.news", "https://www.google.com/url?rct=j&sa=t&url=https://polizei.news/2026/08/24/weil-am-rhein-bw-zoll-entdeckt-ueber-zwoelf-kilo-kokain-im-reserverad/&ct=ga&cd=CAIyGmRhZmUxNDBjYTI3ODhhODA6Y29tOmRlOlVT&usg=AOvVaw3xQtCU9iRUN5p8KF9mVvcb",
+  "2026-08-24", "Cannabis und Kokain gefunden - PNP", "https://www.google.com/url?rct=j&sa=t&url=https://www.pnp.de/lokales/stadt-passau/cannabis-und-kokain-gefunden-21842453&ct=ga&cd=CAIyGmRhZmUxNDBjYTI3ODhhODA6Y29tOmRlOlVT&usg=AOvVaw1E7Y4xbY521bkynI5AhK7j",
+  "2026-08-24", "Deutschland: Rentnerpaar schmuggelt 263 Kilogramm Kokain mit Segeljacht - L essentiel", "https://www.google.com/url?rct=j&sa=t&url=https://www.lessentiel.lu/de/story/deutschland-rentnerpaar-schmuggelt-263-kilogramm-kokain-mit-segeljacht-103621360&ct=ga&cd=CAIyGmRhZmUxNDBjYTI3ODhhODA6Y29tOmRlOlVT&usg=AOvVaw2fD-0NgWeJm7t6b6KUzBbe",
+  "2026-08-24", "Zwischen Geld steckte Kokain - PNP", "https://www.google.com/url?rct=j&sa=t&url=https://www.pnp.de/lokales/landkreis-passau/zwischen-geld-steckte-kokain-21841043&ct=ga&cd=CAIyGmRhZmUxNDBjYTI3ODhhODA6Y29tOmRlOlVT&usg=AOvVaw0X3LrH9-5k4HaH-m3cDw9W",
+  "2026-08-24", "Griechische Insel: Deutsche Piloten landen Hubschrauber am Strand - GRland", "https://www.google.com/url?rct=j&sa=t&url=https://www.grland.com/de/aktuelles/hubschrauber-landung-spetses-0826/&ct=ga&cd=CAIyGmRhZmUxNDBjYTI3ODhhODA6Y29tOmRlOlVT&usg=AOvVaw3Pq_a7xgSqec4VNjw1L-V6",
+  "2026-08-24", "Dealerin bei Übergabe beobachtet - kaernten.ORF.at", "https://www.google.com/url?rct=j&sa=t&url=https://kaernten.orf.at/stories/3368163/&ct=ga&cd=CAIyGjg0ZTExZTJlMWQ1NWFkNDY6Y29tOmRlOlVT&usg=AOvVaw38i1ROW9rbEpfXJCuLWT3k",
+  "2026-08-24", "Passauer Verkehrspolizei meldet Drogenfund auf A3 - Oldiewelle Niederbayern", "https://www.google.com/url?rct=j&sa=t&url=https://niederbayern.oldiewelle.com/passauer-verkehrspolizei-meldet-drogenfund-auf-a3-54961/&ct=ga&cd=CAIyGjg0ZTExZTJlMWQ1NWFkNDY6Y29tOmRlOlVT&usg=AOvVaw2_f4MsBtlQ0P7YEHYNKKP8",
+  "2026-08-24", "Cannabis und Kokain gefunden - Pnp.de", "https://www.google.com/url?rct=j&sa=t&url=https://www.pnp.de/lokales/stadt-passau/cannabis-und-kokain-gefunden-21842453&ct=ga&cd=CAIyGjg0ZTExZTJlMWQ1NWFkNDY6Y29tOmRlOlVT&usg=AOvVaw1E7Y4xbY521bkynI5AhK7j",
+  "2026-08-24", "Verkehrskontrolle rettet Junkie das Leben: Nach Drogenfund in der Psychiatrie", "https://www.google.com/url?rct=j&sa=t&url=https://www.merkur.de/lokales/fuerstenfeldbruck/emmering-ort28645/verkehrskontrolle-rettet-junkie-das-leben-nach-drogenfund-in-der-psychiatrie-94456773.html&ct=ga&cd=CAIyGjg0ZTExZTJlMWQ1NWFkNDY6Y29tOmRlOlVT&usg=AOvVaw0ih0nALuceAjr6Ix1AEopl",
+  "2026-08-24", "Spur führt zu Frau (23) – Unfassbar, was Mann (37) vor Augen der Polizei macht | Heute.at", "https://www.google.com/url?rct=j&sa=t&url=https://www.heute.at/s/unfassbar-was-mann-37-vor-augen-der-polizei-macht-120242225&ct=ga&cd=CAIyGjg0ZTExZTJlMWQ1NWFkNDY6Y29tOmRlOlVT&usg=AOvVaw2nhezafKhrijvJF5qTwvY7",
+  "2026-08-24", "10 Mio. Euro zusätzlich für “Lehre mit Matura” - NEUE Vorarlberger Tageszeitung", "https://www.google.com/url?rct=j&sa=t&url=https://www.neue.at/newsticker/10-mio-euro-zusaetzlich-fuer-lehre-mit-matura/143570850&ct=ga&cd=CAIyGjg0ZTExZTJlMWQ1NWFkNDY6Y29tOmRlOlVT&usg=AOvVaw2Y3-aI5xf2wQD3nIo2Z8Xy",
+  "2026-08-24", "Heroin und Kokain bei Hausdurchsuchung in Spittal sichergestellt - Nachrichten.jetzt", "https://www.google.com/url?rct=j&sa=t&url=https://nachrichten.jetzt/2026/08/heroin-und-kokain-bei-hausdurchsuchung-in-spittal-sichergestellt/&ct=ga&cd=CAIyGjg0ZTExZTJlMWQ1NWFkNDY6Y29tOmRlOlVT&usg=AOvVaw1DPGk_shQ6jiCQQEz7Zfo1",
+  "2026-08-24", "Weil am Rhein, BW: Zoll entdeckt über zwölf Kilo Kokain im Reserverad - Polizei.news", "https://www.google.com/url?rct=j&sa=t&url=https://polizei.news/2026/08/24/weil-am-rhein-bw-zoll-entdeckt-ueber-zwoelf-kilo-kokain-im-reserverad/&ct=ga&cd=CAIyGjg0ZTExZTJlMWQ1NWFkNDY6Y29tOmRlOlVT&usg=AOvVaw3xQtCU9iRUN5p8KF9mVvcb",
+  "2026-08-24", "Zwischen Geld steckte Kokain - Pnp.de", "https://www.google.com/url?rct=j&sa=t&url=https://www.pnp.de/lokales/landkreis-passau/zwischen-geld-steckte-kokain-21841043&ct=ga&cd=CAIyGjg0ZTExZTJlMWQ1NWFkNDY6Y29tOmRlOlVT&usg=AOvVaw0X3LrH9-5k4HaH-m3cDw9W",
+  "2026-08-24", "So viel Steuern zahlt Apple in Österreich - DiePresse.com", "https://www.google.com/url?rct=j&sa=t&url=https://www.diepresse.com/41196113/so-viel-steuern-zahlt-apple-in-oesterreich&ct=ga&cd=CAIyGjg0ZTExZTJlMWQ1NWFkNDY6Y29tOmRlOlVT&usg=AOvVaw1ZcH6_fazIuAtnd8EB9DMW",
+  "2026-08-24", "Kein Kokain vor der Show? Ein „Hoppala“ im Ikkimel-Publikum - DiePresse.com", "https://www.google.com/url?rct=j&sa=t&url=https://www.diepresse.com/41195288/kein-kokain-vor-der-show-ein-hoppala-im-ikkimel-publikum&ct=ga&cd=CAIyGjg0ZTExZTJlMWQ1NWFkNDY6Y29tOmRlOlVT&usg=AOvVaw3sKr8FWOqCq2IipZrUAW5E",
+  "2026-08-24", "Österreich baut seinen ersten Militärsatelliten – doch ohne Musk kommt er nicht ins All", "https://www.google.com/url?rct=j&sa=t&url=https://www.diepresse.com/41188507/oesterreich-baut-seinen-ersten-militaersatelliten-doch-ohne-musk-kommt&ct=ga&cd=CAIyGjg0ZTExZTJlMWQ1NWFkNDY6Y29tOmRlOlVT&usg=AOvVaw0cilrxHXxKc5uBMrYEIvwP",
+  "2026-08-24", "Trump setzt auf Härte: Kolumbien geht auf Kokain-Milizen los - Anleger hoffen auf die ...", "https://www.google.com/url?rct=j&sa=t&url=https://www.finanznachrichten.de/nachrichten-2026-08/69383026-trump-setzt-auf-haerte-kolumbien-geht-auf-kokain-milizen-los-anleger-hoffen-auf-die-friedensdividende-049.htm&ct=ga&cd=CAIyGjg0ZTExZTJlMWQ1NWFkNDY6Y29tOmRlOlVT&usg=AOvVaw1m71AkcNHa6Pjjr8g6R0Nj",
+  "2026-08-24", "Cannabis und Kokain: Polizei stoppt Drogenfahrten", "https://www.google.com/url?rct=j&sa=t&url=https://www.merkur.de/lokales/ebersberg/cannabis-und-kokain-polizei-stoppt-drogenfahrten-94455598.html&ct=ga&cd=CAIyGjg0ZTExZTJlMWQ1NWFkNDY6Y29tOmRlOlVT&usg=AOvVaw2Q2uEc1YszL2CEP7vtYHsR",
+  "2026-08-24", "Darmstadt, Hessen: Cannabis und Kokain – Polizei zieht zahlreiche Fahrer aus dem Verkehr", "https://www.google.com/url?rct=j&sa=t&url=https://polizei.news/2026/08/23/darmstadt-hessen-cannabis-und-kokain-polizei-zieht-zahlreiche-fahrer-aus-dem-verkehr/&ct=ga&cd=CAIyGjg0ZTExZTJlMWQ1NWFkNDY6Y29tOmRlOlVT&usg=AOvVaw098O1Rcv4SdxOLen5LCz5s",
+  "2026-08-24", "Gewapende rovers maken USD 29.000 buit in Houttuin - Starnieuws", "https://www.google.com/url?rct=j&sa=t&url=https://www.starnieuws.com/index.php/welcome/index/nieuwsitem/93563&ct=ga&cd=CAIyGjBhZThmZjY4ZWZhZjljNWU6Y29tOm5sOlVT&usg=AOvVaw0b-9qxdhVBp_aQTcBCkmBa",
+  "2026-08-24", "Ministerie van Justitie wil criminaliteitsaanpak verder digitaliseren | Suriname - Drimble", "https://www.google.com/url?rct=j&sa=t&url=https://drimble.nl/dossiers/multicultureel/suriname/107783607/ministerie-van-justitie-wil-criminaliteitsaanpak-verder-digitaliseren.html&ct=ga&cd=CAIyGjBhZThmZjY4ZWZhZjljNWU6Y29tOm5sOlVT&usg=AOvVaw0TpD8f74N5qZNZK6pIlQ06",
+  "2026-08-24", "Sophie Straat over witte mannen: waar zijn de feiten? - Moordplekken.nl", "https://www.google.com/url?rct=j&sa=t&url=https://www.moordplekken.nl/blog/opinie-sophie-straat-lowlands-witte-mannen-feiten-cbs-criminaliteit&ct=ga&cd=CAIyGjBhZThmZjY4ZWZhZjljNWU6Y29tOm5sOlVT&usg=AOvVaw03BvLzUcfwX6OEMOeSeqrW",
+  "2026-08-24", "Ministerie van Justitie wil criminaliteitsaanpak verder digitaliseren - Culturu.com", "https://www.google.com/url?rct=j&sa=t&url=https://www.culturu.com/nieuws/suriname/ministerie-van-justitie-wil-criminaliteitsaanpak-verder-digitaliseren/&ct=ga&cd=CAIyGjBhZThmZjY4ZWZhZjljNWU6Y29tOm5sOlVT&usg=AOvVaw1HjeLmoba5Ia1_f54pDjqC",
+  "2026-08-24", "Canada slaat terug in handelsoorlog met VS", "https://www.google.com/url?rct=j&sa=t&url=https://www.surinametimes.com/artikel/canada-slaat-terug-in-handelsoorlog-met-vs&ct=ga&cd=CAIyGjBhZThmZjY4ZWZhZjljNWU6Y29tOm5sOlVT&usg=AOvVaw0gGyw5bvwVW5IBYXhHpYMh",
+  "2026-08-24", "Laptop catches fire on US flight - Suriname Times", "https://www.google.com/url?rct=j&sa=t&url=https://www.surinametimes.com/artikel/laptop-catches-fire-on-us-flight&ct=ga&cd=CAIyGjBhZThmZjY4ZWZhZjljNWU6Y29tOm5sOlVT&usg=AOvVaw20_c841wVrrK9DSLPLi1im",
+  "2026-08-24", "MV Canawaima stilgelegd", "https://www.google.com/url?rct=j&sa=t&url=https://www.surinametimes.com/artikel/mv-canawaima-stilgelegd&ct=ga&cd=CAIyGjBhZThmZjY4ZWZhZjljNWU6Y29tOm5sOlVT&usg=AOvVaw1KPQI9yPB7avJsuRrsrOA7" 
+  
+  
+  )
+
+
+################################################################################
+##  FUNCIONES AUXILIARES  ######################################################
+################################################################################
+
+# Vectorizada: funciona con una URL o un vector completo
+extraer_url_real <- function(u) {
+  m <- str_match(u, "[?&]url=([^&]+)")[, 2]
+  ifelse(is.na(m), u, URLdecode(m))
+}
+
+NO_SCRAPEABLE <- c("facebook.com", "threads.com", "instagram.com",
+                   "tiktok.com", "twitter.com", "x.com")
+es_no_scrapeable <- function(u) any(str_detect(u, fixed(NO_SCRAPEABLE)))
+
+es_pagina_etiqueta <- function(u) {
+  str_detect(u, "/etiqueta/|/tag/|/topic/|/categoria/|/category/|/tema/")
+}
+
+# --- Pre-filtro: busca en título + URL combinados ---
+PALABRAS_DESCARTE <- c(
+  "chaussure", "sandale", "contrefait", "textiles", "falsificad",
+  "obras del cabildo", "demolici[oó]n del", "cabildo inicia",
+  "p[eé]trolier russe", "petrolero ruso", "camping-car prend feu"
+)
+PALABRAS_ADMITIDAS <- c(
+  "coca[ií]?na", "cocaine", "cocaïne", "kokain",
+  "pasta base", "pasta b[aá]sica", "clorhidrato",
+  "crack", "hoja de coca", "coca leaf",
+  "decomis", "incaut", "saisie", "seizure", "seized", "confisca",
+  "asegura(?:n|do|ron)? droga", "detenid.*droga",
+  "destruy.*(f[aá]bric|laborator|cocin)", "f[aá]bric.*m[oó]vil",
+  "golpe al (c[aá]rt|cjng|clan)", "cart[eé]l.*decomis",
+  "cjng|jalisco nueva generaci",
+  "narcot[uú]nel", "narcomader", "narcosubmar",
+  "kilo(?:gramo)?", " kg\\b", "tonelada",
+  "microtr[aá]fic", "narcotr[aá]fic",
+  "cocai\\b", "apreens", "confisca", "flagrante",
+  "sicherstellung", "beschlagnahm",
+  "inbeslagname", "drug bust", "drug haul", "narcotics seiz",
+  "porcoes de coca", "pinos de coca", "tr[aá]fico"
+)
+
+pasa_filtro_titulo <- function(titulo, url = "") {
+  texto_combinado <- str_to_lower(paste(titulo, url))
+  tiene_admisible <- any(str_detect(texto_combinado, PALABRAS_ADMITIDAS))
+  tiene_descarte  <- any(str_detect(texto_combinado, PALABRAS_DESCARTE))
+  tiene_admisible && !tiene_descarte
+}
+
+# --- Descarga HTML con cache por hash ---
+descargar_html <- function(u) {
+  archivo <- file.path(DIR_ESPEJO, paste0(substr(md5(u), 1, 16), ".html"))
+  if (file.exists(archivo) && file.size(archivo) > 2000)
+    return(list(ruta = archivo, error = ""))
+  resultado <- tryCatch({
+    resp <- request(u) |>
+      req_user_agent(UA) |>
+      req_headers(`Accept-Language` = "es,en;q=0.9,fr;q=0.8,pt;q=0.7") |>
+      req_timeout(30) |> req_perform()
+    writeLines(resp_body_string(resp), archivo, useBytes = TRUE)
+    list(ruta = archivo, error = "")
+  }, error = function(e) list(ruta = NA_character_, error = conditionMessage(e)))
+  Sys.sleep(2)
+  resultado
+}
+
+# --- Extracción con trafilatura ---
+.trafilatura <- NULL
+extraer_texto_limpio <- function(ruta_html) {
+  if (is.na(ruta_html) || !file.exists(ruta_html)) return("")
+  if (is.null(.trafilatura)) .trafilatura <<- import("trafilatura")
+  tryCatch({
+    html_raw <- paste(readLines(ruta_html, warn = FALSE, encoding = "UTF-8"),
+                      collapse = "\n")
+    texto <- .trafilatura$extract(html_raw)
+    if (is.null(texto)) "" else as.character(texto)
+  }, error = function(e) { message("    ⚠ trafilatura falló"); "" })
+}
+
+
+################################################################################
+##  PROMPTS  ###################################################################
+################################################################################
+
+# --- Prompt principal: extracción de filas ------------------------------------
+PROMPT_EXTRACCION <- '# Cocaine Seizures Database — Extraction Prompt
+
+We are building a database on cocaine seizures, criminal trafficking, modus operandi and trafficking routes.
+
+The user will provide the text of a news article. Extract the relevant information and create ONE database entry per distinct seizure event. Extract only from the provided text.
+
+NEVER create or assume information. If uncertain about a field, leave it null.
+
+There are 45 columns:
+event_type, time_unit, date_1, date_2, year, month, day, duration, drug_type, quantity, quantity_unit, modus_operandi, sub_modus_operandi, region, country, "department/state", "municipality/port", origin_country, origin_area, origin_municipality, transit_1_region, transit_1_country, "transit_1_department/state", "transit_1_municipality/port", transit_2_region, transit_2_country, "transit_2_department/state", "transit_2_municipality/port", destination_1_region, destination_1_country, "destination_1_department/state", "destination_1_municipality/port", destination_2_country, "destination_2_department/state", "destination_2_municipality/port", description, criminal_group_1, criminal_group_2, criminal_group_3, source_link, source_link2, archived_link, minor_involved, project_interested, uid
+
+event_type: ["Seizure", "Destruction of Infrastructure", "Crop Eradication", "Combined event", "Total Production Estimate", "Total Crop Cultivation Estimate", "Price", "Other (explain in Description)"]
+
+time_unit: ["Individual", "Multi-Day", "Month", "Multi-Month", "Multi-Year", "Year", "Other (explain in Description)"]
+
+date_1: YYYY-MM-DD. When the seizure took place, NOT the publication date.
+If the article does not mention a specific seizure date, use the article publication date as approximation and note "date approximated from publication" in description.
+date_2: null for individual seizures. End date for period totals.
+year, month, day, duration: Leave null. R fills these automatically.
+
+drug_type: ["Cocaine", "Cocaine Base", "Crack Cocaine", "Liquid Cocaine", "Coca Crops", "Coca Leafs", "All/Unspecified/Multiple", "Other (explain in Description)"]
+
+===== drug_type — keywords by language =====
+- Cocaine: ES: cocaína, clorhidrato · FR: cocaïne, chlorhydrate · PT: cocaína, cloridrato · DE: Kokain · NL: cocaïne
+- Cocaine Base: ES: pasta base, base de coca, PBC · FR: pâte de coca · PT: pasta base de cocaína · DE: Kokapaste
+- Crack: ES/EN/FR: crack · PT: pedra de crack (do NOT treat piedra/pedra alone as crack)
+- Liquid Cocaine: ES: cocaína líquida · FR: cocaïne liquide · PT: cocaína líquida
+- Coca Crops: ES: cultivos/plantaciones de coca · FR: cultures de coca · PT: plantações de coca (standing plants only)
+- Coca Leafs: ES: hojas de coca · FR: feuilles de coca · PT: folhas de coca
+
+quantity: As reported. Convert tons to kilograms. A "paquete/tijolo" is NOT automatically 1 kg.
+quantity_unit: ["Kilogram", "Pounds (lbs)", "Package", "Capsule/Dose", "Plant", "USD", "Euro", "Hectare", "Other (explain in Description)"]
+
+modus_operandi (how transported):
+- "Land": road, residences, warehouses, labs, parcels, pedestrians
+- "Maritime": sea/coastal, cargo ships, small vessels
+- "River": riverine transport
+- "Air": aircraft, airports, commercial flights, air cargo
+- "Multiple": aggregate covering more than one broad mode
+
+sub_modus_operandi: ["Storage Site", "Vehicle", "Truck", "Container", "Cargo Ship", "Go-fast boat", "Fishing Vessel", "Commercial Vessel", "Narco-submarine", "Semi-Submersible", "Human courier", "Body Carry", "Backpack/Bag/Suitcase", "Commercial flight", "Air Cargo", "Private jet", "Parcel/Courier Service", "Bus", "Train", "Bicycle", "Drone", "Sailing Vessel", "Jetski", "Tunneling", "Other"]
+
+region: ["Central America", "South America", "Europe", "North America", "Africa", "Caribbean", "Global", "Asia", "Oceania"]
+country/department/municipality: WHERE THE SEIZURE TOOK PLACE.
+
+origin_*: Where cocaine was PRODUCED (almost always Colombia, Peru, Bolivia). If seized in non-producing country with no stated origin, leave origin null, use transit_1 for that country.
+
+===== origin vs transit example =====
+9.5 tons seized in Dominican Republic, came from Guatemala. Guatemala does not produce cocaine.
+→ origin_country = null, transit_1_country = Guatemala, transit_2_country = Dominican Republic
+
+description: SHORT phrase under 15 words.
+criminal_group_1/_2/_3: null if unknown.
+source_link: the URL provided. source_link2, archived_link, project_interested, uid: null.
+
+===== minor_involved =====
+MUST be JSON boolean true, false, or null. Never strings like "Yes"/"No"/"TRUE".
+
+===== ONE ROW PER EVENT =====
+One operation + one location + one date + one combined quantity = one row.
+Multiple packages/vehicles in same seizure = one row. Separate dates/locations = separate rows.
+
+===== OUTPUT FORMAT =====
+Respond ONLY with a valid JSON array (no preamble, no code fences). Each element has ALL 45 keys.
+
+===== WHEN TO CREATE A ROW =====
+Create a row WHENEVER cocaine is mentioned as SEIZED, DESTROYED, or ERADICATED:
+1. Multi-drug seizures: drug_type="All/Unspecified/Multiple", quantity=null. CREATE ROW.
+2. Aggregated operations: time_unit="Multi-Day", quantity=null if unclear. CREATE ROW.
+3. Quantity in money/doses: use those as quantity/unit. CREATE ROW.
+4. Microtrafficking: valid regardless of size. CREATE ROW.
+
+Return [] ONLY when: no cocaine at all, or cocaine only in non-event context (policy debate, past sentencing, statistics).
+
+===== IF YOU ONLY HAVE THE TITLE (no body text or under 300 chars) =====
+If article text is missing but the TITLE describes a cocaine event with concrete detail, STILL CREATE A ROW from the title alone:
+- drug_type from words like cocaína/cocaine/pasta base/crack
+- quantity from numbers like "100 kg", "62 porções", "1.9 toneladas" (tijolo = ~1 kg brick)
+- country from language + place names
+- event_type = "Seizure" if apreende/incauta/decomisa/saisie/seized
+Leave everything else null. DO NOT classify as Evidence just because you lack full text.
+
+===== IMPORTANT: seizure vs context =====
+If the article describes ANY specific seizure (quantity + location + date), CREATE A ROW even if the article angle is about method, modus operandi, or investigation technique.
+'
+
+# --- Prompt secundario: clasificación cuando Claude devuelve [] ---------------
+PROMPT_CLASIFICACION <- '# CSDB Alert Classification
+Classify into ONE category:
+- "Evidence": useful context for cocaine research (route analysis, sentencing revealing MO, official statistics, trafficking method details) even without a specific seizure event
+- "Potentially Interesting": touches on cocaine/trafficking but relevance unclear
+- "Discard": irrelevant (other drugs only, entertainment, sports, weather, unrelated crime)
+
+Respond ONLY with JSON: {"classification": "Evidence"|"Potentially Interesting"|"Discard", "reason": "under 20 words"}
+'
+
+
+################################################################################
+##  API CALLS  #################################################################
+################################################################################
+
+llamar_claude_generico <- function(system_prompt, user_message, max_tokens = 4000L) {
+  body <- list(
+    model = MODELO_CLAUDE, max_tokens = max_tokens,
+    thinking = list(type = "disabled"),
+    system = system_prompt,
+    messages = list(list(role = "user", content = user_message))
+  )
+  resp <- tryCatch({
+    request("https://api.anthropic.com/v1/messages") |>
+      req_headers("x-api-key" = ANTHROPIC_KEY,
+                  "anthropic-version" = "2023-06-01",
+                  "content-type" = "application/json") |>
+      req_body_json(body) |> req_timeout(90) |> req_perform()
+  }, error = function(e) { message("    ⚠ API error: ", conditionMessage(e)); NULL })
+  if (is.null(resp)) return(NULL)
+  contenido <- resp_body_json(resp)
+  bloques <- keep(contenido$content, ~ .x$type == "text")
+  if (length(bloques) == 0) return(NULL)
+  str_remove_all(bloques[[1]]$text, "^```json\\s*|```\\s*$")
+}
+
+extraer_filas_csdb <- function(texto, url, titulo) {
+  if (nchar(texto) > 15000) texto <- substr(texto, 1, 15000)
+  msg <- glue("URL: {url}\nTITLE: {titulo}\n\nARTICLE TEXT:\n{texto}")
+  out <- llamar_claude_generico(PROMPT_EXTRACCION, msg)
+  if (is.null(out)) return(list())
+  tryCatch(fromJSON(out, simplifyVector = FALSE), error = function(e) {
+    message("    ⚠ JSON inválido, guardado")
+    writeLines(out, file.path(DIR_OUT, paste0("json_invalido_",
+              substr(md5(url), 1, 8), ".txt")))
+    list()
+  })
+}
+
+clasificar_nota <- function(texto, url, titulo) {
+  if (nchar(texto) > 8000) texto <- substr(texto, 1, 8000)
+  msg <- glue("URL: {url}\nTITLE: {titulo}\n\nTEXT:\n{texto}")
+  out <- llamar_claude_generico(PROMPT_CLASIFICACION, msg, 200L)
+  if (is.null(out)) return(list(classification = "Potentially Interesting",
+                                reason = "API error"))
+  tryCatch(fromJSON(out, simplifyVector = FALSE),
+           error = function(e) list(classification = "Potentially Interesting",
+                                    reason = "JSON error"))
+}
+
+
+################################################################################
+##  GEOCODIFICACIÓN  ###########################################################
+################################################################################
+
+geocodificar <- function(query) {
+  if (!GEOCODIFICAR || is.na(query) || query == "")
+    return(list(lat = NA, lon = NA, lugar = NA, precision = NA))
+  url <- glue("https://maps.googleapis.com/maps/api/geocode/json",
+              "?address={URLencode(query)}&key={GOOGLE_KEY}&language=es")
+  tryCatch({
+    r <- request(url) |> req_timeout(15) |> req_perform() |> resp_body_json()
+    if (r$status != "OK" || length(r$results) == 0)
+      return(list(lat = NA, lon = NA, lugar = NA, precision = NA))
+    x <- r$results[[1]]
+    list(lat = x$geometry$location$lat, lon = x$geometry$location$lng,
+         lugar = x$formatted_address, precision = x$geometry$location_type)
+  }, error = function(e) list(lat = NA, lon = NA, lugar = NA, precision = NA))
+}
+
+
+################################################################################
+##  LOOP PRINCIPAL  ############################################################
+################################################################################
+
+message("\n", strrep("═", 70))
+message("  CSDB PIPELINE v3 — ", nrow(entradas), " URLs")
+message(strrep("═", 70), "\n")
+
+resultados <- list()
+resumen    <- list()
+
+for (i in seq_len(nrow(entradas))) {
+  fila <- entradas[i, ]
+  message(strrep("─", 70))
+  message(glue("  [{i}/{nrow(entradas)}]  {str_trunc(fila$titulo, 62)}"))
+
+  u <- extraer_url_real(fila$url_google)
+
+  # ── Filtros gratuitos ──────────────────────────────────────────────────────
+  if (es_pagina_etiqueta(u)) {
+    message("    ✗ Discard: página de etiqueta")
+    resumen[[i]] <- tibble(i, url = u, decision = "Discard",
+                           razon = "página de etiqueta")
+    next
+  }
+  if (!pasa_filtro_titulo(fila$titulo, u)) {
+    message("    ✗ Discard: título/URL irrelevantes")
+    resumen[[i]] <- tibble(i, url = u, decision = "Discard",
+                           razon = "título irrelevante")
+    next
+  }
+
+  # ── Descarga ───────────────────────────────────────────────────────────────
+  if (es_no_scrapeable(u)) {
+    message("    ⚠ No scrapeable, solo título a Claude")
+    texto <- ""; scrape_status <- "no_scrapeable"
+  } else {
+    message("    → descargando HTML...")
+    dl <- descargar_html(u)
+    texto <- extraer_texto_limpio(dl$ruta)
+    scrape_status <- if (nchar(texto) > 300) "ok" else "texto_pobre"
+    message(glue("      {format(nchar(texto), big.mark=',')} chars ({scrape_status})"))
+  }
+
+  # ── Extracción con Claude ──────────────────────────────────────────────────
+  message("    → extrayendo con Claude...")
+  filas_claude <- extraer_filas_csdb(texto, u, fila$titulo)
+  n_filas <- length(filas_claude)
+
+  if (n_filas > 0) {
+    message(glue("      ✓ {n_filas} fila(s) extraída(s)"))
+    if (GEOCODIFICAR) message("    → geocodificando...")
+
+    filas_procesadas <- map(filas_claude, function(f) {
+      ubicacion <- paste(na.omit(c(f$`municipality/port`,
+                                   f$`department/state`, f$country)),
+                         collapse = ", ")
+      geo <- geocodificar(ubicacion)
+
+      # Convertir TODOS los campos a character para evitar bind_rows error
+      f_chr <- map(f, ~ if (is.null(.x)) NA_character_ else as.character(.x))
+
+      tibble(!!!f_chr) |> mutate(
+        lat             = as.character(geo$lat),
+        lon             = as.character(geo$lon),
+        geo_lugar       = geo$lugar,
+        geo_precision   = geo$precision,
+        `_url_original` = u,
+        `_titulo_alerta`= fila$titulo,
+        `_fecha_alerta` = fila$fecha_alerta,
+        `_scrape_status`= scrape_status
+      )
+    })
+
+    resultados[[i]] <- bind_rows(filas_procesadas)
+    resumen[[i]] <- tibble(i, url = u, decision = "Evidence",
+                           razon = paste(n_filas, "fila(s) extraída(s) para CSDB"),
+                           scrape_status = scrape_status)
+  } else {
+    # ── Clasificar con segunda llamada ────────────────────────────────────────
+    message("    → sin evento, clasificando...")
+    clasif <- clasificar_nota(texto, u, fila$titulo)
+    message(glue("      → {clasif$classification}: {clasif$reason}"))
+    resumen[[i]] <- tibble(i, url = u, decision = clasif$classification,
+                           razon = clasif$reason, scrape_status = scrape_status)
+  }
+}
+
+
+################################################################################
+##  CONSOLIDAR  ################################################################
+################################################################################
+
+# compact() quita los NULL, bind_rows junta (todo ya es character)
+tabla_final   <- resultados |> compact() |> bind_rows()
+tabla_resumen <- bind_rows(resumen)
+
+# --- Rellenar year/month/day desde date_1 (o fallback a fecha_alerta) ---------
+if (nrow(tabla_final) > 0) {
+  tabla_final <- tabla_final |> mutate(
+    date_1 = case_when(
+      !is.na(date_1) & date_1 != "" & date_1 != "NA" ~ date_1,
+      !is.na(`_fecha_alerta`) & `_fecha_alerta` != "" ~ `_fecha_alerta`,
+      TRUE ~ NA_character_
+    ),
+    .fecha = as.Date(date_1, format = "%Y-%m-%d"),
+    year  = ifelse(is.na(.fecha), NA_character_, as.character(year(.fecha))),
+    month = ifelse(is.na(.fecha), NA_character_, as.character(month(.fecha))),
+    day   = ifelse(is.na(.fecha), NA_character_, as.character(day(.fecha)))
+  ) |> select(-.fecha)
+}
+
+# --- Detección de duplicados --------------------------------------------------
+if (nrow(tabla_final) > 1) {
+  tabla_final <- tabla_final |> mutate(
+    .qbucket = case_when(
+      is.na(quantity) | quantity == "NA" ~ "sin_cantidad",
+      TRUE ~ as.character(round(as.numeric(quantity) / 100) * 100)
+    ),
+    .date_key = ifelse(is.na(date_1) | date_1 == "NA", "sin_fecha", date_1)
+  ) |>
+  group_by(country, .date_key, .qbucket) |>
+  mutate(`_grupo_duplicado` = if (n() > 1) paste0("dup_", cur_group_id())
+         else NA_character_) |>
+  ungroup() |> select(-.qbucket, -.date_key)
+} else if (nrow(tabla_final) > 0) {
+  tabla_final$`_grupo_duplicado` <- NA_character_
+}
+
+
+################################################################################
+##  GUARDAR  ###################################################################
+################################################################################
+
+timestamp <- format(Sys.time(), "%Y%m%d_%H%M%S")
+
+ruta_resultado    <- file.path(DIR_CORRIDAS, paste0("resultado_",    timestamp, ".csv"))
+ruta_resumen      <- file.path(DIR_CORRIDAS, paste0("resumen_",      timestamp, ".csv"))
+ruta_no_new_entry <- file.path(DIR_CORRIDAS, paste0("no_new_entry_", timestamp, ".csv"))
+ruta_panel        <- file.path(DIR_OUT, "panel_acumulado.csv")
+
+if (nrow(tabla_final) > 0) tabla_final$`_run_id` <- timestamp
+tabla_resumen$`_run_id` <- timestamp
+
+tabla_final[tabla_final == "NA"] <- ""
+write_excel_csv(tabla_final,   ruta_resultado)
+write_excel_csv(tabla_resumen, ruta_resumen)
+
+# no_new_entry: solo Evidence / Potentially Interesting / Discard
+no_new <- tabla_resumen |>
+  filter(!str_detect(razon, "fila\\(s\\) extraída"))
+if (nrow(no_new) > 0) {
+  no_new <- no_new |>
+    left_join(entradas |> mutate(url = extraer_url_real(url_google)) |>
+                select(url, titulo, fecha_alerta), by = "url")
+  write_excel_csv(no_new, ruta_no_new_entry)
+}
+
+# Panel acumulado
+if (nrow(tabla_final) > 0) {
+  tf_chr <- tabla_final |> mutate(across(everything(), as.character))
+  if (file.exists(ruta_panel)) {
+    panel_prev <- read_csv(ruta_panel, show_col_types = FALSE,
+                           col_types = cols(.default = "c"))
+    panel_new <- bind_rows(panel_prev, tf_chr)
+  } else {
+    panel_new <- tf_chr
+  }
+  write_excel_csv(panel_new, ruta_panel)
+}
+
+
+################################################################################
+##  REPORTE  ###################################################################
+################################################################################
+
+n_con_filas <- sum(str_detect(tabla_resumen$razon, "fila\\(s\\)"), na.rm = TRUE)
+n_evid    <- sum(tabla_resumen$decision == "Evidence",                na.rm = TRUE)
+n_pot     <- sum(tabla_resumen$decision == "Potentially Interesting", na.rm = TRUE)
+n_disc    <- sum(tabla_resumen$decision == "Discard",                 na.rm = TRUE)
+n_dup     <- if (nrow(tabla_final) > 0) sum(!is.na(tabla_final$`_grupo_duplicado`)) else 0
+
+message("\n", strrep("═", 70))
+message("  RESUMEN")
+message(strrep("═", 70))
+message(glue("  URLs recibidas:              {nrow(entradas)}"))
+message(glue("  ✓ Evidence (con filas CSDB):    {n_con_filas}"))
+message(glue("  · Evidence:                  {n_evid}"))
+message(glue("  · Potentially Interesting:   {n_pot}"))
+message(glue("  ✗ Discard:                   {n_disc}"))
+message(glue("  ──────────────────────────────"))
+message(glue("  Filas generadas:             {nrow(tabla_final)}"))
+if (n_dup > 0) message(glue("  Posibles duplicados:         {n_dup} filas"))
+if (GEOCODIFICAR && nrow(tabla_final) > 0) {
+  message(glue("  Geocodificadas:              {sum(tabla_final$lat != 'NA', na.rm=TRUE)}"))
+}
+if (exists("panel_new")) message(glue("  Panel acumulado total:       {nrow(panel_new)}"))
+message(glue("\n  → {ruta_resultado}"))
+message(glue("  → {ruta_no_new_entry}"))
+message(glue("  → {ruta_panel}"))
+message(strrep("═", 70), "\n")
+```
