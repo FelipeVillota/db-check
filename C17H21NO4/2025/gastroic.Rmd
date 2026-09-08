@@ -4,16 +4,10 @@ date: "`r Sys.Date()`"
 output: html_document
 ---
 
-# Hola 
+# CSDB Data Digestion Pipeline
+
+
 ```{r} 
-################################################################################
-##                                                                            ##
-##            CSDB — Cocaine Seizures Database — Pipeline v3                  ##
-##                                                                            ##
-##   InsightCrime · MAD Team · Agosto 2026                                    ##
-##                                                                            ##
-################################################################################
-#
 #  CHANGELOG v3:
 #    ✓ bind_rows fix: todos los campos de Claude se convierten a character
 #    ✓ extraer_url_real vectorizado (ifelse en vez de if)
@@ -47,7 +41,7 @@ output: html_document
 #
 ################################################################################
 
-# --- INSTALACIÓN (una sola vez) -----------------------------------------------
+<!-- # --- INSTALACIÓN (una sola vez) -----------------------------------------------
 # install.packages(c("httr2", "rvest", "xml2", "jsonlite", "reticulate",
 #                    "dplyr", "stringr", "purrr", "readr", "glue",
 #                    "openssl", "tibble", "lubridate"))
@@ -58,7 +52,7 @@ suppressPackageStartupMessages({
   library(reticulate); library(dplyr);      library(stringr); library(purrr)
   library(readr);      library(glue);       library(openssl); library(tibble)
   library(lubridate)
-})
+}) -->
 
 
 ################################################################################
