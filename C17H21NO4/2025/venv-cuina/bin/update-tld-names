@@ -1,0 +1,6 @@
+#!/home/lfvm/codenivore/codebaker/garde-manger/ic-db-check/C17H21NO4/2025/venv-cuina/bin/python
+import sys
+from tld.utils import update_tld_names_cli
+if __name__ == '__main__':
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
+    sys.exit(update_tld_names_cli())
