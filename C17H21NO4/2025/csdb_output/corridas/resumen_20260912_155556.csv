@@ -1,0 +1,11 @@
+﻿i,url,decision,razon,scrape_status,_run_id
+1,https://www.gub.uy/ministerio-interior/comunicacion/noticias/operacion-coyote-incautacion-drogas-dinero-desarticulacion-bocas-tacuarembo,Evidence,1 fila(s) extraída(s) para CSDB,ok,20260912_155556
+2,http://www.msn.com/en-us/news/us/cbp-officers-seize-nearly-1-million-worth-of-cocaine-at-south-texas-ports/ar-AA25Z5lX?apiversion=v2&domshim=1&noservercache=1&noservertelemetry=1&batchservertelemetry=1&renderwebcomponents=1&wcseo=1,Potentially Interesting,Title suggests cocaine seizure at South Texas ports but no text content available.,texto_pobre,20260912_155556
+3,https://folhadomate.com/noticias/policia/policia-apreende-carregamentos-de-maconha-e-cocaina-na-regiao/,Evidence,1 fila(s) extraída(s) para CSDB,texto_pobre,20260912_155556
+4,https://www.barrietoday.com/police-beat/police-find-kilo-of-cocaine-12k-cash-and-mdma-in-collingwood-home-12421538,Evidence,1 fila(s) extraída(s) para CSDB,texto_pobre,20260912_155556
+5,https://sapo.pt/artigo/psp-desmantela-alegada-rede-de-trafico-em-evora-23-detidos-e-mais-de-800-doses-de-cocaina-apreendidas-6a1d8b12bd4691ffdc57af1b,Evidence,1 fila(s) extraída(s) para CSDB,ok,20260912_155556
+6,https://www.facebook.com/studionoticiastv/posts/caxiasdosul-policial-a%C3%A7%C3%A3o-ocorreu-no-bairro-jardim-am%C3%A9rica-e-resultou-na-apreens/1617329463731289/,Evidence,1 fila(s) extraída(s) para CSDB,no_scrapeable,20260912_155556
+7,https://uknip.co.uk/news/uk/uk-news/plymouth-man-jailed-for-drugs-and-weapons-following-swrocu-bust/,Evidence,1 fila(s) extraída(s) para CSDB,ok,20260912_155556
+8,https://www.koaci.com/article/2026/06/15/liberia/societe/liberia-saisie-record-de-237-kg-de-cocaine-dune-valeur-de-plus-de-19-millions-de-dollars-a-laeroport-enquete_197604.html,Evidence,1 fila(s) extraída(s) para CSDB,ok,20260912_155556
+9,https://www.vitoria.es.gov.br/noticia/guarda-de-vitoria-faz-apreensao-de-drogas-na-praia-do-canto-jesus-de-nazareth-e-vila-rubim-56638,Discard,Page content unavailable; no usable information to classify.,texto_pobre,20260912_155556
+10,https://www.facebook.com/OnTheRoadQuebec/posts/pour-tenter-de-comprendre-%EF%B8%8F-saisie-majeure-au-pont-blue-water-plus-de-60-kg-de-c/1537256128194039/,Evidence,1 fila(s) extraída(s) para CSDB,no_scrapeable,20260912_155556
