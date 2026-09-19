@@ -1,0 +1,5 @@
+The article mentions drugs found at a restaurant (cannabis, CBD, no cocaine confirmed in that seizure) and a separate incident with "plus de 2kg de diverses drogues, notamment festives" (various recreational drugs). Cocaine is mentioned only as an example of possible drug types ("cannabis, cocaïne, ecstasy, etc.") without confirmation it was actually seized. The 2kg seizure specifies "diverses drogues festives" without confirming cocaine specifically.
+
+Since cocaine is not confirmed as actually seized in any specific event described, this does not meet the threshold for creating a row.
+
+[]
