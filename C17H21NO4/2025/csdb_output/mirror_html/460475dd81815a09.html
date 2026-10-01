@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="fr-BE">
+
+<head><meta charset="UTF-8"><script>if(navigator.userAgent.match(/MSIE|Internet Explorer/i)||navigator.userAgent.match(/Trident\/7\..*?rv:11/i)){var href=document.location.href;if(!href.match(/[?&]nowprocket/)){if(href.indexOf("?")==-1){if(href.indexOf("#")==-1){document.location.href=href+"?nowprocket=1"}else{document.location.href=href.replace("#","?nowprocket=1#")}}else{if(href.indexOf("#")==-1){document.location.href=href+"&nowprocket=1"}else{document.location.href=href.replace("#","&nowprocket=1#")}}}}</script><script>(()=>{class RocketLazyLoadScripts{constructor(){this.v="2.0.4",this.userEvents=["keydown","keyup","mousedown","mouseup","mousemove","mouseover","mouseout","touchmove","touchstart","touchend","touchcancel","wheel","click","dblclick","input"],this.attributeEvents=["onblur","onclick","oncontextmenu","ondblclick","onfocus","onmousedown","onmouseenter","onmouseleave","onmousemove","onmouseout","onmouseover","onmouseup","onmousewheel","onscroll","onsubmit"]}async t(){this.i(),this.o(),/iP(ad|hone)/.test(navigator.userAgent)&&this.h(),this.u(),this.l(this),this.m(),this.k(this),this.p(this),this._(),await Promise.all([this.R(),this.L()]),this.lastBreath=Date.now(),this.S(this),this.P(),this.D(),this.O(),this.M(),await this.C(this.delayedScripts.normal),await this.C(this.delayedScripts.defer),await this.C(this.delayedScripts.async),await this.T(),await this.F(),await this.j(),await this.A(),window.dispatchEvent(new Event("rocket-allScriptsLoaded")),this.everythingLoaded=!0,this.lastTouchEnd&&await new Promise(t=>setTimeout(t,500-Date.now()+this.lastTouchEnd)),this.I(),this.H(),this.U(),this.W()}i(){this.CSPIssue=sessionStorage.getItem("rocketCSPIssue"),document.addEventListener("securitypolicyviolation",t=>{this.CSPIssue||"script-src-elem"!==t.violatedDirective||"data"!==t.blockedURI||(this.CSPIssue=!0,sessionStorage.setItem("rocketCSPIssue",!0))},{isRocket:!0})}o(){window.addEventListener("pageshow",t=>{this.persisted=t.persisted,this.realWindowLoadedFired=!0},{isRocket:!0}),window.addEventListener("pagehide",()=>{this.onFirstUserAction=null},{isRocket:!0})}h(){let t;function e(e){t=e}window.addEventListener("touchstart",e,{isRocket:!0}),window.addEventListener("touchend",function i(o){o.changedTouches[0]&&t.changedTouches[0]&&Math.abs(o.changedTouches[0].pageX-t.changedTouches[0].pageX)<10&&Math.abs(o.changedTouches[0].pageY-t.changedTouches[0].pageY)<10&&o.timeStamp-t.timeStamp<200&&(window.removeEventListener("touchstart",e,{isRocket:!0}),window.removeEventListener("touchend",i,{isRocket:!0}),"INPUT"===o.target.tagName&&"text"===o.target.type||(o.target.dispatchEvent(new TouchEvent("touchend",{target:o.target,bubbles:!0})),o.target.dispatchEvent(new MouseEvent("mouseover",{target:o.target,bubbles:!0})),o.target.dispatchEvent(new PointerEvent("click",{target:o.target,bubbles:!0,cancelable:!0,detail:1,clientX:o.changedTouches[0].clientX,clientY:o.changedTouches[0].clientY})),event.preventDefault()))},{isRocket:!0})}q(t){this.userActionTriggered||("mousemove"!==t.type||this.firstMousemoveIgnored?"keyup"===t.type||"mouseover"===t.type||"mouseout"===t.type||(this.userActionTriggered=!0,this.onFirstUserAction&&this.onFirstUserAction()):this.firstMousemoveIgnored=!0),"click"===t.type&&t.preventDefault(),t.stopPropagation(),t.stopImmediatePropagation(),"touchstart"===this.lastEvent&&"touchend"===t.type&&(this.lastTouchEnd=Date.now()),"click"===t.type&&(this.lastTouchEnd=0),this.lastEvent=t.type,t.composedPath&&t.composedPath()[0].getRootNode()instanceof ShadowRoot&&(t.rocketTarget=t.composedPath()[0]),this.savedUserEvents.push(t)}u(){this.savedUserEvents=[],this.userEventHandler=this.q.bind(this),this.userEvents.forEach(t=>window.addEventListener(t,this.userEventHandler,{passive:!1,isRocket:!0})),document.addEventListener("visibilitychange",this.userEventHandler,{isRocket:!0})}U(){this.userEvents.forEach(t=>window.removeEventListener(t,this.userEventHandler,{passive:!1,isRocket:!0})),document.removeEventListener("visibilitychange",this.userEventHandler,{isRocket:!0}),this.savedUserEvents.forEach(t=>{(t.rocketTarget||t.target).dispatchEvent(new window[t.constructor.name](t.type,t))})}m(){const t="return false",e=Array.from(this.attributeEvents,t=>"data-rocket-"+t),i="["+this.attributeEvents.join("],[")+"]",o="[data-rocket-"+this.attributeEvents.join("],[data-rocket-")+"]",s=(e,i,o)=>{o&&o!==t&&(e.setAttribute("data-rocket-"+i,o),e["rocket"+i]=new Function("event",o),e.setAttribute(i,t))};new MutationObserver(t=>{for(const n of t)"attributes"===n.type&&(n.attributeName.startsWith("data-rocket-")||this.everythingLoaded?n.attributeName.startsWith("data-rocket-")&&this.everythingLoaded&&this.N(n.target,n.attributeName.substring(12)):s(n.target,n.attributeName,n.target.getAttribute(n.attributeName))),"childList"===n.type&&n.addedNodes.forEach(t=>{if(t.nodeType===Node.ELEMENT_NODE)if(this.everythingLoaded)for(const i of[t,...t.querySelectorAll(o)])for(const t of i.getAttributeNames())e.includes(t)&&this.N(i,t.substring(12));else for(const e of[t,...t.querySelectorAll(i)])for(const t of e.getAttributeNames())this.attributeEvents.includes(t)&&s(e,t,e.getAttribute(t))})}).observe(document,{subtree:!0,childList:!0,attributeFilter:[...this.attributeEvents,...e]})}I(){this.attributeEvents.forEach(t=>{document.querySelectorAll("[data-rocket-"+t+"]").forEach(e=>{this.N(e,t)})})}N(t,e){const i=t.getAttribute("data-rocket-"+e);i&&(t.setAttribute(e,i),t.removeAttribute("data-rocket-"+e))}k(t){Object.defineProperty(HTMLElement.prototype,"onclick",{get(){return this.rocketonclick||null},set(e){this.rocketonclick=e,this.setAttribute(t.everythingLoaded?"onclick":"data-rocket-onclick","this.rocketonclick(event)")}})}S(t){function e(e,i){let o=e[i];e[i]=null,Object.defineProperty(e,i,{get:()=>o,set(s){t.everythingLoaded?o=s:e["rocket"+i]=o=s}})}e(document,"onreadystatechange"),e(window,"onload"),e(window,"onpageshow");try{Object.defineProperty(document,"readyState",{get:()=>t.rocketReadyState,set(e){t.rocketReadyState=e},configurable:!0}),document.readyState="loading"}catch(t){console.log("WPRocket DJE readyState conflict, bypassing")}}l(t){this.originalAddEventListener=EventTarget.prototype.addEventListener,this.originalRemoveEventListener=EventTarget.prototype.removeEventListener,this.savedEventListeners=[],EventTarget.prototype.addEventListener=function(e,i,o){o&&o.isRocket||!t.B(e,this)&&!t.userEvents.includes(e)||t.B(e,this)&&!t.userActionTriggered||e.startsWith("rocket-")||t.everythingLoaded?t.originalAddEventListener.call(this,e,i,o):(t.savedEventListeners.push({target:this,remove:!1,type:e,func:i,options:o}),"mouseenter"!==e&&"mouseleave"!==e||t.originalAddEventListener.call(this,e,t.savedUserEvents.push,o))},EventTarget.prototype.removeEventListener=function(e,i,o){o&&o.isRocket||!t.B(e,this)&&!t.userEvents.includes(e)||t.B(e,this)&&!t.userActionTriggered||e.startsWith("rocket-")||t.everythingLoaded?t.originalRemoveEventListener.call(this,e,i,o):t.savedEventListeners.push({target:this,remove:!0,type:e,func:i,options:o})}}J(t,e){this.savedEventListeners=this.savedEventListeners.filter(i=>{let o=i.type,s=i.target||window;return e!==o||t!==s||(this.B(o,s)&&(i.type="rocket-"+o),this.$(i),!1)})}H(){EventTarget.prototype.addEventListener=this.originalAddEventListener,EventTarget.prototype.removeEventListener=this.originalRemoveEventListener,this.savedEventListeners.forEach(t=>this.$(t))}$(t){t.remove?this.originalRemoveEventListener.call(t.target,t.type,t.func,t.options):this.originalAddEventListener.call(t.target,t.type,t.func,t.options)}p(t){let e;function i(e){return t.everythingLoaded?e:e.split(" ").map(t=>"load"===t||t.startsWith("load.")?"rocket-jquery-load":t).join(" ")}function o(o){function s(e){const s=o.fn[e];o.fn[e]=o.fn.init.prototype[e]=function(){return this[0]===window&&t.userActionTriggered&&("string"==typeof arguments[0]||arguments[0]instanceof String?arguments[0]=i(arguments[0]):"object"==typeof arguments[0]&&Object.keys(arguments[0]).forEach(t=>{const e=arguments[0][t];delete arguments[0][t],arguments[0][i(t)]=e})),s.apply(this,arguments),this}}if(o&&o.fn&&!t.allJQueries.includes(o)){const e={DOMContentLoaded:[],"rocket-DOMContentLoaded":[]};for(const t in e)document.addEventListener(t,()=>{e[t].forEach(t=>t())},{isRocket:!0});o.fn.ready=o.fn.init.prototype.ready=function(i){function s(){parseInt(o.fn.jquery)>2?setTimeout(()=>i.bind(document)(o)):i.bind(document)(o)}return"function"==typeof i&&(t.realDomReadyFired?!t.userActionTriggered||t.fauxDomReadyFired?s():e["rocket-DOMContentLoaded"].push(s):e.DOMContentLoaded.push(s)),o([])},s("on"),s("one"),s("off"),t.allJQueries.push(o)}e=o}t.allJQueries=[],o(window.jQuery),Object.defineProperty(window,"jQuery",{get:()=>e,set(t){o(t)}})}P(){const t=new Map;document.write=document.writeln=function(e){const i=document.currentScript,o=document.createRange(),s=i.parentElement;let n=t.get(i);void 0===n&&(n=i.nextSibling,t.set(i,n));const c=document.createDocumentFragment();o.setStart(c,0),c.appendChild(o.createContextualFragment(e)),s.insertBefore(c,n)}}async R(){return new Promise(t=>{this.userActionTriggered?t():this.onFirstUserAction=t})}async L(){return new Promise(t=>{document.addEventListener("DOMContentLoaded",()=>{this.realDomReadyFired=!0,t()},{isRocket:!0})})}async j(){return this.realWindowLoadedFired?Promise.resolve():new Promise(t=>{window.addEventListener("load",t,{isRocket:!0})})}M(){this.pendingScripts=[];this.scriptsMutationObserver=new MutationObserver(t=>{for(const e of t)e.addedNodes.forEach(t=>{"SCRIPT"!==t.tagName||t.noModule||t.isWPRocket||this.pendingScripts.push({script:t,promise:new Promise(e=>{const i=()=>{const i=this.pendingScripts.findIndex(e=>e.script===t);i>=0&&this.pendingScripts.splice(i,1),e()};t.addEventListener("load",i,{isRocket:!0}),t.addEventListener("error",i,{isRocket:!0}),setTimeout(i,1e3)})})})}),this.scriptsMutationObserver.observe(document,{childList:!0,subtree:!0})}async F(){await this.X(),this.pendingScripts.length?(await this.pendingScripts[0].promise,await this.F()):this.scriptsMutationObserver.disconnect()}D(){this.delayedScripts={normal:[],async:[],defer:[]},document.querySelectorAll("script[type$=rocketlazyloadscript]").forEach(t=>{t.hasAttribute("data-rocket-src")?t.hasAttribute("async")&&!1!==t.async?this.delayedScripts.async.push(t):t.hasAttribute("defer")&&!1!==t.defer||"module"===t.getAttribute("data-rocket-type")?this.delayedScripts.defer.push(t):this.delayedScripts.normal.push(t):this.delayedScripts.normal.push(t)})}async _(){await this.L();let t=[];document.querySelectorAll("script[type$=rocketlazyloadscript][data-rocket-src]").forEach(e=>{let i=e.getAttribute("data-rocket-src");if(i&&!i.startsWith("data:")){i.startsWith("//")&&(i=location.protocol+i);try{const o=new URL(i).origin;o!==location.origin&&t.push({src:o,crossOrigin:e.crossOrigin||"module"===e.getAttribute("data-rocket-type")})}catch(t){}}}),t=[...new Map(t.map(t=>[JSON.stringify(t),t])).values()],this.Y(t,"preconnect")}async G(t){if(await this.K(),!0!==t.noModule||!("noModule"in HTMLScriptElement.prototype))return new Promise(e=>{let i;function o(){(i||t).setAttribute("data-rocket-status","executed"),e()}try{if(navigator.userAgent.includes("Firefox/")||""===navigator.vendor||this.CSPIssue)i=document.createElement("script"),[...t.attributes].forEach(t=>{let e=t.nodeName;"type"!==e&&("data-rocket-type"===e&&(e="type"),"data-rocket-src"===e&&(e="src"),i.setAttribute(e,t.nodeValue))}),t.text&&(i.text=t.text),t.nonce&&(i.nonce=t.nonce),i.hasAttribute("src")?(i.addEventListener("load",o,{isRocket:!0}),i.addEventListener("error",()=>{i.setAttribute("data-rocket-status","failed-network"),e()},{isRocket:!0}),setTimeout(()=>{i.isConnected||e()},1)):(i.text=t.text,o()),i.isWPRocket=!0,t.parentNode.replaceChild(i,t);else{const i=t.getAttribute("data-rocket-type"),s=t.getAttribute("data-rocket-src");i?(t.type=i,t.removeAttribute("data-rocket-type")):t.removeAttribute("type"),t.addEventListener("load",o,{isRocket:!0}),t.addEventListener("error",i=>{this.CSPIssue&&i.target.src.startsWith("data:")?(console.log("WPRocket: CSP fallback activated"),t.removeAttribute("src"),this.G(t).then(e)):(t.setAttribute("data-rocket-status","failed-network"),e())},{isRocket:!0}),s?(t.fetchPriority="high",t.removeAttribute("data-rocket-src"),t.src=s):t.src="data:text/javascript;base64,"+window.btoa(unescape(encodeURIComponent(t.text)))}}catch(i){t.setAttribute("data-rocket-status","failed-transform"),e()}});t.setAttribute("data-rocket-status","skipped")}async C(t){const e=t.shift();return e?(e.isConnected&&await this.G(e),this.C(t)):Promise.resolve()}O(){this.Y([...this.delayedScripts.normal,...this.delayedScripts.defer,...this.delayedScripts.async],"preload")}Y(t,e){this.trash=this.trash||[];let i=!0;var o=document.createDocumentFragment();t.forEach(t=>{const s=t.getAttribute&&t.getAttribute("data-rocket-src")||t.src;if(s&&!s.startsWith("data:")){const n=document.createElement("link");n.href=s,n.rel=e,"preconnect"!==e&&(n.as="script",n.fetchPriority=i?"high":"low"),t.getAttribute&&"module"===t.getAttribute("data-rocket-type")&&(n.crossOrigin=!0),t.crossOrigin&&(n.crossOrigin=t.crossOrigin),t.integrity&&(n.integrity=t.integrity),t.nonce&&(n.nonce=t.nonce),o.appendChild(n),this.trash.push(n),i=!1}}),document.head.appendChild(o)}W(){this.trash.forEach(t=>t.remove())}async T(){try{document.readyState="interactive"}catch(t){}this.fauxDomReadyFired=!0;try{await this.K(),this.J(document,"readystatechange"),document.dispatchEvent(new Event("rocket-readystatechange")),await this.K(),document.rocketonreadystatechange&&document.rocketonreadystatechange(),await this.K(),this.J(document,"DOMContentLoaded"),document.dispatchEvent(new Event("rocket-DOMContentLoaded")),await this.K(),this.J(window,"DOMContentLoaded"),window.dispatchEvent(new Event("rocket-DOMContentLoaded"))}catch(t){console.error(t)}}async A(){try{document.readyState="complete"}catch(t){}try{await this.K(),this.J(document,"readystatechange"),document.dispatchEvent(new Event("rocket-readystatechange")),await this.K(),document.rocketonreadystatechange&&document.rocketonreadystatechange(),await this.K(),this.J(window,"load"),window.dispatchEvent(new Event("rocket-load")),await this.K(),window.rocketonload&&window.rocketonload(),await this.K(),this.allJQueries.forEach(t=>t(window).trigger("rocket-jquery-load")),await this.K(),this.J(window,"pageshow");const t=new Event("rocket-pageshow");t.persisted=this.persisted,window.dispatchEvent(t),await this.K(),window.rocketonpageshow&&window.rocketonpageshow({persisted:this.persisted})}catch(t){console.error(t)}}async K(){Date.now()-this.lastBreath>45&&(await this.X(),this.lastBreath=Date.now())}async X(){return document.hidden?new Promise(t=>setTimeout(t)):new Promise(t=>requestAnimationFrame(t))}B(t,e){return e===document&&"readystatechange"===t||(e===document&&"DOMContentLoaded"===t||(e===window&&"DOMContentLoaded"===t||(e===window&&"load"===t||e===window&&"pageshow"===t)))}static run(){(new RocketLazyLoadScripts).t()}}RocketLazyLoadScripts.run()})();</script>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- CMP -->
+  <script type="text/javascript" src="https://cache.consentframework.com/js/pa/30714/c/A98hA/stub" data-cfasync="false" referrerpolicy="unsafe-url"></script>
+  <script type="text/javascript" src="https://choices.consentframework.com/js/pa/30714/c/A98hA/cmp" data-cfasync="false" referrerpolicy="unsafe-url" async></script>
+
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="alternate" href="https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/" hreflang="fr">
+<link rel="alternate" href="https://www.21news.be/nl/drugsbende-brussel-27-arrestaties-cannabis-cocaine/" hreflang="nl">
+        <script type="rocketlazyloadscript" youngid-adboost="1" defer async data-rocket-src="https://PnZRpQaXeLBs5SpoE.ay.delivery/manager/PnZRpQaXeLBs5SpoE" data-rocket-type="text/javascript" referrerpolicy="no-referrer-when-downgrade"></script>
+                <style id="adboost-custom-css">
+            @media screen and (min-width: 769px){
+	[data-youngid-key^=\"inread\"] {
+		min-height: 300px !important;
+	}
+	#inread_end {
+		min-height: 300px !important;
+	}
+}
+.ad-placeholder {
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+}        </style>
+        	<script>
+		(function () { /* 21news-no-delay-handler */
+			var noDelaySelector = "[data-no-delay],header a,post-card a,#category-nav a,.breadcrumb a,.post-meta a";
+			var preloadSelector = "#sd-cmp strong.vendors";
+
+			// M&eacute;canisme 1 : stopPropagation pour les &eacute;l&eacute;ments sans JS.
+			function noDelay(e) {
+				if (noDelaySelector && e.target && e.target.closest && e.target.closest(noDelaySelector)) {
+					e.stopPropagation();
+				}
+			}
+			document.addEventListener('click', noDelay, { isRocket: true });
+			document.addEventListener('touchend', noDelay, { isRocket: true });
+
+			// M&eacute;canisme 2 : d&eacute;clenche le chargement des scripts d&egrave;s qu'un &eacute;l&eacute;ment
+			// correspondant &agrave; preloadSelector appara&icirc;t dans le DOM (ex. CMP inject&eacute;e via JS).
+			// Ainsi les scripts sont d&eacute;j&agrave; charg&eacute;s quand l'utilisateur clique.
+			function triggerRocketLoad() {
+				window.dispatchEvent(new MouseEvent('mousedown', { bubbles: false }));
+			}
+			if (preloadSelector) {
+				var preloadObserver = new MutationObserver(function (mutations) {
+					for (var i = 0; i < mutations.length; i++) {
+						var nodes = mutations[i].addedNodes;
+						for (var j = 0; j < nodes.length; j++) {
+							var node = nodes[j];
+							if (node.nodeType !== 1) continue;
+							if ((node.matches && node.matches(preloadSelector)) ||
+								(node.querySelector && node.querySelector(preloadSelector))) {
+								triggerRocketLoad();
+								preloadObserver.disconnect();
+								return;
+							}
+						}
+					}
+				});
+				preloadObserver.observe(document.documentElement, { childList: true, subtree: true });
+			}
+
+			// Nettoyage une fois que WP Rocket a charg&eacute; tous les scripts diff&eacute;r&eacute;s.
+			window.addEventListener('rocket-allScriptsLoaded', function () {
+				document.removeEventListener('click', noDelay);
+				document.removeEventListener('touchend', noDelay);
+				if (preloadObserver) preloadObserver.disconnect();
+			}, { isRocket: true, once: true });
+		})();
+	</script>
+
+	<!-- This site is optimized with the Yoast SEO Premium plugin v26.9 (Yoast SEO v26.9) - https://yoast.com/product/yoast-seo-premium-wordpress/ -->
+	<title>Cannabis, coca&iuml;ne, armes et cash : une organisation criminelle neutralis&eacute;e &agrave; Bruxelles - 21 News</title>
+	<meta name="description" content="Un vaste coup de filet men&eacute; &agrave; Bruxelles a permis de neutraliser une organisation soup&ccedil;onn&eacute;e d&rsquo;alimenter plusieurs points de vente de stup&eacute;fiants. L&rsquo;op&eacute;ration a conduit &agrave; 27 privations de libert&eacute; et &agrave; la saisie de drogues, d&rsquo;armes et d&rsquo;importantes sommes d&rsquo;argent.">
+	<link rel="canonical" href="https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/">
+	<meta property="og:locale" content="fr_FR">
+	<meta property="og:locale:alternate" content="nl_BE">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="Cannabis, coca&iuml;ne, armes et cash : une organisation criminelle neutralis&eacute;e &agrave; Bruxelles">
+	<meta property="og:description" content="Un vaste coup de filet men&eacute; &agrave; Bruxelles a permis de neutraliser une organisation soup&ccedil;onn&eacute;e d&rsquo;alimenter plusieurs points de vente de stup&eacute;fiants. L&rsquo;op&eacute;ration a conduit &agrave; 27 privations de libert&eacute; et &agrave; la saisie de drogues, d&rsquo;armes et d&rsquo;importantes sommes d&rsquo;argent.">
+	<meta property="og:url" content="https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/">
+	<meta property="og:site_name" content="21 News">
+	<meta property="article:publisher" content="https://www.facebook.com/21NewsBe/">
+	<meta property="article:published_time" content="2026-06-01T07:04:00+00:00">
+	<meta name="author" content="A JS">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:creator" content="@21NewsBE">
+	<meta name="twitter:site" content="@21NewsBE">
+	<meta name="twitter:label1" content="&Eacute;crit par">
+	<meta name="twitter:data1" content="A JS">
+	<meta name="twitter:label2" content="Dur&eacute;e de lecture est.">
+	<meta name="twitter:data2" content="3 minutes">
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/#article","isPartOf":{"@id":"https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/"},"author":{"name":"A JS","@id":"https://www.21news.be/#/schema/person/d0b92d47907be95c3e3d74ad3f41d0b1"},"headline":"Cannabis, coca&iuml;ne, armes et cash : une organisation criminelle neutralis&eacute;e &agrave; Bruxelles","datePublished":"2026-06-01T07:04:00+00:00","mainEntityOfPage":{"@id":"https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/"},"wordCount":540,"publisher":{"@id":"https://www.21news.be/#organization"},"image":{"@id":"https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/#primaryimage"},"thumbnailUrl":"https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-scaled.jpg","keywords":["Criminalit&eacute;","Police"],"articleSection":["Belgique","Bruxelles"],"inLanguage":"fr-BE","copyrightYear":"2026","copyrightHolder":{"@id":"https://www.21news.be/#organization"}},{"@type":"WebPage","@id":"https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/","url":"https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/","name":"Cannabis, coca&iuml;ne, armes et cash : une organisation criminelle neutralis&eacute;e &agrave; Bruxelles - 21 News","isPartOf":{"@id":"https://www.21news.be/#website"},"primaryImageOfPage":{"@id":"https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/#primaryimage"},"image":{"@id":"https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/#primaryimage"},"thumbnailUrl":"https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-scaled.jpg","datePublished":"2026-06-01T07:04:00+00:00","description":"Un vaste coup de filet men&eacute; &agrave; Bruxelles a permis de neutraliser une organisation soup&ccedil;onn&eacute;e d&rsquo;alimenter plusieurs points de vente de stup&eacute;fiants. L&rsquo;op&eacute;ration a conduit &agrave; 27 privations de libert&eacute; et &agrave; la saisie de drogues, d&rsquo;armes et d&rsquo;importantes sommes d&rsquo;argent.","breadcrumb":{"@id":"https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/#breadcrumb"},"inLanguage":"fr-BE","potentialAction":[{"@type":"ReadAction","target":["https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/"]}]},{"@type":"ImageObject","inLanguage":"fr-BE","@id":"https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/#primaryimage","url":"https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-scaled.jpg","contentUrl":"https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-scaled.jpg","width":2048,"height":1357,"caption":"&copy;LEFEVRE/MAXPPP"},{"@type":"BreadcrumbList","@id":"https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://www.21news.be/"},{"@type":"ListItem","position":2,"name":"Belgique","item":"https://www.21news.be/category/belgique/"},{"@type":"ListItem","position":3,"name":"Cannabis, coca&iuml;ne, armes et cash : une organisation criminelle neutralis&eacute;e &agrave; Bruxelles"}]},{"@type":"WebSite","@id":"https://www.21news.be/#website","url":"https://www.21news.be/","name":"21News","description":"21News est un m&eacute;dia belge francophone qui promeut la libert&eacute;, l&rsquo;entrepreneuriat et la pluralit&eacute; d&rsquo;opinions.","publisher":{"@id":"https://www.21news.be/#organization"},"potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://www.21news.be/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"fr-BE"},{"@type":"Organization","@id":"https://www.21news.be/#organization","name":"21News","url":"https://www.21news.be/","logo":{"@type":"ImageObject","inLanguage":"fr-BE","@id":"https://www.21news.be/#/schema/logo/image/","url":"https://www.21news.be/wp-content/uploads/2024/11/Logo-21-NEWS-CMJN_CARRE_500_petit.png","contentUrl":"https://www.21news.be/wp-content/uploads/2024/11/Logo-21-NEWS-CMJN_CARRE_500_petit.png","width":148,"height":154,"caption":"21News"},"image":{"@id":"https://www.21news.be/#/schema/logo/image/"},"sameAs":["https://www.facebook.com/21NewsBe/","https://x.com/21NewsBE","https://www.youtube.com/@21NewsBE"]},{"@type":"Person","@id":"https://www.21news.be/#/schema/person/d0b92d47907be95c3e3d74ad3f41d0b1","name":"A JS","image":{"@type":"ImageObject","inLanguage":"fr-BE","@id":"https://www.21news.be/#/schema/person/image/","url":"https://secure.gravatar.com/avatar/d492720937bc5a59f723434d53d558f760cc1eeb3902928a68f6181ac279ef35?s=96&d=mm&r=g","contentUrl":"https://secure.gravatar.com/avatar/d492720937bc5a59f723434d53d558f760cc1eeb3902928a68f6181ac279ef35?s=96&d=mm&r=g","caption":"A JS"},"url":"https://www.21news.be/author/ajs/"}]}</script>
+	<!-- / Yoast SEO Premium plugin. -->
+
+
+<link rel="dns-prefetch" href="//www.gstatic.com">
+<link rel="dns-prefetch" href="//www.googletagmanager.com">
+<script type="text/javascript" id="wpp-js" src="https://www.21news.be/wp-content/plugins/wordpress-popular-posts/assets/js/wpp.min.js?ver=7.3.8" data-sampling="0" data-sampling-rate="100" data-api-url="https://www.21news.be/wp-json/wordpress-popular-posts" data-post-id="45401" data-token="8f4de243b8" data-lang="fr" data-debug="0"></script>
+    <meta property="og:image" content="https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-scaled.jpg">
+    <meta property="og:image:width" content="2048">
+    <meta property="og:image:height" content="1357">
+    <meta property="og:image:type" content="image/jpeg">
+
+    <style id="wp-img-auto-sizes-contain-inline-css" type="text/css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<link rel="stylesheet" id="wpn-modal-css" href="https://www.21news.be/wp-content/plugins/youngid-wpn/assets/css/subscribe-modal.css?ver=1.0.1" type="text/css" media="all">
+<link rel="stylesheet" id="youngid-placeholders-css" href="https://www.21news.be/wp-content/plugins/youngid-adboost/assets/css/placeholders.css?ver=1.3.3" type="text/css" media="all">
+<link rel="stylesheet" id="yidnl-popup-css" href="https://www.21news.be/wp-content/plugins/youngid-newsletter/assets/css/popup.css?ver=1.0.2" type="text/css" media="all">
+<link rel="stylesheet" id="youngid-paywall-public-css" href="https://www.21news.be/wp-content/plugins/youngid-paywall/assets/css/public.css?ver=1.1.0" type="text/css" media="all">
+<meta name="generator" content="Site Kit by Google 1.171.0">            <style id="wpp-loading-animation-styles">@-webkit-keyframes bgslide{from{background-position-x:0}to{background-position-x:-200%}}@keyframes bgslide{from{background-position-x:0}to{background-position-x:-200%}}.wpp-widget-block-placeholder,.wpp-shortcode-placeholder{margin:0 auto;width:60px;height:3px;background:#dd3737;background:linear-gradient(90deg,#dd3737 0%,#571313 10%,#dd3737 100%);background-size:200% auto;border-radius:3px;-webkit-animation:bgslide 1s infinite linear;animation:bgslide 1s infinite linear}</style>
+            <link rel="preload" as="image" fetchpriority="high" href="https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-1024x678.jpg.webp" imagesrcset="https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-1024x678.jpg.webp 1024w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-300x199.jpg.webp 300w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-768x509.jpg.webp 768w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-1536x1017.jpg.webp 1536w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-scaled.jpg.webp 2048w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-1920x1272.jpg 1920w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-1170x775.jpg 1170w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-780x516.jpg 780w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-585x387.jpg 585w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-263x175.jpg 263w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-600x397.jpg 600w" imagesizes="(max-width: 1024px) 100vw, 1024px"><meta name="google-site-verification" content="4NWE1eWoiD9R-khXgbOYUmvIzie_uWYFNwGOQ6EVbAk">
+<!-- Google Tag Manager snippet added by Site Kit -->
+<script type="rocketlazyloadscript" data-rocket-type="text/javascript">
+/* <![CDATA[ */
+
+			( function( w, d, s, l, i ) {
+				w[l] = w[l] || [];
+				w[l].push( {'gtm.start': new Date().getTime(), event: 'gtm.js'} );
+				var f = d.getElementsByTagName( s )[0],
+					j = d.createElement( s ), dl = l != 'dataLayer' ? '&l=' + l : '';
+				j.async = true;
+				j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+				f.parentNode.insertBefore( j, f );
+			} )( window, document, 'script', 'dataLayer', 'GTM-N8Z99DC3' );
+			
+/* ]]> */
+</script>
+
+<!-- End Google Tag Manager snippet added by Site Kit -->
+<link rel="icon" href="https://www.21news.be/wp-content/uploads/2026/02/cropped-telechargement-32x32.png" sizes="32x32">
+<link rel="icon" href="https://www.21news.be/wp-content/uploads/2026/02/cropped-telechargement-192x192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="https://www.21news.be/wp-content/uploads/2026/02/cropped-telechargement-180x180.png">
+<meta name="msapplication-TileImage" content="https://www.21news.be/wp-content/uploads/2026/02/cropped-telechargement-270x270.png">
+    <script type="rocketlazyloadscript">
+      // Young ID Ad Manager datalayer
+      window.adBoost_datalayer = {"page_url":"https:\/\/www.21news.be\/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles\/","page_path":"\/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles\/","page_type":"post","user_logged":0,"post_id":45401,"post_type":"post","post_slug":"cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles","post_author_id":1097,"post_author_slug":"ajs","post_date_publish":"2026-06-01","post_term_category_belgique":true,"post_term_category_bruxelles":true,"post_term_tag_criminalite":true,"post_term_tag_police":true,"user_is_subscriber":0,"post_is_protected":0};
+
+      console.group('window.adBoost_datalayer');
+      console.table(window.adBoost_datalayer);
+      console.groupEnd();
+    </script>
+      <link rel="alternate" type="application/rss+xml" href="https://www.21news.be/feed">
+    <link rel="stylesheet" href="https://www.21news.be/wp-content/themes/21news/assets/css/build.css?v=1783370428">
+
+  
+  
+  <link rel="stylesheet" href="https://www.21news.be/wp-content/cache/fonts/1/google-fonts/css/2/7/4/68072444ad64aebe9f11ca280ce15.css" data-wpr-hosted-gf-parameters="family=Crimson+Pro:ital,wght@0,200..900;1,200..900&amp;display=swap">
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+    rel="stylesheet"> -->
+
+  <style>
+    @font-face {
+      font-family: 'Bebas Neue Fallback';
+      src: local(Impact);
+      size-adjust: 79%;
+      ascent-override: 100%;
+      descent-override: normal;
+      line-gap-override: 31%;
+    }
+
+    @font-face {
+      font-family: 'Bebas Neue';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/bebasneue/v16/JTUSjIg69CK48gW7PXoo9WlhyyTh89Y.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+  </style>
+
+        <style>
+      :root {
+                --sub-label: "Abonn\e9 s";
+      }
+    </style>
+  
+  <!-- Taboola. ID: taboola -->
+  <script type="rocketlazyloadscript" data-rocket-type="text/javascript">
+    window._taboola = window._taboola || [];
+    _taboola.push({ article: 'auto' });
+    !function (e, f, u, i) {
+      if (!document.getElementById(i)) {
+        e.async = 1;
+        e.src = u;
+        e.id = i;
+        f.parentNode.insertBefore(e, f);
+      }
+    }(document.createElement('script'),
+      document.getElementsByTagName('script')[0],
+      '//cdn.taboola.com/libtrc/youngid-network2/loader.js',
+      'tb_loader_script');
+    if (window.performance && typeof window.performance.mark == 'function') { window.performance.mark('tbl_ic'); }
+  </script>
+<meta name="generator" content="WP Rocket 3.20.3" data-wpr-features="wpr_delay_js wpr_defer_js wpr_preload_links wpr_host_fonts_locally wpr_desktop"></head>
+
+<body class="font-core ">
+  <header class="header" id="header">
+    <div class="top-nav-bar">
+      <nav class="top-nav">
+        <ul class="top-nav-links">
+                        <div class="lang-switcher">
+                                  <li>
+                    <a href="https://www.21news.be/nl/drugsbende-brussel-27-arrestaties-cannabis-cocaine/" hreflang="nl" class="lang-switcher-link">
+                      <img src="https://www.21news.be/wp-content/plugins/polylang-pro/vendor/wpsyntex/polylang/flags/be.png" alt="Nederlands" width="16" height="12">
+                      <span>
+                        NL                      </span>
+                    </a>
+                  </li>
+                              </div>
+            
+                                      <li>
+                  <a href="https://www.21news.be/tag/interviews/">Interviews</a>
+                </li>
+                                <li>
+                  <a href="https://www.21news.be/tag/carte-blanche/">Carte blanche</a>
+                </li>
+                                <li>
+                  <a href="https://www.21news.be/tag/chroniques/">Chroniques</a>
+                </li>
+                                <li>
+                  <a href="https://www.21news.be/tag/opinions/">Opinions</a>
+                </li>
+                                <li>
+                  <a href="https://www.21news.be/tag/analyses/">Analyses</a>
+                </li>
+                                <li>
+                  <a href="https://www.21news.be/tag/podcast/">Podcast</a>
+                </li>
+                                  </ul>
+                  <ul class="top-nav-links donate">
+            <li>
+              <a class="btn btn-donate btn-sm" href="https://donate.stripe.com/8x2fZhgZx3SjgBWg6L5sA05">
+                <span class="heart">&hearts;</span>
+                Faire un don</a>
+            </li>
+          </ul>
+              </nav>
+    </div>
+    <div class="header-wrapper">
+      <button class="header-btn btn-menu" aria-label="Menu">
+        <svg width="25" height="25" viewbox="0 0 24 23" fill="currentColor">
+          <path d="M4.73 12.1c0-.23.01-.46.03-.68H.55C.24 11.42 0 11.7 0 11.97v1.37c0 .3.24.55.55.55h4.37a7.5 7.5 0 01-.19-1.79zM.55 5.96C.24 5.96 0 6.24 0 6.51v1.37c0 .3.24.55.55.55h4.98a8.5 8.5 0 011.67-2.46H.55zM14.74.5H.55C.24.5 0 .78 0 1.05v1.37c0 .3.24.55.55.55h14.19c.27 0 .55-.24.55-.55V1.05c0-.27-.28-.55-.55-.55z"></path>
+          <path d="M23.77 20.13l-3.41-3.42a1.1 1.1 0 00-.57-.23h-.55a8.1 8.1 0 001.5-4.37c0-3.89-3.21-7.1-7.1-7.1a7.1 7.1 0 00-7.1 7.1c0 .61.08 1.21.23 1.78.79 3.07 3.56 5.32 6.87 5.32 1.64 0 3.14-.55 4.37-1.5v.58c0 .21.07.41.24.58l3.38 3.38a.75.75 0 001.06 0l.95-.95a.75.75 0 000-1.16zM13.64 16.48a4.37 4.37 0 01-4.37-4.37 4.37 4.37 0 014.37-4.37 4.37 4.37 0 014.37 4.37 4.37 4.37 0 01-4.37 4.37z"></path>
+        </svg>
+      </button>
+      <a href="https://www.21news.be" class="logo">
+                <img src="https://www.21news.be/wp-content/themes/21news/assets/images/logo_21news.png" alt="21news.be Logo" height="146" width="500">
+      </a>
+      <nav class="nav">
+                  <ul class="nav-links">
+                            <li><a href="https://www.21news.be/category/belgique/">Belgique</a></li>
+                                <li><a href="https://www.21news.be/category/politique/">Politique</a></li>
+                                <li><a href="https://www.21news.be/category/europe/">Europe</a></li>
+                                <li><a href="https://www.21news.be/category/international/">International</a></li>
+                                <li><a href="https://www.21news.be/category/economie/">&Eacute;conomie</a></li>
+                          </ul>
+              </nav>
+                                <a href="https://www.21news.be/sabonner/" class="header-btn btn-subscribe">
+            <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>S'abonner</span>
+          </a>
+                          <a href="https://www.21news.be/wp-login.php?lang=fr" class="header-btn btn-account">
+            <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="7" r="4"></circle>
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            </svg>
+            <span>Connexion</span>
+          </a>
+                  </div>
+  </header>
+
+  <!-- Burger Menu Overlay -->
+  <div id="burger-menu-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[10000] opacity-0 pointer-events-none transition-opacity duration-300">
+  </div>
+
+  <!-- Burger Menu -->
+  <div id="burger-menu" class="fixed flex flex-col left-0 top-0 h-full w-[380px] max-w-[90vw] bg-white z-[10001] transform -translate-x-full transition-transform duration-300 ease-in-out shadow-[4px_0_30px_rgba(0,0,0,0.15)]">
+
+    <!-- Sticky Header: Logo + Language + Close -->
+    <div class="bg-white px-5 py-3 flex-shrink-0 flex items-center justify-between border-b border-gray-200 sticky top-0 z-10">
+      <a href="https://www.21news.be" class="block h-8">
+                <img class="h-full w-auto" src="https://www.21news.be/wp-content/themes/21news/assets/images/logo_21news.png" alt="21news.be Logo" height="146" width="500">
+      </a>
+      <div class="flex items-center gap-3">
+                  <div class="flex items-center gap-1">
+                            <a href="https://www.21news.be/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles/" class="text-xs font-title uppercase px-1.5 py-0.5 bg-primary text-white transition-colors">
+                  fr                </a>
+                              <a href="https://www.21news.be/nl/drugsbende-brussel-27-arrestaties-cannabis-cocaine/" class="text-xs font-title uppercase px-1.5 py-0.5 text-gray-400 hover:text-primary transition-colors">
+                  nl                </a>
+                        </div>
+                <button id="burger-menu-close" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-primary transition-colors" aria-label="Fermer le menu">
+          <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="flex-1 overflow-y-auto">
+
+      <!-- Search -->
+      <div class="bg-primary-50 px-5 py-4">
+        <form action="https://www.21news.be/" method="get" class="flex">
+          <input type="text" name="s" placeholder="Rechercher un article..." class="flex-1 min-w-0 pl-4 pr-3 py-3 bg-white border border-gray-200 border-r-0 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all font-core" style="border-radius: 0;">
+          <button type="submit" class="flex items-center justify-center w-12 shrink-0 bg-primary text-white hover:bg-primary-800 transition-colors" aria-label="Rechercher">
+            <svg width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </form>
+      </div>
+
+      <!-- Highlighted Tags -->
+                <div class="px-5 py-4">
+            <nav class="flex flex-wrap gap-2">
+                              <a href="https://www.21news.be/tag/france/" class="inline-block text-sm font-title uppercase tracking-wide text-primary bg-primary-50 px-3 py-1.5 hover:bg-primary hover:text-white transition-colors">
+                  France                </a>
+                              <a href="https://www.21news.be/tag/usa/" class="inline-block text-sm font-title uppercase tracking-wide text-primary bg-primary-50 px-3 py-1.5 hover:bg-primary hover:text-white transition-colors">
+                  USA                </a>
+                              <a href="https://www.21news.be/tag/ue/" class="inline-block text-sm font-title uppercase tracking-wide text-primary bg-primary-50 px-3 py-1.5 hover:bg-primary hover:text-white transition-colors">
+                  UE                </a>
+                              <a href="https://www.21news.be/tag/gouvernement/" class="inline-block text-sm font-title uppercase tracking-wide text-primary bg-primary-50 px-3 py-1.5 hover:bg-primary hover:text-white transition-colors">
+                  Gouvernement                </a>
+                              <a href="https://www.21news.be/tag/medias/" class="inline-block text-sm font-title uppercase tracking-wide text-primary bg-primary-50 px-3 py-1.5 hover:bg-primary hover:text-white transition-colors">
+                  M&eacute;dias                </a>
+                          </nav>
+          </div>
+        
+      <!-- Categories (accordion with ACF sub-categories & tags) -->
+              <div>
+          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-[2px] px-5 py-2.5 font-title bg-gray-100">
+            Rubriques          </h3>
+          <nav>
+                                              <div class="burger-accordion border-b border-gray-100">
+                    <button class="burger-accordion-toggle w-full flex items-center justify-between px-5 py-3 text-left hover:bg-gray-50 transition-colors" type="button">
+                      <span class="text-sm font-semibold text-gray-800">Belgique</span>
+                      <svg class="burger-accordion-chevron w-4 h-4 text-gray-400 transition-transform duration-200" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                    <div class="burger-accordion-content hidden pb-2">
+                      <a href="https://www.21news.be/category/belgique/" class="block px-5 pl-8 py-3 text-sm text-primary font-semibold hover:bg-primary-50 transition-colors">
+                                                Tous les articles Belgique                      </a>
+                                                <a href="https://www.21news.be/category/belgique/bruxelles/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Bruxelles                          </a>
+                                                  <a href="https://www.21news.be/category/belgique/flandre/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Flandre                          </a>
+                                                  <a href="https://www.21news.be/category/belgique/wallonie/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Wallonie                          </a>
+                                                                        <a href="https://www.21news.be/tag/gouvernement/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Gouvernement                          </a>
+                                                  <a href="https://www.21news.be/tag/fiscalite/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Fiscalit&eacute;                          </a>
+                                            </div>
+                  </div>
+                                                                <div class="burger-accordion border-b border-gray-100">
+                    <button class="burger-accordion-toggle w-full flex items-center justify-between px-5 py-3 text-left hover:bg-gray-50 transition-colors" type="button">
+                      <span class="text-sm font-semibold text-gray-800">Politique</span>
+                      <svg class="burger-accordion-chevron w-4 h-4 text-gray-400 transition-transform duration-200" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                    <div class="burger-accordion-content hidden pb-2">
+                      <a href="https://www.21news.be/category/politique/" class="block px-5 pl-8 py-3 text-sm text-primary font-semibold hover:bg-primary-50 transition-colors">
+                                                Tous les articles Politique                      </a>
+                                                                      <a href="https://www.21news.be/tag/emmanuel-macron/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Emmanuel Macron                          </a>
+                                                  <a href="https://www.21news.be/tag/chomage/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Ch&ocirc;mage                          </a>
+                                                  <a href="https://www.21news.be/tag/defense/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            D&eacute;fense                          </a>
+                                                  <a href="https://www.21news.be/tag/democratie/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            D&eacute;mocratie                          </a>
+                                                  <a href="https://www.21news.be/tag/emploi/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Emploi                          </a>
+                                                  <a href="https://www.21news.be/tag/gouvernement/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Gouvernement                          </a>
+                                                  <a href="https://www.21news.be/tag/enseignement/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Enseignement                          </a>
+                                            </div>
+                  </div>
+                                                                <div class="burger-accordion border-b border-gray-100">
+                    <button class="burger-accordion-toggle w-full flex items-center justify-between px-5 py-3 text-left hover:bg-gray-50 transition-colors" type="button">
+                      <span class="text-sm font-semibold text-gray-800">Europe</span>
+                      <svg class="burger-accordion-chevron w-4 h-4 text-gray-400 transition-transform duration-200" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                    <div class="burger-accordion-content hidden pb-2">
+                      <a href="https://www.21news.be/category/europe/" class="block px-5 pl-8 py-3 text-sm text-primary font-semibold hover:bg-primary-50 transition-colors">
+                                                Tous les articles Europe                      </a>
+                                                                      <a href="https://www.21news.be/tag/france/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            France                          </a>
+                                                  <a href="https://www.21news.be/tag/russie/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Russie                          </a>
+                                                  <a href="https://www.21news.be/tag/ukraine/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Ukraine                          </a>
+                                                  <a href="https://www.21news.be/tag/italie/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Italie                          </a>
+                                                  <a href="https://www.21news.be/tag/allemagne/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Allemagne                          </a>
+                                                  <a href="https://www.21news.be/tag/espagne/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Espagne                          </a>
+                                            </div>
+                  </div>
+                                                                <div class="burger-accordion border-b border-gray-100">
+                    <button class="burger-accordion-toggle w-full flex items-center justify-between px-5 py-3 text-left hover:bg-gray-50 transition-colors" type="button">
+                      <span class="text-sm font-semibold text-gray-800">International</span>
+                      <svg class="burger-accordion-chevron w-4 h-4 text-gray-400 transition-transform duration-200" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                    <div class="burger-accordion-content hidden pb-2">
+                      <a href="https://www.21news.be/category/international/" class="block px-5 pl-8 py-3 text-sm text-primary font-semibold hover:bg-primary-50 transition-colors">
+                                                Tous les articles International                      </a>
+                                                                      <a href="https://www.21news.be/tag/france/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            France                          </a>
+                                                  <a href="https://www.21news.be/tag/chine/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Chine                          </a>
+                                                  <a href="https://www.21news.be/tag/usa/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            USA                          </a>
+                                                  <a href="https://www.21news.be/tag/onu/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            ONU                          </a>
+                                                  <a href="https://www.21news.be/tag/otan/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            OTAN                          </a>
+                                                  <a href="https://www.21news.be/tag/russie/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Russie                          </a>
+                                                  <a href="https://www.21news.be/tag/iran/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Iran                          </a>
+                                            </div>
+                  </div>
+                                                                <div class="burger-accordion border-b border-gray-100">
+                    <button class="burger-accordion-toggle w-full flex items-center justify-between px-5 py-3 text-left hover:bg-gray-50 transition-colors" type="button">
+                      <span class="text-sm font-semibold text-gray-800">&Eacute;conomie</span>
+                      <svg class="burger-accordion-chevron w-4 h-4 text-gray-400 transition-transform duration-200" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                    <div class="burger-accordion-content hidden pb-2">
+                      <a href="https://www.21news.be/category/economie/" class="block px-5 pl-8 py-3 text-sm text-primary font-semibold hover:bg-primary-50 transition-colors">
+                                                Tous les articles &Eacute;conomie                      </a>
+                                                                      <a href="https://www.21news.be/tag/fiscalite/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Fiscalit&eacute;                          </a>
+                                                  <a href="https://www.21news.be/tag/cryptomonnaie/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Cryptomonnaie                          </a>
+                                                  <a href="https://www.21news.be/tag/immobilier/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Immobilier                          </a>
+                                                  <a href="https://www.21news.be/tag/entreprise/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Entreprise                          </a>
+                                            </div>
+                  </div>
+                                                                <div class="burger-accordion border-b border-gray-100">
+                    <button class="burger-accordion-toggle w-full flex items-center justify-between px-5 py-3 text-left hover:bg-gray-50 transition-colors" type="button">
+                      <span class="text-sm font-semibold text-gray-800">Culture</span>
+                      <svg class="burger-accordion-chevron w-4 h-4 text-gray-400 transition-transform duration-200" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                    <div class="burger-accordion-content hidden pb-2">
+                      <a href="https://www.21news.be/category/culture/" class="block px-5 pl-8 py-3 text-sm text-primary font-semibold hover:bg-primary-50 transition-colors">
+                                                Tous les articles Culture                      </a>
+                                                                      <a href="https://www.21news.be/tag/cinema/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Cin&eacute;ma                          </a>
+                                                  <a href="https://www.21news.be/tag/television/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            T&eacute;l&eacute;vision                          </a>
+                                                  <a href="https://www.21news.be/tag/livre/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Livre                          </a>
+                                                  <a href="https://www.21news.be/tag/patrimoine/" class="block px-5 pl-8 py-3 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                            Patrimoine                          </a>
+                                            </div>
+                  </div>
+                                        </nav>
+        </div>
+      
+      <!-- Services -->
+              <div>
+          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-[2px] px-5 py-2.5 font-title bg-gray-100">
+            Services          </h3>
+          <nav>
+                            <a href="https://www.21news.be/tag/interviews/" class="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-b border-gray-100">
+                  Interviews                </a>
+                              <a href="https://www.21news.be/tag/carte-blanche/" class="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-b border-gray-100">
+                  Carte blanche                </a>
+                              <a href="https://www.21news.be/tag/chroniques/" class="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-b border-gray-100">
+                  Chroniques                </a>
+                              <a href="https://www.21news.be/tag/opinions/" class="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-b border-gray-100">
+                  Opinions                </a>
+                              <a href="https://www.21news.be/tag/analyses/" class="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-b border-gray-100">
+                  Analyses                </a>
+                              <a href="https://www.21news.be/tag/podcast/" class="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-b border-gray-100">
+                  Podcast                </a>
+                        </nav>
+        </div>
+      
+      <!-- Social Links -->
+              <div>
+          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-[2px] px-5 py-2.5 font-title bg-gray-100">
+            R&eacute;seaux sociaux          </h3>
+          <nav>
+                            <a href="https://www.facebook.com/21NewsBe" target="_blank" rel="noopener nofollow" class="flex items-center gap-3 px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-b border-gray-100 group">
+                  <span class="w-7 h-7 flex items-center justify-center bg-gray-100 text-gray-500 group-hover:bg-primary group-hover:text-white transition-colors">
+                    <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                  </span>
+                  <span class="font-medium">Facebook</span>
+                </a>
+                              <a href="https://x.com/21NewsBE" target="_blank" rel="noopener nofollow" class="flex items-center gap-3 px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-b border-gray-100 group">
+                  <span class="w-7 h-7 flex items-center justify-center bg-gray-100 text-gray-500 group-hover:bg-primary group-hover:text-white transition-colors">
+                    <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l6.5 8L4 20h2l5.5-6.8L16 20h4l-6.8-8.5L20 4h-2l-5.2 6.3L8 4H4z"></path></svg>
+                  </span>
+                  <span class="font-medium">X</span>
+                </a>
+                              <a href="https://www.instagram.com/21news_be" target="_blank" rel="noopener nofollow" class="flex items-center gap-3 px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-b border-gray-100 group">
+                  <span class="w-7 h-7 flex items-center justify-center bg-gray-100 text-gray-500 group-hover:bg-primary group-hover:text-white transition-colors">
+                    <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                  </span>
+                  <span class="font-medium">Instagram</span>
+                </a>
+                              <a href="https://www.youtube.com/@21NewsBE" target="_blank" rel="noopener nofollow" class="flex items-center gap-3 px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-b border-gray-100 group">
+                  <span class="w-7 h-7 flex items-center justify-center bg-gray-100 text-gray-500 group-hover:bg-primary group-hover:text-white transition-colors">
+                    <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                  </span>
+                  <span class="font-medium">YouTube</span>
+                </a>
+                        </nav>
+        </div>
+      
+      <!-- Donation -->
+              <div class="px-5 py-4">
+          <a href="https://donate.stripe.com/8x2fZhgZx3SjgBWg6L5sA05" class="flex items-center justify-center gap-2 w-full py-3 bg-primary text-white font-bold text-sm hover:bg-primary-800 transition-colors font-title tracking-wide">
+            <span class="text-red-400 text-base leading-none">&hearts;</span>
+            Soutenir 21News          </a>
+        </div>
+      
+    </div>
+  </div>
+
+  <main class="container space-y-10 pb-20">
+            
+
+<ol class="breadcrumb"><li><a href="https://www.21news.be/">Accueil</a></li>  <li><a href="https://www.21news.be/category/belgique/">Belgique</a></li>  <li class="breadcrumb_last" aria-current="page">Cannabis, coca&iuml;ne, armes et cash : une organisation criminelle neutralis&eacute;e &agrave; Bruxelles</li></ol>
+<article id="post" class="post">
+  <!-- Header -->
+  <div class="post-header">
+  <div class="post-header-left">
+        <h1 class="post-title">
+      Cannabis, coca&iuml;ne, armes et cash : une organisation criminelle neutralis&eacute;e &agrave; Bruxelles    </h1>
+          <p class="post-subtitle">Un vaste coup de filet men&eacute; &agrave; Bruxelles a permis de neutraliser une organisation soup&ccedil;onn&eacute;e d&rsquo;alimenter plusieurs points de vente de stup&eacute;fiants. L&rsquo;op&eacute;ration a conduit &agrave; 27 privations de libert&eacute; et &agrave; la saisie de drogues, d&rsquo;armes et d&rsquo;importantes sommes d&rsquo;argent.</p>
+      </div>
+  <div class="article-header-right">
+    <figure id="post-thumbnail" class="post-thumbnail">
+  <picture class="no-lazyload cover object-cover w-full h-full wp-post-image" decoding="async" fetchpriority="high">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-1024x678.jpg.webp 1024w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-300x199.jpg.webp 300w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-768x509.jpg.webp 768w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-1536x1017.jpg.webp 1536w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-scaled.jpg.webp 2048w" sizes="(max-width: 1024px) 100vw, 1024px"></source>
+<img width="1024" height="678" src="https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-1024x678.jpg" alt="&copy;LEFEVRE/MAXPPP" decoding="async" fetchpriority="high" srcset="https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-1024x678.jpg 1024w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-300x199.jpg 300w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-768x509.jpg 768w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-1536x1017.jpg 1536w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-scaled.jpg 2048w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-1920x1272.jpg 1920w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-1170x775.jpg 1170w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-780x516.jpg 780w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-585x387.jpg 585w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-263x175.jpg 263w, https://www.21news.be/wp-content/uploads/2025/12/Belgaimage-102370493-600x397.jpg 600w" sizes="(max-width: 1024px) 100vw, 1024px">
+</picture>
+      <figcaption class="pt-caption">
+      &copy;LEFEVRE/MAXPPP    </figcaption>
+  </figure>  </div>
+
+  <div class="post-meta">
+    <div class="post-author">
+      <div class="author-info">
+                        <div class="author-details">
+          <p class="author-title">Publi&eacute; par            <a href="https://www.21news.be/author/ajs/">
+              A JS            </a>
+          </p>
+          <p>
+            <time datetime="2026-06-01T07:04:00+00:00" pubdate="pubdate">
+                            1 juin 2026 &agrave; 09:04            </time>
+                      </p>
+        </div>
+      </div>
+      <!-- <div class="social-share"><a
+          href="https://btj931fawxs81jf5.canvacode.com/codelet/AAEAEGJ0ajkzMWZhd3hzODFqZjUAAAAAAZrj3lNx49S2yTyLI_HNbO9_uHYuICAuvGshUQE0NqjzH1vFjHg/#"
+          class="share-btn share-linkedin">in</a>
+      </div> -->
+    </div>
+
+    <div class="post-follow">
+      Suis-nous sur              <a href="https://news.google.com/publications/CAAqIggKIhxDQklTRHdnTWFnc0tDVEl4Ym1WM2N5NWlaU2dBUAE" class="btn btn-sm share-linkedin">
+          <svg height="15" width="15" version="1.1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewbox="0 0 6550.8 5359.7" xml:space="preserve"><use href="#google_news"></use></svg>          Google news
+        </a>
+                    <a href="https://profile.google.com/cp/EgsKCTIxbmV3cy5iZQ" class="btn btn-sm share-linkedin">
+          <svg version="1.1" id="svg1" width="15" height="15" viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><use href="#google_discover"></use></svg>          Google discover
+        </a>
+                </div>
+  </div>
+</div>
+  <div class="sidebar-layout"><!-- Sidebar gauche -->
+    <div class="post-main"><!-- Contenu de l'article -->
+      <!-- Before Content -->
+      
+  <!-- Summary -->
+  
+  <!-- R&eacute;sum&eacute; -->
+  <div class="post-summary">
+          <h2 class="ps-title">R&eacute;sum&eacute; <span class="sr-only">de l'article</span>
+      </h2>
+      <p></p><p>Une op&eacute;ration judiciaire men&eacute;e le 26 mai &agrave; Bruxelles a permis l&rsquo;arrestation de 27 personnes li&eacute;es &agrave; un r&eacute;seau de trafic de stup&eacute;fiants. Les enqu&ecirc;teurs ont saisi cannabis, coca&iuml;ne, armes &agrave; feu, argent liquide, v&eacute;hicules et mat&eacute;riel logistique utilis&eacute; pour alimenter plusieurs points de vente.  </p>
+
+    
+          <details class="h-table">
+        <summary>
+          Sommaire        </summary>
+        <ul>
+                      <li>
+              <a href="#h-une-organisation-structuree-et-active-a-plusieurs-niveaux">
+                
+Une organisation structur&eacute;e et active &agrave; plusieurs niveaux
+              </a>
+            </li>
+                      <li>
+              <a href="#h-drogues-armes-et-argent-liquide-saisis">
+                
+Drogues, armes et argent liquide saisis
+              </a>
+            </li>
+                      <li>
+              <a href="#h-une-priorite-pour-les-autorites-bruxelloises">
+                
+Une priorit&eacute; pour les autorit&eacute;s bruxelloises
+              </a>
+            </li>
+                  </ul>
+      </details>
+      </div>
+
+
+    <!-- Bloc couverture compl&egrave;te -->
+  <a href="https://www.21news.be/tag/criminalite/" class="post-main-tag-button">
+          <div class="tag-image">
+        <picture class="attachment-thumbnail size-thumbnail" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2026/02/cyber-criminalite-pedo-scaled-aspect-ratio-450-600-150x150.jpg.webp"></source>
+<img width="150" height="150" src="https://www.21news.be/wp-content/uploads/2026/02/cyber-criminalite-pedo-scaled-aspect-ratio-450-600-150x150.jpg" alt="" decoding="async">
+</picture>
+      </div>
+        <div class="button-content">
+      <div class="button-text">
+        Couverture compl&egrave;te sur      </div>
+      <div class="tag-name">
+        Criminalit&eacute;      </div>
+    </div>
+  </a>
+
+      <!-- Content + tags -->
+      <div class="content-style">
+  
+<p>La police f&eacute;d&eacute;rale a annonc&eacute; dimanche le d&eacute;mant&egrave;lement d&rsquo;un important r&eacute;seau criminel actif dans le trafic de stup&eacute;fiants &agrave; Bruxelles. </p>
+
+
+
+<p>Cette intervention judiciaire, men&eacute;e le 26 mai dernier, marque l&rsquo;aboutissement de plusieurs mois d&rsquo;enqu&ecirc;te visant une structure organis&eacute;e impliqu&eacute;e &agrave; diff&eacute;rents niveaux de la cha&icirc;ne de distribution de drogue.</p>
+
+
+
+<p>Au total, 27 personnes ont &eacute;t&eacute; priv&eacute;es de libert&eacute;. Parmi elles, dix suspects ont &eacute;t&eacute; plac&eacute;s sous mandat d&rsquo;arr&ecirc;t. Un mineur a &eacute;t&eacute; transf&eacute;r&eacute; vers une Institution publique de protection de la jeunesse (IPPJ), tandis qu&rsquo;une personne en s&eacute;jour irr&eacute;gulier a &eacute;t&eacute; dirig&eacute;e vers un centre ferm&eacute;.</p><div id="inread" class="ad-placeholder" style="min-height: 250px; --adboost-height-mobile: 600px;" data-height-mobile="600px" data-youngid-key="inread"></div>
+
+
+
+<h2 class="wp-block-heading" id="h-une-organisation-structuree-et-active-a-plusieurs-niveaux">Une organisation structur&eacute;e et active &agrave; plusieurs niveaux</h2>
+
+
+
+<p>L&rsquo;enqu&ecirc;te, ouverte en 2025 sous la direction d&rsquo;une juge d&rsquo;instruction, a permis d&rsquo;identifier un r&eacute;seau impliqu&eacute; dans l&rsquo;approvisionnement, l&rsquo;entreposage, le conditionnement et la distribution de stup&eacute;fiants. Selon les enqu&ecirc;teurs, l&rsquo;organisation alimentait plusieurs points de vente situ&eacute;s dans l&rsquo;arrondissement de Bruxelles.</p>
+
+
+
+<p>Les investigations se sont notamment concentr&eacute;es autour de la station de m&eacute;tro Saint-Guidon ainsi que dans le quartier du <a href="https://www.21news.be/violence-liee-au-trafic-de-drogue-nouvelles-arrestations-dans-le-dossier-du-peterbos/">Peterbos</a>. Les autorit&eacute;s &eacute;voquent une structure particuli&egrave;rement &eacute;labor&eacute;e, dot&eacute;e de moyens logistiques sp&eacute;cifiques destin&eacute;s &agrave; soutenir l&rsquo;ensemble des activit&eacute;s du r&eacute;seau.</p>
+
+
+
+<p>La police f&eacute;d&eacute;rale souligne que le d&eacute;mant&egrave;lement a n&eacute;cessit&eacute; un important travail d&rsquo;enqu&ecirc;te en raison de la complexit&eacute; de l&rsquo;organisation. Les investigations ont notamment permis de rep&eacute;rer des lieux de stockage, des circuits de distribution et diff&eacute;rentes infrastructures utilis&eacute;es pour soutenir le trafic.</p><div id="inread_2" class="ad-placeholder" style="min-height: 250px; --adboost-height-mobile: 600px;" data-height-mobile="600px" data-youngid-key="inread"></div>
+
+
+
+<h2 class="wp-block-heading" id="h-drogues-armes-et-argent-liquide-saisis">Drogues, armes et argent liquide saisis</h2>
+
+
+
+<p>Les perquisitions r&eacute;alis&eacute;es dans le cadre de l&rsquo;op&eacute;ration ont d&eacute;bouch&eacute; sur d&rsquo;importantes saisies. Les enqu&ecirc;teurs ont notamment d&eacute;couvert de grandes quantit&eacute;s de cannabis et de coca&iuml;ne. Une partie de ces produits &eacute;tait d&eacute;j&agrave; pr&eacute;par&eacute;e en centaines de doses destin&eacute;es &agrave; la revente.</p>
+
+
+
+<p>Les autorit&eacute;s ont &eacute;galement mis la main sur des dizaines de milliers d&rsquo;euros en esp&egrave;ces, plusieurs v&eacute;hicules, du mat&eacute;riel utilis&eacute; pour le conditionnement des stup&eacute;fiants ainsi que des balances de pr&eacute;cision. De nombreux t&eacute;l&eacute;phones et supports num&eacute;riques ont aussi &eacute;t&eacute; saisis afin de poursuivre l&rsquo;exploitation des &eacute;l&eacute;ments recueillis.</p>
+
+
+
+<p>Des armes &agrave; feu figurent &eacute;galement parmi les objets d&eacute;couverts lors des perquisitions, t&eacute;moignant de l&rsquo;ampleur des moyens mobilis&eacute;s par les personnes soup&ccedil;onn&eacute;es d&rsquo;appartenir &agrave; cette organisation criminelle.</p><div id="inread_3" class="ad-placeholder" style="min-height: 250px; --adboost-height-mobile: 600px;" data-height-mobile="600px" data-youngid-key="inread"></div>
+
+
+
+<h2 class="wp-block-heading" id="h-une-priorite-pour-les-autorites-bruxelloises">Une priorit&eacute; pour les autorit&eacute;s bruxelloises</h2>
+
+
+
+<p>Cette op&eacute;ration s&rsquo;ins&egrave;re dans la strat&eacute;gie men&eacute;e par le parquet du procureur du Roi de Bruxelles contre les r&eacute;seaux criminels li&eacute;s au trafic de stup&eacute;fiants. Les autorit&eacute;s consid&egrave;rent ces organisations comme des facteurs de nuisances, de violence et d&rsquo;ins&eacute;curit&eacute; dans plusieurs quartiers de la capitale. <br><br>Avec ce coup de filet, les enqu&ecirc;teurs affirment avoir port&eacute; un coup significatif &agrave; une structure qui intervenait &agrave; diff&eacute;rentes &eacute;tapes du commerce illicite de drogue sur le territoire bruxellois.</p>
+
+  
+  <!-- Tags -->
+  
+  <!-- Tags -->
+  <div class="post-tags -md:!order-10 cv-auto not-prose">
+    <h2 class="tags-title">
+      Mentionn&eacute;s dans cet article    </h2>
+
+          <a href="https://www.21news.be/tag/criminalite/" title="Voir tous les articles sur Criminalit&eacute;" class="tag">
+        Criminalit&eacute;      </a>
+          <a href="https://www.21news.be/tag/police/" title="Voir tous les articles sur Police" class="tag">
+        Police      </a>
+      </div>
+
+      <!-- A lire aussi -->
+    <nav class="read-more-list not-prose !order-9">
+      <h2 style="font-size: 1.3rem; font-weight: 700; color: #163860; margin: 0 0 10px 0; font-family: 'Bebas Neue', 'Arial', sans-serif; text-transform: uppercase; letter-spacing: 0px;">
+        &Agrave; lire aussi      </h2>
+      <ul class="flex md:grid grid-cols-3 gap-3 overflow-x-auto w-full">
+        <li>
+<article class="post-card -md:w-72 !border-none !pb-0">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2026/05/PSG--1024x512.png.webp 1024w, https://www.21news.be/wp-content/uploads/2026/05/PSG--300x150.png.webp 300w, https://www.21news.be/wp-content/uploads/2026/05/PSG--768x384.png.webp 768w, https://www.21news.be/wp-content/uploads/2026/05/PSG--1536x768.png.webp 1536w, https://www.21news.be/wp-content/uploads/2026/05/PSG-.png.webp 1699w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="512" src="https://www.21news.be/wp-content/uploads/2026/05/PSG--1024x512.png" alt="Le revers s&eacute;curitaire du sacre du PSG : 780 interpellation, 57 policiers bless&eacute;s" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2026/05/PSG--1024x512.png 1024w, https://www.21news.be/wp-content/uploads/2026/05/PSG--300x150.png 300w, https://www.21news.be/wp-content/uploads/2026/05/PSG--768x384.png 768w, https://www.21news.be/wp-content/uploads/2026/05/PSG--1536x768.png 1536w, https://www.21news.be/wp-content/uploads/2026/05/PSG-.png 1699w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                <h3 class="pc-title line-clamp-3 !text-lg">
+            <a href="https://www.21news.be/le-revers-securitaire-du-sacre-du-psg-780-interpellation-57-policiers-blesses/" class="pc-link">
+                <span class="sub-badge"></span>Le revers s&eacute;curitaire du sacre du PSG : 780 interpellations, 57 policiers bless&eacute;s            </a>
+        </h3>
+                    </div>
+</article></li><li>
+<article class="post-card -md:w-72 !border-none !pb-0">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2026/05/EUROPOL-1024x768.jpg.webp 1024w, https://www.21news.be/wp-content/uploads/2026/05/EUROPOL-300x225.jpg.webp 300w, https://www.21news.be/wp-content/uploads/2026/05/EUROPOL-768x576.jpg.webp 768w, https://www.21news.be/wp-content/uploads/2026/05/EUROPOL.jpg.webp 1280w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="768" src="https://www.21news.be/wp-content/uploads/2026/05/EUROPOL-1024x768.jpg" alt="Europol frappe au c&oelig;ur d'une multinationale du crime migratoire en Espagne" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2026/05/EUROPOL-1024x768.jpg 1024w, https://www.21news.be/wp-content/uploads/2026/05/EUROPOL-300x225.jpg 300w, https://www.21news.be/wp-content/uploads/2026/05/EUROPOL-768x576.jpg 768w, https://www.21news.be/wp-content/uploads/2026/05/EUROPOL.jpg 1280w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                <h3 class="pc-title line-clamp-3 !text-lg">
+            <a href="https://www.21news.be/europol-frappe-au-coeur-dune-multinationale-du-crime-migratoire-en-espagne/" class="pc-link">
+                <span class="sub-badge"></span>Europol frappe au c&oelig;ur d'une multinationale du crime migratoire en Espagne            </a>
+        </h3>
+                    </div>
+</article></li><li>
+<article class="post-card -md:w-72 !border-none !pb-0">
+            <div class="pc-image ">
+                            <img width="1024" height="768" src="https://www.21news.be/wp-content/uploads/2026/05/marcela1-1-1024x768.jpg" class="w-full h-full cover object-cover wp-post-image" alt='Marcela Gori: "Il y a clairement un d&eacute;tournement de moyens publics &agrave; des fins personnelles"' sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2026/05/marcela1-1-1024x768.jpg 1024w, https://www.21news.be/wp-content/uploads/2026/05/marcela1-1-300x225.jpg 300w, https://www.21news.be/wp-content/uploads/2026/05/marcela1-1-768x576.jpg 768w, https://www.21news.be/wp-content/uploads/2026/05/marcela1-1-1536x1152.jpg 1536w, https://www.21news.be/wp-content/uploads/2026/05/marcela1-1-scaled.jpg 2048w">                    </div>
+        <div class="pc-wrapper ">
+                <h3 class="pc-title line-clamp-3 !text-lg">
+            <a href="https://www.21news.be/violences-a-la-cote-agressions-dans-les-transports-et-si-le-vrai-probleme-etait-leducation-carte-blanche/" class="pc-link">
+                Violences &agrave; la c&ocirc;te, agressions dans les transports : et si le vrai probl&egrave;me &eacute;tait l&rsquo;&eacute;ducation ? (carte blanche)            </a>
+        </h3>
+                    </div>
+</article></li>      </ul>
+    </nav>
+  </div>
+      <!-- After Content -->
+      
+<!-- Bloc de partage -->
+<div class="hidden md:flex gap-6 items-center p-3 bg-gradient-to-r from-primary-50/30 to-primary-100 border-primary-50 border">
+  <span class="font-title text-xl md:text-primary flex-grow flex gap-3 items-center -md:justify-center">
+    Partager cet article    <span class="w-6 md:hidden">
+      <svg width="25" height="25" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+	<path fill="currentColor" d="M17,8h2c1.105,0,2,0.895,2,2v9c0,1.105-0.895,2-2,2H5c-1.105,0-2-0.895-2-2v-9c0-1.105,0.895-2,2-2h2v2H5v9h14v-9h-2V8z     M6.5,5.5l1.414,1.414L11,3.828V14h2V3.828l3.086,3.086L17.5,5.5L12,0L6.5,5.5z"></path>
+</svg>
+    </span>
+  </span>
+  <div class="grid grid-cols-5 gap-3 -md:hidden">
+    <button rel="noopener, nofollow" target="_self" aria-label="Copier le lien" class="btn btn-primary btn-outline" onclick="navigator.clipboard.writeText(window.location.href); alert(" lien copi dans le presse-papier>
+      <span class="w-6">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="currentColor" d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"></path></svg>      </span>
+    </button>
+          <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.21news.be%2Fcannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles%2F" rel="noopener, nofollow" target="_blank" aria-label="Partager sur Facebook" class="btn btn-primary btn-outline justify-center">
+        <span class="w-6">
+          <svg width="100%" height="100%" role="img" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Facebook</title><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>        </span>
+      </a>
+          <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fwww.21news.be%2Fcannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles%2F&amp;text=Cannabis%2C+coca%C3%AFne%2C+armes+et+cash+%3A+une+organisation+criminelle+neutralis%C3%A9e+%C3%A0+Bruxelles" rel="noopener, nofollow" target="_blank" aria-label="Partager sur X" class="btn btn-primary btn-outline justify-center">
+        <span class="w-6">
+          <svg width="100%" height="100%" viewbox="0 0 1200 1227" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill="currentColor" d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"></path>
+</svg>
+        </span>
+      </a>
+          <a href="//pinterest.com/pin/create/link/?url=https%3A%2F%2Fwww.21news.be%2Fcannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles%2F&amp;description=Cannabis%2C+coca%C3%AFne%2C+armes+et+cash+%3A+une+organisation+criminelle+neutralis%C3%A9e+%C3%A0+Bruxelles&amp;media=https%3A%2F%2Fwww.21news.be%2Fwp-content%2Fuploads%2F2025%2F12%2FBelgaimage-102370493-scaled.jpg" rel="noopener, nofollow" target="_blank" aria-label="Partager sur Pinterest" class="btn btn-primary btn-outline justify-center">
+        <span class="w-6">
+          <svg width="100%" height="100%" role="img" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Pinterest</title><path fill="currentColor" d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"></path></svg>        </span>
+      </a>
+          <a href="https://web.whatsapp.com/send?text=Cannabis%2C+coca%C3%AFne%2C+armes+et+cash+%3A+une+organisation+criminelle+neutralis%C3%A9e+%C3%A0+Bruxelles+-+https%3A%2F%2Fwww.21news.be%2Fcannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles%2F" rel="noopener, nofollow" target="_blank" aria-label="Partager sur Whatsapp" class="btn btn-primary btn-outline justify-center">
+        <span class="w-6">
+          <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewbox="0 0 24 24"><path fill="currentColor" d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"></path></svg>        </span>
+      </a>
+      </div>
+</div>
+
+<aside id="share-button" class="cv-auto md:!hidden p-2 md:p-4 bg-gradient-to-r from-primary-50/30 to-primary-100 border-primary-50 border">
+  <div class="btn btn-primary w-full justify-center">
+    Partager cet article    <span class="w-6">
+      <svg width="25" height="25" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+	<path fill="currentColor" d="M17,8h2c1.105,0,2,0.895,2,2v9c0,1.105-0.895,2-2,2H5c-1.105,0-2-0.895-2-2v-9c0-1.105,0.895-2,2-2h2v2H5v9h14v-9h-2V8z     M6.5,5.5l1.414,1.414L11,3.828V14h2V3.828l3.086,3.086L17.5,5.5L12,0L6.5,5.5z"></path>
+</svg>
+    </span>
+  </div>
+  <script type="rocketlazyloadscript">
+    const btn = document.getElementById("share-button");
+    if (navigator.share) {
+      // Show button if it supports webShareAPI
+      btn.style.display = "flex";
+      btn.addEventListener("click", () =>
+        webShareAPI("Cannabis, coca\u00efne, armes et cash : une organisation criminelle neutralis\u00e9e \u00e0 Bruxelles", "Un vaste coup de filet men\u00e9 \u00e0 Bruxelles a permis de neutraliser une organisation soup\u00e7onn\u00e9e d\u2019alimenter plusieurs points de vente de stup\u00e9fiants. L\u2019op\u00e9ration a conduit \u00e0 27 privations de libert\u00e9 et \u00e0 la saisie de drogues, d\u2019armes et d\u2019importantes sommes d\u2019argent.", "https:\/\/www.21news.be\/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles\/")
+      );
+    } else {
+      // Hide button if it doesn't supports webShareAPI
+      btn.style.display = "none";
+    }
+
+    // function for web share api
+    function webShareAPI(header, description, link) {
+      navigator
+        .share({
+          title: header,
+          text: description,
+          url: link,
+        })
+        .then(() => console.log("Successful share"))
+        .catch((error) => console.log("Error sharing", error));
+    }
+  </script>
+</aside>
+
+
+<!-- Blocs Newsletter et Push Notifications -->
+<div class="subscription-blocks">
+  <div class="subscription-block newsletter-block">
+    <div class="subscription-content">
+      <div class="subscription-title flex gap-3 items-center">
+        <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+          <path d="M22 7l-10 7L2 7"></path>
+        </svg>
+        Newsletter      </div>
+      <form class="subscription-form"><input type="email" placeholder="Votre email" class="subscription-input" required=""> <button type="submit" class="btn btn-primary">S'abonner</button>
+      </form>
+    </div>
+  </div>
+  <div class="subscription-block push-block">
+    <div class="subscription-content grid gap-2">
+      <div class="subscription-title flex gap-3 items-center">
+        <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        Retrouvez nos articles sur Google      </div>
+      <div class="grid grid-cols-2 gap-3">
+                  <a href="https://news.google.com/publications/CAAqIggKIhxDQklTRHdnTWFnc0tDVEl4Ym1WM2N5NWlaU2dBUAE" class="btn btn-primary">
+            <svg height="25" width="25" version="1.1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewbox="0 0 6550.8 5359.7" xml:space="preserve"><use href="#google_news"></use></svg>            G News          </a>
+                          <a href="https://profile.google.com/cp/EgsKCTIxbmV3cy5iZQ" class="btn btn-primary">
+            <svg version="1.1" id="svg1" width="25" height="25" viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><use href="#google_discover"></use></svg>            G Discover          </a>
+              </div>
+    </div>
+  </div>
+</div>    </div>
+
+    <aside id="sidebar" class="sidebar">
+      <div class="p-4 border border-primary">
+      <h2 class="h5 mb-2">
+        Les plus lus      </h2>
+      
+<article class="post-card ">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2026/09/Wassila-1024x543.png.webp 1024w, https://www.21news.be/wp-content/uploads/2026/09/Wassila-300x159.png.webp 300w, https://www.21news.be/wp-content/uploads/2026/09/Wassila-768x408.png.webp 768w, https://www.21news.be/wp-content/uploads/2026/09/Wassila.png.webp 1208w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="543" src="https://www.21news.be/wp-content/uploads/2026/09/Wassila-1024x543.png" alt="De serveuse &agrave; directrice des marques : qui est Wassila Meddas, l&rsquo;embarrassante compagne de Matthieu Pigasse ?" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2026/09/Wassila-1024x543.png 1024w, https://www.21news.be/wp-content/uploads/2026/09/Wassila-300x159.png 300w, https://www.21news.be/wp-content/uploads/2026/09/Wassila-768x408.png 768w, https://www.21news.be/wp-content/uploads/2026/09/Wassila.png 1208w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                <h3 class="pc-title ">
+            <a href="https://www.21news.be/de-serveuse-a-directrice-des-marques-qui-est-wassila-meddas-lembarrassante-compagne-de-matthieu-pigasse/" class="pc-link">
+                <span class="sub-badge"></span>De serveuse &agrave; directrice des marques : qui est Wassila Meddas, l&rsquo;embarrassante compagne de Matthieu Pigasse ?            </a>
+        </h3>
+                    </div>
+</article>
+<article class="post-card ">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-1024x682.jpg.webp 1024w, https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-300x200.jpg.webp 300w, https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-768x512.jpg.webp 768w, https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-1536x1023.jpg.webp 1536w, https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-scaled.jpg.webp 2048w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="682" src="https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-1024x682.jpg" alt="Damien Ernst agress&eacute; &agrave; l'Uli&egrave;ge, une p&eacute;tition en soutien se lance" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-1024x682.jpg 1024w, https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-scaled-600x400.jpg 600w, https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-300x200.jpg 300w, https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-768x512.jpg 768w, https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-1536x1023.jpg 1536w, https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-scaled.jpg 2048w, https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-1920x1279.jpg 1920w, https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-1170x779.jpg 1170w, https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-585x390.jpg 585w, https://www.21news.be/wp-content/uploads/2024/10/Damien-Ernst-263x175.jpg 263w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                <h3 class="pc-title ">
+            <a href="https://www.21news.be/damien-ernst-agresse-a-luliege-par-un-groupuscule-dextreme-gauche-la-violence-dans-ce-pays-commence-a-faire-peur/" class="pc-link">
+                Damien Ernst agress&eacute; &agrave; l&rsquo;ULi&egrave;ge par un groupuscule d&rsquo;extr&ecirc;me-gauche : &laquo; La violence dans ce pays commence &agrave; faire peur &raquo;&nbsp;            </a>
+        </h3>
+                    </div>
+</article>
+<article class="post-card !border-none !pb-0">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2026/09/David-Lisnard-Meeting-Cannes-2026-2-1024x664.jpg.webp 1024w, https://www.21news.be/wp-content/uploads/2026/09/David-Lisnard-Meeting-Cannes-2026-2-300x195.jpg.webp 300w, https://www.21news.be/wp-content/uploads/2026/09/David-Lisnard-Meeting-Cannes-2026-2-768x498.jpg.webp 768w, https://www.21news.be/wp-content/uploads/2026/09/David-Lisnard-Meeting-Cannes-2026-2-1536x996.jpg.webp 1536w, https://www.21news.be/wp-content/uploads/2026/09/David-Lisnard-Meeting-Cannes-2026-2-scaled.jpg.webp 2048w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="664" src="https://www.21news.be/wp-content/uploads/2026/09/David-Lisnard-Meeting-Cannes-2026-2-1024x664.jpg" alt="Sondage Pr&eacute;sidentielle 2027 : Lisnard &agrave; 5 % face au trio de t&ecirc;te" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2026/09/David-Lisnard-Meeting-Cannes-2026-2-1024x664.jpg 1024w, https://www.21news.be/wp-content/uploads/2026/09/David-Lisnard-Meeting-Cannes-2026-2-300x195.jpg 300w, https://www.21news.be/wp-content/uploads/2026/09/David-Lisnard-Meeting-Cannes-2026-2-768x498.jpg 768w, https://www.21news.be/wp-content/uploads/2026/09/David-Lisnard-Meeting-Cannes-2026-2-1536x996.jpg 1536w, https://www.21news.be/wp-content/uploads/2026/09/David-Lisnard-Meeting-Cannes-2026-2-scaled.jpg 2048w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                <h3 class="pc-title ">
+            <a href="https://www.21news.be/sondage-presidentielle-2027-lisnard-a-5-face-au-trio-de-tete/" class="pc-link">
+                Sondage Pr&eacute;sidentielle 2027 : Lisnard &agrave; 5 % face au trio de t&ecirc;te            </a>
+        </h3>
+                    </div>
+</article>    </div>
+  
+  <!-- Conteneur sticky avec les deux blocs -->
+  <div id="sidebar-sticky" class="sticky-part"><div id="mpu-top" class="ad-placeholder hide-mobile" style="min-height: 600px;" data-youngid-key="mpu-top"></div><!-- Deuxi&egrave;me pub -->
+    <div class="social-news-block">
+      <div class="social-news-title">Suivez-nous sur les r&eacute;seaux</div>
+      <div class="social-links">
+                  <a href="https://www.facebook.com/21NewsBe" class="social-link social-facebook">
+            <svg width="30" height="30" role="img" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><use href="#facebook"></use></svg>            <span class="social-text">Facebook</span>
+          </a>
+                          <a href="https://x.com/21NewsBE" class="social-link social-twitter">
+            <svg width="30" height="30" viewbox="0 0 1200 1227" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#x"></use></svg>            <span class="social-text">X</span>
+          </a>
+                          <a href="https://www.linkedin.com/company/21news.be" class="social-link social-linkedin">
+            <svg width="30" height="30" role="img" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><use href="#linkedin"></use></svg>            <span class="social-text">LinkedIn</span>
+          </a>
+                          <a href="https://www.instagram.com/21news_be" class="social-link social-instagram">
+            <svg width="30" height="30" role="img" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><use href="#instagram"></use></svg>            <span class="social-text">Instagram</span>
+          </a>
+              </div>
+    </div>
+  </div>
+</aside>  </div>
+</article>
+
+<div id="taboola-below-article-thumbnails" class="cv-auto empty:hidden max-w-[calc(100vw_-_32px)] overflow-hidden">
+</div>
+<script type="rocketlazyloadscript" data-rocket-type="text/javascript">
+  window._taboola = window._taboola || [];
+  _taboola.push({
+    mode: 'alternating-thumbnails-a',
+    container: 'taboola-below-article-thumbnails',
+    placement: 'Below Article Thumbnails',
+    target_type: 'mix'
+  });
+</script>
+
+  
+
+  <section class="post-feed order-last">
+    <div class="pf-title-wrapper">
+              <h2 class="pf-title">Derni&egrave;res news sur <b class="text-tag">Criminalit&eacute;</b></h2>
+                </div>
+    <div class="pf-grid">
+                                  
+<article class="post-card ">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-180756454-1024x650.jpg.webp 1024w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-180756454-300x190.jpg.webp 300w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-180756454-768x488.jpg.webp 768w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-180756454-1536x975.jpg.webp 1536w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-180756454-scaled.jpg.webp 2048w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="650" src="https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-180756454-1024x650.jpg" alt="Le Royaume-Uni a naturalis&eacute; un ancien garde du corps du chef du Hamas, d&eacute;sormais accus&eacute; d&rsquo;avoir pr&eacute;par&eacute; des attentats" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-180756454-1024x650.jpg 1024w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-180756454-300x190.jpg 300w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-180756454-768x488.jpg 768w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-180756454-1536x975.jpg 1536w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-180756454-scaled.jpg 2048w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                    <div class="pc-meta">
+                                    <span class="pc-category">International</span> &bull;
+                
+                                    Il y a <time datetime="2026-09-27T08:38:00+00:00">20 heures</time>
+                                                        &bull;
+                            Par Harrison du Bus                            </div>
+                <h3 class="pc-title ">
+            <a href="https://www.21news.be/le-royaume-uni-a-naturalise-un-ancien-garde-du-corps-du-chef-du-hamas-desormais-accuse-davoir-prepare-des-attentats/" class="pc-link">
+                <span class="sub-badge"></span>Le Royaume-Uni a naturalis&eacute; un ancien garde du corps du chef du Hamas, d&eacute;sormais accus&eacute; d&rsquo;avoir pr&eacute;par&eacute; des attentats            </a>
+        </h3>
+                    </div>
+</article>                            
+<article class="post-card ">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-184908129-1024x683.jpg.webp 1024w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-184908129-300x200.jpg.webp 300w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-184908129-768x512.jpg.webp 768w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-184908129-1536x1024.jpg.webp 1536w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-184908129-scaled.jpg.webp 2048w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="683" src="https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-184908129-1024x683.jpg" alt="&laquo; Je vais te tuer, je vais t&rsquo;&eacute;gorger &raquo; : &agrave; 8 ans, un &eacute;l&egrave;ve roue son institutrice de coups" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-184908129-1024x683.jpg 1024w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-184908129-300x200.jpg 300w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-184908129-768x512.jpg 768w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-184908129-1536x1024.jpg 1536w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-184908129-scaled.jpg 2048w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                    <div class="pc-meta">
+                                    <span class="pc-category">International</span> &bull;
+                
+                                    Il y a <time datetime="2026-09-24T13:24:09+00:00">4 jours</time>
+                                                        &bull;
+                            Par Harrison du Bus                            </div>
+                <h3 class="pc-title ">
+            <a href="https://www.21news.be/je-vais-te-tuer-je-vais-tegorger-a-8-ans-un-eleve-roue-une-institutrice-de-coups/" class="pc-link">
+                &laquo; Je vais te tuer, je vais t&rsquo;&eacute;gorger &raquo; : &agrave; 8 ans, un &eacute;l&egrave;ve roue une institutrice de coups            </a>
+        </h3>
+                    </div>
+</article>                            
+<article class="post-card ">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-173252053-1024x683.jpg.webp 1024w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-173252053-300x200.jpg.webp 300w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-173252053-768x512.jpg.webp 768w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-173252053-1536x1025.jpg.webp 1536w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-173252053-scaled.jpg.webp 2048w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="683" src="https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-173252053-1024x683.jpg" alt="La coca&iuml;ne d&eacute;ferle sur l&rsquo;Europe : en Espagne, les narcos disposent de bateaux que la police ne peut pas rattraper" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-173252053-1024x683.jpg 1024w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-173252053-300x200.jpg 300w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-173252053-768x512.jpg 768w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-173252053-1536x1025.jpg 1536w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-173252053-scaled.jpg 2048w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                    <div class="pc-meta">
+                                    <span class="pc-category">International</span> &bull;
+                
+                                    Il y a <time datetime="2026-09-24T06:14:00+00:00">4 jours</time>
+                                                        &bull;
+                            Par Harrison du Bus                            </div>
+                <h3 class="pc-title ">
+            <a href="https://www.21news.be/la-cocaine-deferle-sur-leurope-en-espagne-les-narcos-disposent-de-bateaux-que-la-police-ne-peut-pas-rattraper/" class="pc-link">
+                <span class="sub-badge"></span>La coca&iuml;ne d&eacute;ferle sur l&rsquo;Europe : en Espagne, les narcos disposent de bateaux que la police ne peut pas rattraper            </a>
+        </h3>
+                    </div>
+</article>                            
+<article class="post-card ">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-95249105-1024x690.jpg.webp 1024w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-95249105-300x202.jpg.webp 300w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-95249105-768x517.jpg.webp 768w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-95249105-1536x1034.jpg.webp 1536w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-95249105.jpg.webp 2048w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="690" src="https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-95249105-1024x690.jpg" alt="Xavier Magn&eacute;e, l'avocat qui d&eacute;fendit Dutroux, est mort &agrave; 91 ans" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-95249105-1024x690.jpg 1024w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-95249105-300x202.jpg 300w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-95249105-768x517.jpg 768w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-95249105-1536x1034.jpg 1536w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-95249105.jpg 2048w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                    <div class="pc-meta">
+                                    <span class="pc-category">Belgique</span> &bull;
+                
+                                    Il y a <time datetime="2026-09-22T10:56:24+00:00">6 jours</time>
+                                                        &bull;
+                            Par R&eacute;daction                            </div>
+                <h3 class="pc-title ">
+            <a href="https://www.21news.be/xavier-magnee-lavocat-qui-defendit-dutroux-est-mort-a-91-ans/" class="pc-link">
+                Xavier Magn&eacute;e, l'avocat qui d&eacute;fendit Dutroux, est mort &agrave; 91 ans            </a>
+        </h3>
+                    </div>
+</article>                            
+<article class="post-card ">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-135726248-1024x698.jpg.webp 1024w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-135726248-300x204.jpg.webp 300w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-135726248-768x523.jpg.webp 768w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-135726248-1536x1047.jpg.webp 1536w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-135726248-scaled.jpg.webp 2048w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="698" src="https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-135726248-1024x698.jpg" alt="Le logisticien du 13-Novembre bient&ocirc;t dehors ? La justice belge face &agrave; la col&egrave;re des victimes" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-135726248-1024x698.jpg 1024w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-135726248-300x204.jpg 300w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-135726248-768x523.jpg 768w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-135726248-1536x1047.jpg 1536w, https://www.21news.be/wp-content/uploads/2026/09/Belgaimage-135726248-scaled.jpg 2048w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                    <div class="pc-meta">
+                                    <span class="pc-category">Belgique</span> &bull;
+                
+                                    Il y a <time datetime="2026-09-17T09:58:03+00:00">2 semaines</time>
+                                                        &bull;
+                            Par Harrison du Bus                            </div>
+                <h3 class="pc-title ">
+            <a href="https://www.21news.be/le-logisticien-des-attentats-du-13-novembre-bientot-dehors-la-justice-belge-face-a-la-colere-des-victimes/" class="pc-link">
+                <span class="sub-badge"></span>Le logisticien des attentats du 13-Novembre bient&ocirc;t dehors ? La justice belge face &agrave; la col&egrave;re des victimes            </a>
+        </h3>
+                    </div>
+</article>                            
+<article class="post-card ">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2026/09/Capture-decran-2026-09-16-211855.png.webp 532w, https://www.21news.be/wp-content/uploads/2026/09/Capture-decran-2026-09-16-211855-300x275.png.webp 300w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="532" height="488" src="https://www.21news.be/wp-content/uploads/2026/09/Capture-decran-2026-09-16-211855.png" alt="Crimes de guerre au Kosovo : 25 ans de prison pour l'ex-pr&eacute;sident Hashim Tha&ccedil;i" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2026/09/Capture-decran-2026-09-16-211855.png 532w, https://www.21news.be/wp-content/uploads/2026/09/Capture-decran-2026-09-16-211855-300x275.png 300w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                    <div class="pc-meta">
+                                    <span class="pc-category">International</span> &bull;
+                
+                                    Il y a <time datetime="2026-09-17T08:51:00+00:00">2 semaines</time>
+                                                        &bull;
+                            Par A JS                            </div>
+                <h3 class="pc-title ">
+            <a href="https://www.21news.be/crimes-de-guerre-au-kosovo-25-ans-de-prison-pour-lex-president-hashim-thaci/" class="pc-link">
+                <span class="sub-badge"></span>Crimes de guerre au Kosovo : 25 ans de prison pour l'ex-pr&eacute;sident Hashim Tha&ccedil;i            </a>
+        </h3>
+                    </div>
+</article>                  </div>
+          <a href="https://www.21news.be/tag/criminalite/" class="btn btn-primary btn-arrow btn-lg mx-auto">
+        Tout sur Criminalit&eacute;      </a>
+      </section>
+
+  <!-- Tags -->
+        
+      <section class="post-feed cv-auto order-last">
+      <div class="pf-title-wrapper">
+        <h2 class="pf-title !text-3xl">
+          Autour de <b class="text-tag">Criminalit&eacute;</b>        </h2>
+      </div>
+      <div class="tf-grid ">
+                                
+<div class="relative shrink-0 flex flex-col group w-full max-w-36">
+  <h3 class="text-center font-bold text-lg">
+    <a href="https://www.21news.be/tag/trafic_de_drogue/" class="after:content-[''] after:absolute after:inset-0 after:z-[1]">
+      Trafic de drogue    </a>
+  </h3>
+  <div class="order-first relative aspect-[3/4] flex flex-col overflow-hidden border border-primary mb-2">
+    <div class="w-full flex-grow overflow-hidden text-6xl font-title flex items-center justify-center bg-primary-100 text-primary-300">
+      <picture class="w-full h-full cover object-cover" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2026/04/dealer-drogue-scaled-aspect-ratio-450-600.jpg.webp 450w, https://www.21news.be/wp-content/uploads/2026/04/dealer-drogue-scaled-aspect-ratio-450-600-225x300.jpg.webp 225w" sizes="(max-width: 450px) 100vw, 450px"></source>
+<img width="450" height="600" src="https://www.21news.be/wp-content/uploads/2026/04/dealer-drogue-scaled-aspect-ratio-450-600.jpg" alt="" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2026/04/dealer-drogue-scaled-aspect-ratio-450-600.jpg 450w, https://www.21news.be/wp-content/uploads/2026/04/dealer-drogue-scaled-aspect-ratio-450-600-225x300.jpg 225w" sizes="(max-width: 450px) 100vw, 450px">
+</picture>
+    </div>
+    <div class="bg-primary text-white text-[10px] font-bold px-2 py-1 w-full uppercase">
+      Sujet    </div>
+  </div>
+  </div>                
+                              </div>
+      </section>
+  
+  
+
+  <section class="post-feed order-last">
+    <div class="pf-title-wrapper">
+              <h2 class="pf-title">Toutes les news <b class="text-primary-800">Belgique</b></h2>
+                    <div class="pf-subcategories">
+                      <a href="https://www.21news.be/category/belgique/bruxelles/" class="btn btn-primary btn-outline ">
+              Bruxelles            </a>
+                      <a href="https://www.21news.be/category/belgique/flandre/" class="btn btn-primary btn-outline ">
+              Flandre            </a>
+                      <a href="https://www.21news.be/category/belgique/wallonie/" class="btn btn-primary btn-outline ">
+              Wallonie            </a>
+                  </div>
+          </div>
+    <div class="pf-grid">
+                                  
+<article class="post-card ">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-1024x683.jpg.webp 1024w, https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-300x200.jpg.webp 300w, https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-768x512.jpg.webp 768w, https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-1536x1024.jpg.webp 1536w, https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-scaled.jpg.webp 2048w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="683" src="https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-1024x683.jpg" alt="Pour Julien Moinil, le niveau au sein du parlement bruxellois laisse &agrave; d&eacute;sirer" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-1024x683.jpg 1024w, https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-300x200.jpg 300w, https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-768x512.jpg 768w, https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-1536x1024.jpg 1536w, https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-scaled.jpg 2048w, https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-1920x1280.jpg 1920w, https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-1170x780.jpg 1170w, https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-585x390.jpg 585w, https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-263x175.jpg 263w, https://www.21news.be/wp-content/uploads/2025/06/Julien-Moinil-600x400.jpg 600w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                    <div class="pc-meta">
+                                    <span class="pc-category">Belgique</span> &bull;
+                
+                                    Il y a <time datetime="2026-09-27T16:46:26+00:00">11 heures</time>
+                                                        &bull;
+                            Par J.PE                            </div>
+                <h3 class="pc-title ">
+            <a href="https://www.21news.be/julien-moinil-sur-le-parlement-bruxellois-le-niveau-de-competence-et-dintegrite-laisse-pantois/" class="pc-link">
+                Julien Moinil sur le parlement Bruxellois &laquo;&nbsp;Le niveau de comp&eacute;tence et d&rsquo;int&eacute;grit&eacute; laisse pantois.&nbsp;&raquo;            </a>
+        </h3>
+                    </div>
+</article>                            
+<article class="post-card ">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2026/09/image-29-1024x683.png.webp 1024w, https://www.21news.be/wp-content/uploads/2026/09/image-29-300x200.png.webp 300w, https://www.21news.be/wp-content/uploads/2026/09/image-29-768x512.png.webp 768w, https://www.21news.be/wp-content/uploads/2026/09/image-29.png.webp 1200w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="683" src="https://www.21news.be/wp-content/uploads/2026/09/image-29-1024x683.png" alt="EXCLUSIF &ndash; &Eacute;quipe de France : voici l&rsquo;h&ocirc;tel choisi par les Bleus &agrave; Sterrebeek avant Belgique-France" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2026/09/image-29-1024x683.png 1024w, https://www.21news.be/wp-content/uploads/2026/09/image-29-300x200.png 300w, https://www.21news.be/wp-content/uploads/2026/09/image-29-768x512.png 768w, https://www.21news.be/wp-content/uploads/2026/09/image-29.png 1200w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                    <div class="pc-meta">
+                                    <span class="pc-category">Belgique</span> &bull;
+                
+                                    Il y a <time datetime="2026-09-27T15:42:04+00:00">13 heures</time>
+                                                        &bull;
+                            Par J.PE                            </div>
+                <h3 class="pc-title ">
+            <a href="https://www.21news.be/exclusif-equipe-de-france-hotel-bleus-sterrebeek-belgique-france/" class="pc-link">
+                EXCLUSIF &ndash; &Eacute;quipe de France : voici l&rsquo;h&ocirc;tel choisi par les Bleus &agrave; Sterrebeek avant Belgique-France            </a>
+        </h3>
+                    </div>
+</article>                            
+<article class="post-card ">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-1024x683.jpg.webp 1024w, https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-300x200.jpg.webp 300w, https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-768x512.jpg.webp 768w, https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-1536x1024.jpg.webp 1536w, https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-scaled.jpg.webp 2048w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="683" src="https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-1024x683.jpg" alt="Trein train" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-1024x683.jpg 1024w, https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-300x200.jpg 300w, https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-768x512.jpg 768w, https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-1536x1024.jpg 1536w, https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-scaled.jpg 2048w, https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-1920x1280.jpg 1920w, https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-1170x780.jpg 1170w, https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-585x390.jpg 585w, https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-263x175.jpg 263w, https://www.21news.be/wp-content/uploads/2025/04/train-SNCB-600x400.jpg 600w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                    <div class="pc-meta">
+                                    <span class="pc-category">Belgique</span> &bull;
+                
+                                    Il y a <time datetime="2026-09-27T09:55:42+00:00">18 heures</time>
+                                                        &bull;
+                            Par R&eacute;daction                            </div>
+                <h3 class="pc-title ">
+            <a href="https://www.21news.be/le-mensonge-xxl-decolo-j-non-le-mr-ne-veut-pas-supprimer-481-des-555-gares-belges/" class="pc-link">
+                Le mensonge XXL d'&eacute;colo j : non, le MR ne veut pas supprimer  481 des 555 gares belges...            </a>
+        </h3>
+                    </div>
+</article>                            
+<article class="post-card ">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-1024x683.jpg.webp 1024w, https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-300x200.jpg.webp 300w, https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-768x512.jpg.webp 768w, https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-1536x1024.jpg.webp 1536w, https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-scaled.jpg.webp 2048w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="683" src="https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-1024x683.jpg" alt="Thomas Dermine estime que le PS a perdu les &eacute;lections parce qu'ils ont fait des erreurs de communication" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-1024x683.jpg 1024w, https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-300x200.jpg 300w, https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-768x512.jpg 768w, https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-1536x1024.jpg 1536w, https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-scaled.jpg 2048w, https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-1920x1280.jpg 1920w, https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-1170x780.jpg 1170w, https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-585x390.jpg 585w, https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-263x175.jpg 263w, https://www.21news.be/wp-content/uploads/2025/04/Thomas-Dermine2-600x400.jpg 600w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                    <div class="pc-meta">
+                                    <span class="pc-category">Wallonie</span> &bull;
+                
+                                    Il y a <time datetime="2026-09-27T06:40:12+00:00">22 heures</time>
+                                                        &bull;
+                            Par J.PE                            </div>
+                <h3 class="pc-title ">
+            <a href="https://www.21news.be/thomas-dermine-le-ps-a-perdu-en-partie-parce-quil-sinteressait-plus-a-la-maniere-de-repartir-le-gateau-qua-la-facon-de-creer-de-la-richesse/" class="pc-link">
+                Thomas Dermine&nbsp;:&nbsp; &laquo;Le PS a perdu en partie parce qu'il s'int&eacute;ressait plus &agrave; la mani&egrave;re de r&eacute;partir le g&acirc;teau qu'&agrave; la fa&ccedil;on de cr&eacute;er de la richesse.&nbsp;&raquo;            </a>
+        </h3>
+                    </div>
+</article>                            
+<article class="post-card ">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-1024x683.jpg.webp 1024w, https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-300x200.jpg.webp 300w, https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-768x512.jpg.webp 768w, https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-1536x1024.jpg.webp 1536w, https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-scaled.jpg.webp 2048w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="683" src="https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-1024x683.jpg" alt="Bill White accuse Conner Rousseau de ne pas se pr&eacute;occuper de la communaut&eacute; juive." sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-1024x683.jpg 1024w, https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-300x200.jpg 300w, https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-768x512.jpg 768w, https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-1536x1024.jpg 1536w, https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-scaled.jpg 2048w, https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-1920x1280.jpg 1920w, https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-1170x780.jpg 1170w, https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-585x390.jpg 585w, https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-263x175.jpg 263w, https://www.21news.be/wp-content/uploads/2025/02/Vooruit-Rousseau-Vandenbroucke-600x400.jpg 600w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                    <div class="pc-meta">
+                                    <span class="pc-category">Belgique</span> &bull;
+                
+                                    Il y a <time datetime="2026-09-26T07:45:00+00:00">2 jours</time>
+                                                        &bull;
+                            Par A.G.                            </div>
+                <h3 class="pc-title ">
+            <a href="https://www.21news.be/bill-white-accuse-conner-rousseau-de-se-desinteresser-de-la-communaute-juive/" class="pc-link">
+                <span class="sub-badge"></span>Bill White accuse Conner Rousseau de se d&eacute;sint&eacute;resser de la communaut&eacute; juive            </a>
+        </h3>
+                    </div>
+</article>                            
+<article class="post-card ">
+            <div class="pc-image ">
+                            <picture class="w-full h-full cover object-cover wp-post-image" decoding="async">
+<source type="image/webp" srcset="https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-1024x683.jpg.webp 1024w, https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-300x200.jpg.webp 300w, https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-768x512.jpg.webp 768w, https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-1536x1024.jpg.webp 1536w, https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-scaled.jpg.webp 2048w" sizes="(max-width: 768px) 100vw, 375px"></source>
+<img width="1024" height="683" src="https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-1024x683.jpg" alt="Photo Belgaimage" sizes="(max-width: 768px) 100vw, 375px" decoding="async" srcset="https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-1024x683.jpg 1024w, https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-300x200.jpg 300w, https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-768x512.jpg 768w, https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-1536x1024.jpg 1536w, https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-scaled.jpg 2048w, https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-1920x1280.jpg 1920w, https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-1170x780.jpg 1170w, https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-585x390.jpg 585w, https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-263x175.jpg 263w, https://www.21news.be/wp-content/uploads/2024/12/Valerie-Glatigny-2-600x400.jpg 600w">
+</picture>
+                    </div>
+        <div class="pc-wrapper ">
+                    <div class="pc-meta">
+                                    <span class="pc-category">Belgique</span> &bull;
+                
+                                    Il y a <time datetime="2026-09-26T07:18:00+00:00">2 jours</time>
+                                                        &bull;
+                            Par Harrison du Bus                            </div>
+                <h3 class="pc-title ">
+            <a href="https://www.21news.be/un-professeur-ecarte-apres-avoir-denonce-les-pratiques-de-collegues-grevistes-valerie-glatigny-demande-que-toute-la-lumiere-soit-faite/" class="pc-link">
+                <span class="sub-badge"></span>Un professeur &eacute;cart&eacute; apr&egrave;s avoir d&eacute;nonc&eacute; les pratiques de coll&egrave;gues gr&eacute;vistes : Val&eacute;rie Glatigny demande que &laquo; toute la lumi&egrave;re soit faite &raquo;            </a>
+        </h3>
+                    </div>
+</article>                  </div>
+          <a href="https://www.21news.be/category/belgique/" class="btn btn-primary btn-arrow btn-lg mx-auto">
+        Toutes les actualit&eacute;s belgique      </a>
+      </section>
+</main>
+
+
+  <div class="offer-banner-bottom" id="offer-banner" hidden>
+    <div class="container">
+      <div class="offer-banner-content">
+        <div class="offer-text">
+          <span class="offer-main">Offre Sp&eacute;ciale :  99,00 &euro; au lieu de 120,00 &euro; pour un abonnement annuel !</span>
+        </div>
+        <a href="https://www.21news.be/sabonner/" class="btn btn-sub btn-sm">S'abonner</a>
+        <button type="button" class="offer-banner-close" id="offer-banner-close" aria-label="Fermer">&times;</button>
+      </div>
+    </div>
+  </div>
+  <script type="rocketlazyloadscript">
+    (function () {
+      var COOKIE = 'offer_banner_dismissed';
+      var banner = document.getElementById('offer-banner');
+      var closeBtn = document.getElementById('offer-banner-close');
+      if (!banner || !closeBtn) return;
+
+      if (document.cookie.split('; ').indexOf(COOKIE + '=1') === -1) {
+        banner.hidden = false;
+      }
+
+      closeBtn.addEventListener('click', function () {
+        banner.hidden = true;
+        var expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toUTCString();
+        document.cookie = COOKIE + '=1; expires=' + expires + '; path=/; SameSite=Lax';
+      });
+    })();
+  </script>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <div class="fs-title">21 News</div>
+        <p>
+          21News est un m&eacute;dia belge francophone qui promeut la libert&eacute;, l'entrepreneuriat et la pluralit&eacute; d'opinions.        </p>
+      </div>
+
+      <div class="footer-section">
+        <div class="fs-title">Rubriques</div>
+                  <ul id="menu-menu" class=""><li id="menu-item-24983" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-24983 current-main-post-ancestor"><a href="https://www.21news.be/category/belgique/">Belgique</a></li>
+<li id="menu-item-25" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-25"><a href="https://www.21news.be/category/politique/">Politique</a></li>
+<li id="menu-item-24984" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-24984"><a href="https://www.21news.be/category/europe/">Europe</a></li>
+<li id="menu-item-26" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-26"><a href="https://www.21news.be/category/international/">International</a></li>
+<li id="menu-item-28" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-28"><a href="https://www.21news.be/category/economie/">&Eacute;conomie</a></li>
+</ul>              </div>
+
+      <div class="footer-section">
+        <div class="fs-title">&Agrave; propos</div>
+                  <ul id="menu-menu-footer-a-propos" class=""><li id="menu-item-25006" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-25006"><a href="https://www.21news.be/qui-sommes-nous/">Qui sommes-nous ?</a></li>
+<li id="menu-item-25007" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-25007"><a href="https://www.21news.be/contactez-nous/">Contactez-nous</a></li>
+<li id="menu-item-25009" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-25009"><a href="https://www.21news.be/editeur-responsable/">&Eacute;diteur responsable</a></li>
+</ul>              </div>
+
+      <div class="footer-section">
+        <div class="fs-title">Suivez-nous</div>
+        <ul>
+                        <li><a href="https://www.facebook.com/21NewsBe" target="_blank" rel="noopener nofollow">Facebook</a></li>
+                            <li><a href="https://x.com/21NewsBE" target="_blank" rel="noopener nofollow">Twitter</a></li>
+                            <li><a href="https://www.instagram.com/21news_be" target="_blank" rel="noopener nofollow">Instagram</a></li>
+                            <li><a href="https://www.youtube.com/@21NewsBE" target="_blank" rel="noopener nofollow">YouTube</a></li>
+                      </ul>
+      </div>
+    </div>
+
+    <div class="footer-newsletter">
+      <div class="fn-title">Restez inform&eacute;</div>
+      <p>
+        Recevez notre newsletter quotidienne avec les analyses et d&eacute;cryptages de nos journalistes      </p>
+      <form class="footer-newsletter-form"><input type="email" placeholder="Votre adresse email" class="footer-newsletter-input" required=""> <button type="submit" class="btn btn-primary">S'inscrire</button>
+      </form>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copyright" style="margin: 0;">&copy; 2026 21news.be -
+        Tous droits r&eacute;serv&eacute;s      </p>
+              <ul id="menu-menu-footer-copyright" class="footer-legal"><li id="menu-item-25274" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-privacy-policy menu-item-25274"><a rel="privacy-policy" href="https://www.21news.be/politique-en-matiere-de-protection-de-la-vie-privee-et-des-donnees-a-caractere-personnel/">Politique des donn&eacute;es personelles</a></li>
+<li id="menu-item-25275" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-25275"><a href="https://www.21news.be/conditions-generales-de-vente/">CGV</a></li>
+<li id="menu-item-25276" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-25276"><a href="https://www.21news.be/conditions-generales-dutilisation/">CGU</a></li>
+<li id="menu-item-25277" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-25277"><a href="https://www.21news.be/charte-du-contributeur/">Charte du contributeur</a></li>
+</ul>          </div>
+  </div>
+</footer>
+
+<script type="rocketlazyloadscript">
+  const newsletterConfig = {
+    endpoint: "https:\/\/www.21news.be\/wp-json\/yid-newsletter\/v1\/subscribe",
+    listId: 6,
+    nonce: "8f4de243b8",
+    messages: {
+      success: "Merci pour votre inscription !",
+      error: "Une erreur est survenue. Veuillez r\u00e9essayer.",
+    }
+  };
+
+  async function subscribeNewsletter(form, inputSelector) {
+    const input = form.querySelector(inputSelector);
+    const email = input.value.trim();
+    if (!email) return;
+
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+
+    // Remove any previous message
+    const prev = form.parentElement.querySelector('.newsletter-msg');
+    if (prev) prev.remove();
+
+    try {
+      const res = await fetch(newsletterConfig.endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-WP-Nonce': newsletterConfig.nonce,
+        },
+        body: JSON.stringify({
+          email: email, params: {
+            list_id: newsletterConfig.listId
+          }
+        }),
+      });
+
+      const data = await res.json();
+      const msg = document.createElement('div');
+      msg.className = 'newsletter-msg';
+
+      if (res.ok) {
+        msg.textContent = newsletterConfig.messages.success;
+        msg.classList.add('newsletter-msg-success');
+        input.value = '';
+      } else {
+        msg.textContent = data.message || newsletterConfig.messages.error;
+        msg.classList.add('newsletter-msg-error');
+      }
+
+      form.parentElement.appendChild(msg);
+      setTimeout(() => msg.remove(), 5000);
+    } catch (e) {
+      const msg = document.createElement('div');
+      msg.className = 'newsletter-msg newsletter-msg-error';
+      msg.textContent = newsletterConfig.messages.error;
+      form.parentElement.appendChild(msg);
+      setTimeout(() => msg.remove(), 5000);
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  (function () {
+    // Gestion du header au scroll
+    window.addEventListener('scroll', function () {
+      const header = document.getElementById('header');
+      const body = document.body;
+      if (window.scrollY > 100) {
+        header.classList.add('scrolled');
+        body.classList.add('header-scrolled');
+      } else if (window.scrollY < 40) {
+        header.classList.remove('scrolled');
+        body.classList.remove('header-scrolled');
+      }
+    });
+  })();
+
+  // Burger menu
+  (function () {
+    const burgerMenu = document.getElementById('burger-menu');
+    const overlay = document.getElementById('burger-menu-overlay');
+    const openBtn = document.querySelector('.btn-menu');
+    const closeBtn = document.getElementById('burger-menu-close');
+
+    if (!burgerMenu || !overlay || !openBtn || !closeBtn) return;
+
+    function openBurgerMenu() {
+      burgerMenu.classList.remove('-translate-x-full');
+      burgerMenu.classList.add('translate-x-0');
+      overlay.classList.remove('opacity-0', 'pointer-events-none');
+      overlay.classList.add('opacity-100');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeBurgerMenu() {
+      burgerMenu.classList.add('-translate-x-full');
+      burgerMenu.classList.remove('translate-x-0');
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      overlay.classList.remove('opacity-100');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    openBtn.addEventListener('click', openBurgerMenu);
+    closeBtn.addEventListener('click', closeBurgerMenu);
+    overlay.addEventListener('click', closeBurgerMenu);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && burgerMenu.classList.contains('translate-x-0')) {
+        closeBurgerMenu();
+      }
+    });
+
+    // Accordion for burger menu categories
+    burgerMenu.querySelectorAll('.burger-accordion-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var accordion = this.closest('.burger-accordion');
+        var content = accordion.querySelector('.burger-accordion-content');
+        var chevron = accordion.querySelector('.burger-accordion-chevron');
+        var isOpen = !content.classList.contains('hidden');
+
+        // Close all other accordions
+        burgerMenu.querySelectorAll('.burger-accordion').forEach(function (other) {
+          if (other !== accordion) {
+            other.querySelector('.burger-accordion-content').classList.add('hidden');
+            other.querySelector('.burger-accordion-chevron').classList.remove('rotate-180');
+          }
+        });
+
+        // Toggle current
+        content.classList.toggle('hidden');
+        chevron.classList.toggle('rotate-180');
+      });
+    });
+  })();
+
+  // Newsletter forms &rarr; API
+  document.querySelectorAll('.newsletter-form, .footer-newsletter-form, .subscription-form').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const input = this.querySelector('input[type="email"]');
+      if (input) subscribeNewsletter(this, 'input[type="email"]');
+    });
+  });
+
+  // Gestion des boutons de partage
+  document.querySelectorAll('.share-btn').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      const url = encodeURIComponent(window.location.href);
+      const title = encodeURIComponent(document.title);
+
+      let shareUrl = '';
+      if (this.classList.contains('share-facebook')) {
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+      } else if (this.classList.contains('share-twitter')) {
+        shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+      } else if (this.classList.contains('share-linkedin')) {
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+      }
+
+      if (shareUrl) {
+        window.open(shareUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
+      }
+    });
+  });
+</script>
+
+<!-- Taboola -->
+<script type="rocketlazyloadscript" data-rocket-type="text/javascript">
+  window._taboola = window._taboola || [];
+  // Taboola AY integration
+  _taboola.push({
+    external_page_view:
+      ((window.performance.timing.navigationStart + window.performance.now()) * Math.random() * 1000000).toFixed() +
+      "|" +
+      window.location.host,
+  });
+  _taboola.push({ flush: true });
+</script>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/21news/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+        <div id="yidnl-overlay" role="dialog" aria-modal="true" aria-labelledby="yidnl-popup-title">
+            <div id="yidnl-popup">
+                <button id="yidnl-close" aria-label="Fermer">&times;</button>
+                <h2 id="yidnl-popup-title">S'inscrire &agrave; la Newsletter</h2>
+                <p>Obtenez l'exclusivit&eacute;&nbsp;! Abonnez-vous gratuitement pour &ecirc;tre s&ucirc;r(e) de recevoir nos exclus en
+                    avant-premi&egrave;re.</p>
+                <!-- Bouton Google : visuel custom + iframe Google invisible par-dessus -->
+                <div id="yidnl-btn-container">
+                    <button class="yidnl-btn yidnl-btn-google" id="yidnl-google-btn-visual">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                            <path fill="#fff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"></path>
+                            <path fill="#fff" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"></path>
+                            <path fill="#fff" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"></path>
+                            <path fill="#fff" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"></path>
+                        </svg>
+                        Continuer avec Google
+                    </button>
+                    <div id="yidnl-google-btn-wrapper"></div>
+                </div>
+
+                <div class="yidnl-or-divider"><span>ou</span></div>
+
+                <button class="yidnl-btn yidnl-btn-email" id="yidnl-email-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                        <path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"></path>
+                    </svg>
+                    Continuer avec une adresse e-mail
+                </button>
+
+                <!-- Formulaire e-mail inline (r&eacute;v&eacute;l&eacute; au clic sur le bouton ci-dessus).
+                     Remplace window.prompt() qui bloquait le thread principal (mauvais INP). -->
+                <form id="yidnl-email-form" hidden>
+                    <input type="email" id="yidnl-email-input" name="email" placeholder="votre@email.com" autocomplete="email" aria-label="Adresse e-mail" required>
+                    <button type="submit" class="yidnl-btn yidnl-btn-email">S'inscrire</button>
+                </form>
+
+                <div id="yidnl-popup-message"></div>
+                <p id="yidnl-legal">En vous inscrivant avec votre compte Google, vous autorisez Google &agrave; partager votre nom et
+                    adresse e-mail avec <strong>21 News</strong>, conform&eacute;ment aux <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Conditions d'utilisation</a> et
+                    aux <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">R&egrave;gles de
+                        confidentialit&eacute;</a> de Google. 21 News traitera vos donn&eacute;es
+                    conform&eacute;ment &agrave; sa politique de confidentialit&eacute;.</p>
+                <div id="yidnl-branding">
+                    <span>Propuls&eacute; par</span>
+                    <a href="https://www.youngid.fr/" target="_blank" rel="noopener" aria-label="Young ID">
+                        <img src="https://www.21news.be/wp-content/plugins/youngid-newsletter/assets/images/logo_youngid.svg" alt="Young ID" width="100" height="41">
+                    </a>
+                </div>
+            </div>
+        </div>
+        		<!-- Google Tag Manager (noscript) snippet added by Site Kit -->
+		<noscript>
+			<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N8Z99DC3" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+		</noscript>
+		<!-- End Google Tag Manager (noscript) snippet added by Site Kit -->
+		<style id="wp-block-paragraph-inline-css" type="text/css">
+.is-small-text{font-size:.875em}.is-regular-text{font-size:1em}.is-large-text{font-size:2.25em}.is-larger-text{font-size:3em}.has-drop-cap:not(:focus):first-letter{float:left;font-size:8.4em;font-style:normal;font-weight:100;line-height:.68;margin:.05em .1em 0 0;text-transform:uppercase}body.rtl .has-drop-cap:not(:focus):first-letter{float:none;margin-left:.1em}p.has-drop-cap.has-background{overflow:hidden}:root :where(p.has-background){padding:1.25em 2.375em}:where(p.has-text-color:not(.has-link-color)) a{color:inherit}p.has-text-align-left[style*="writing-mode:vertical-lr"],p.has-text-align-right[style*="writing-mode:vertical-rl"]{rotate:180deg}
+/*# sourceURL=https://www.21news.be/wp-includes/blocks/paragraph/style.min.css */
+</style>
+<style id="wp-block-heading-inline-css" type="text/css">
+h1:where(.wp-block-heading).has-background,h2:where(.wp-block-heading).has-background,h3:where(.wp-block-heading).has-background,h4:where(.wp-block-heading).has-background,h5:where(.wp-block-heading).has-background,h6:where(.wp-block-heading).has-background{padding:1.25em 2.375em}h1.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h1.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h2.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h2.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h3.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h3.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h4.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h4.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h5.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h5.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h6.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h6.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]){rotate:180deg}
+/*# sourceURL=https://www.21news.be/wp-includes/blocks/heading/style.min.css */
+</style>
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+<script type="rocketlazyloadscript" data-rocket-type="text/javascript" data-rocket-src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js?ver=10.7.1" id="firebase-app-compat-js" data-rocket-defer defer></script>
+<script type="rocketlazyloadscript" data-rocket-type="text/javascript" data-rocket-src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js?ver=10.7.1" id="firebase-messaging-compat-js" data-rocket-defer defer></script>
+<script type="text/javascript" id="wpn-subscribe-js-extra">
+/* <![CDATA[ */
+var WPN = {"restUrl":"https://www.21news.be/wp-json/wpn/v1/","swUrl":"https://www.21news.be/firebase-messaging-sw.js","nonce":"8f4de243b8","firebaseConfig":{"apiKey":"AIzaSyD45mJ1LCiLM-gPbofFv5OvMmLdam2SMzo","authDomain":"news-a1c17.firebaseapp.com","projectId":"news-a1c17","storageBucket":"news-a1c17.firebasestorage.app","messagingSenderId":"645044481644","appId":"1:645044481644:web:b4eb3f4a67f1d755353249"},"vapidKey":"BN4wIC064Dg_JtgpNOgpewSTp8mV6ZB_kYDAN63sQDNA1BKCZLXFQa8HQH0PjjEOvkH4yAfOdCEwDVtI3EXYR0w","postTopics":["cat_20","cat_17"],"siteLanguage":"fr","cmp":{"wait":true,"tcfVendorId":755},"logoUrl":"https://www.21news.be/wp-content/plugins/youngid-wpn/assets/images/logo_youngid.svg","messages":{"edgeBell":"Cliquez sur \ud83d\udd14 dans la barre d'adresse","firefoxAllow":"Acceptez dans la barre du navigateur"},"modal":{"delay":5000,"title":"Restez inform\u00e9s!","description":"Activez les notifications push pour recevoir directement nos derni\u00e8res actualit\u00e9s.","acceptText":"Activer les notifications","declineText":"Non merci","iconUrl":""}};
+//# sourceURL=wpn-subscribe-js-extra
+/* ]]> */
+</script>
+<script type="rocketlazyloadscript" data-rocket-type="text/javascript" data-rocket-src="https://www.21news.be/wp-content/plugins/youngid-wpn/assets/js/subscribe.min.js?ver=1.0.1" id="wpn-subscribe-js" data-rocket-defer defer></script>
+<script type="rocketlazyloadscript" data-rocket-type="text/javascript" id="pll_cookie_script-js-after">
+/* <![CDATA[ */
+(function() {
+				var expirationDate = new Date();
+				expirationDate.setTime( expirationDate.getTime() + 31536000 * 1000 );
+				document.cookie = "pll_language=fr; expires=" + expirationDate.toUTCString() + "; path=/; secure; SameSite=Lax";
+			}());
+
+//# sourceURL=pll_cookie_script-js-after
+/* ]]> */
+</script>
+<script type="rocketlazyloadscript" data-rocket-type="text/javascript" id="rocket-browser-checker-js-after">
+/* <![CDATA[ */
+"use strict";var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||!1,descriptor.configurable=!0,"value"in descriptor&&(descriptor.writable=!0),Object.defineProperty(target,descriptor.key,descriptor)}}return function(Constructor,protoProps,staticProps){return protoProps&&defineProperties(Constructor.prototype,protoProps),staticProps&&defineProperties(Constructor,staticProps),Constructor}}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor))throw new TypeError("Cannot call a class as a function")}var RocketBrowserCompatibilityChecker=function(){function RocketBrowserCompatibilityChecker(options){_classCallCheck(this,RocketBrowserCompatibilityChecker),this.passiveSupported=!1,this._checkPassiveOption(this),this.options=!!this.passiveSupported&&options}return _createClass(RocketBrowserCompatibilityChecker,[{key:"_checkPassiveOption",value:function(self){try{var options={get passive(){return!(self.passiveSupported=!0)}};window.addEventListener("test",null,options),window.removeEventListener("test",null,options)}catch(err){self.passiveSupported=!1}}},{key:"initRequestIdleCallback",value:function(){!1 in window&&(window.requestIdleCallback=function(cb){var start=Date.now();return setTimeout(function(){cb({didTimeout:!1,timeRemaining:function(){return Math.max(0,50-(Date.now()-start))}})},1)}),!1 in window&&(window.cancelIdleCallback=function(id){return clearTimeout(id)})}},{key:"isDataSaverModeOn",value:function(){return"connection"in navigator&&!0===navigator.connection.saveData}},{key:"supportsLinkPrefetch",value:function(){var elem=document.createElement("link");return elem.relList&&elem.relList.supports&&elem.relList.supports("prefetch")&&window.IntersectionObserver&&"isIntersecting"in IntersectionObserverEntry.prototype}},{key:"isSlowConnection",value:function(){return"connection"in navigator&&"effectiveType"in navigator.connection&&("2g"===navigator.connection.effectiveType||"slow-2g"===navigator.connection.effectiveType)}}]),RocketBrowserCompatibilityChecker}();
+//# sourceURL=rocket-browser-checker-js-after
+/* ]]> */
+</script>
+<script type="text/javascript" id="rocket-preload-links-js-extra">
+/* <![CDATA[ */
+var RocketPreloadLinksConfig = {"excludeUris":"/feed/|/ads.txt/|/(?:.+/)?feed(?:/(?:.+/?)?)?$|/(?:.+/)?embed/|/(index.php/)?(.*)wp-json(/.*|$)|/refer/|/go/|/recommend/|/recommends/","usesTrailingSlash":"1","imageExt":"jpg|jpeg|gif|png|tiff|bmp|webp|avif|pdf|doc|docx|xls|xlsx|php","fileExt":"jpg|jpeg|gif|png|tiff|bmp|webp|avif|pdf|doc|docx|xls|xlsx|php|html|htm","siteUrl":"https://www.21news.be","onHoverDelay":"100","rateThrottle":"3"};
+//# sourceURL=rocket-preload-links-js-extra
+/* ]]> */
+</script>
+<script type="rocketlazyloadscript" data-rocket-type="text/javascript" id="rocket-preload-links-js-after">
+/* <![CDATA[ */
+(function() {
+"use strict";var r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},e=function(){function i(e,t){for(var n=0;n<t.length;n++){var i=t[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(e,t,n){return t&&i(e.prototype,t),n&&i(e,n),e}}();function i(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}var t=function(){function n(e,t){i(this,n),this.browser=e,this.config=t,this.options=this.browser.options,this.prefetched=new Set,this.eventTime=null,this.threshold=1111,this.numOnHover=0}return e(n,[{key:"init",value:function(){!this.browser.supportsLinkPrefetch()||this.browser.isDataSaverModeOn()||this.browser.isSlowConnection()||(this.regex={excludeUris:RegExp(this.config.excludeUris,"i"),images:RegExp(".("+this.config.imageExt+")$","i"),fileExt:RegExp(".("+this.config.fileExt+")$","i")},this._initListeners(this))}},{key:"_initListeners",value:function(e){-1<this.config.onHoverDelay&&document.addEventListener("mouseover",e.listener.bind(e),e.listenerOptions),document.addEventListener("mousedown",e.listener.bind(e),e.listenerOptions),document.addEventListener("touchstart",e.listener.bind(e),e.listenerOptions)}},{key:"listener",value:function(e){var t=e.target.closest("a"),n=this._prepareUrl(t);if(null!==n)switch(e.type){case"mousedown":case"touchstart":this._addPrefetchLink(n);break;case"mouseover":this._earlyPrefetch(t,n,"mouseout")}}},{key:"_earlyPrefetch",value:function(t,e,n){var i=this,r=setTimeout(function(){if(r=null,0===i.numOnHover)setTimeout(function(){return i.numOnHover=0},1e3);else if(i.numOnHover>i.config.rateThrottle)return;i.numOnHover++,i._addPrefetchLink(e)},this.config.onHoverDelay);t.addEventListener(n,function e(){t.removeEventListener(n,e,{passive:!0}),null!==r&&(clearTimeout(r),r=null)},{passive:!0})}},{key:"_addPrefetchLink",value:function(i){return this.prefetched.add(i.href),new Promise(function(e,t){var n=document.createElement("link");n.rel="prefetch",n.href=i.href,n.onload=e,n.onerror=t,document.head.appendChild(n)}).catch(function(){})}},{key:"_prepareUrl",value:function(e){if(null===e||"object"!==(void 0===e?"undefined":r(e))||!1 in e||-1===["http:","https:"].indexOf(e.protocol))return null;var t=e.href.substring(0,this.config.siteUrl.length),n=this._getPathname(e.href,t),i={original:e.href,protocol:e.protocol,origin:t,pathname:n,href:t+n};return this._isLinkOk(i)?i:null}},{key:"_getPathname",value:function(e,t){var n=t?e.substring(this.config.siteUrl.length):e;return n.startsWith("/")||(n="/"+n),this._shouldAddTrailingSlash(n)?n+"/":n}},{key:"_shouldAddTrailingSlash",value:function(e){return this.config.usesTrailingSlash&&!e.endsWith("/")&&!this.regex.fileExt.test(e)}},{key:"_isLinkOk",value:function(e){return null!==e&&"object"===(void 0===e?"undefined":r(e))&&(!this.prefetched.has(e.href)&&e.origin===this.config.siteUrl&&-1===e.href.indexOf("?")&&-1===e.href.indexOf("#")&&!this.regex.excludeUris.test(e.href)&&!this.regex.images.test(e.href))}}],[{key:"run",value:function(){"undefined"!=typeof RocketPreloadLinksConfig&&new n(new RocketBrowserCompatibilityChecker({capture:!0,passive:!0}),RocketPreloadLinksConfig).init()}}]),n}();t.run();
+}());
+
+//# sourceURL=rocket-preload-links-js-after
+/* ]]> */
+</script>
+<script type="text/javascript" id="yidnl-popup-js-extra">
+/* <![CDATA[ */
+var yidnlPopup = {"ajaxUrl":"https://www.21news.be/wp-admin/admin-ajax.php","nonce":"2439504d78","subscribeUrl":"https://www.21news.be/wp-json/yid-newsletter/v1/subscribe","restNonce":"8f4de243b8","googleClientId":"99862530281-6kn55061jf8osnf2ap9tu7bh3k52u2el.apps.googleusercontent.com","cookieName":"yidnl_popup_dismissed","trigger":"delay","delay":"3","scrollValue":"30","scrollUnit":"%","redisplayDays":"30","waitForConsent":"1","tcfVendorId":"755"};
+//# sourceURL=yidnl-popup-js-extra
+/* ]]> */
+</script>
+<script type="rocketlazyloadscript" data-rocket-type="text/javascript" data-rocket-src="https://www.21news.be/wp-content/plugins/youngid-newsletter/assets/js/popup.min.js?ver=1.0.2" id="yidnl-popup-js" data-rocket-defer defer></script>
+<script type="text/javascript" id="youngid-paywall-public-js-extra">
+/* <![CDATA[ */
+var wpPaywall = {"ajax_url":"https://www.21news.be/wp-admin/admin-ajax.php","success_url":"https://www.21news.be/paiement-reussi","cancel_url":"https://www.21news.be/paiement-annule","i18n":{"select_offer":"Veuillez s\u00e9lectionner une offre","loading":"Chargement...","processing":"Traitement...","confirm_credit":"Voulez-vous utiliser 1 cr\u00e9dit pour acc\u00e9der \u00e0 cet article ?","error":"Une erreur est survenue. Veuillez r\u00e9essayer.","error_generic":"Une erreur est survenue"}};
+//# sourceURL=youngid-paywall-public-js-extra
+/* ]]> */
+</script>
+<script type="rocketlazyloadscript" data-rocket-type="text/javascript" data-rocket-src="https://www.21news.be/wp-content/plugins/youngid-paywall/assets/js/public.js?ver=1.1.0" id="youngid-paywall-public-js" data-rocket-defer defer></script>
+
+<!-- AdBoost v1.3.3 - Config 65 - Last sync 2026-09-28 06:02:02 -->
+
+<!-- SVG Symbols generated --> 
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none;"><symbol id="google_news" viewbox="0 0 6550.8 5359.7">
+  <path fill="#0C9D58" d="M5210.8 3635.7c0 91.2-75.2 165.9-167.1 165.9H1507c-91.9 0-167.1-74.7-167.1-165.9V165.9C1339.9 74.7 1415.1 0 1507 0h3536.8c91.9 0 167.1 74.7 167.1 165.9v3469.8z"></path>
+  <polygon opacity=".2" fill="#004D40" points="5210.8,892 3885.3,721.4 5210.8,1077"></polygon>
+  <path opacity=".2" fill="#004D40" d="M3339.3 180.9L1332 1077.2l2218.5-807.5v-2.2c-39-83.6-134-122.6-211.2-86.6z"></path>
+  <path opacity=".2" fill="#FFFFFF" d="M5043.8 0H1507c-91.9 0-167.1 74.7-167.1 165.9v37.2c0-91.2 75.2-165.9 167.1-165.9h3536.8c91.9 0 167.1 74.7 167.1 165.9v-37.2C5210.8 74.7 5135.7 0 5043.8 0z"></path>
+  <path fill="#EA4335" d="M2198.2 3529.1c-23.9 89.1 23.8 180 106 202l3275.8 881c82.2 22 169-32.9 192.8-122l771.7-2880c23.9-89.1-23.8-180-106-202l-3275.8-881c-82.2-22-169 32.9-192.8 122l-771.7 2880z"></path>
+  <polygon opacity=".2" fill="#3E2723" points="5806.4,2638.1 5978.7,3684.8 5806.4,4328.1"></polygon>
+  <polygon opacity=".2" fill="#3E2723" points="3900.8,764.1 4055.2,805.6 4151,1451.6"></polygon>
+  <path opacity=".2" fill="#FFFFFF" d="M6438.6 1408.1l-3275.8-881c-82.2-22-169 32.9-192.8 122l-771.7 2880c-1.3 4.8-1.6 9.7-2.5 14.5l765.9-2858.2c23.9-89.1 110.7-144 192.8-122l3275.8 881c77.7 20.8 123.8 103.3 108.5 187.6l5.9-21.9c23.8-89.1-23.9-180-106.1-202z"></path>
+  <path fill="#FFC107" d="M4778.1 3174.4c31.5 86.7-8.1 181.4-88 210.5L1233.4 4643c-80 29.1-171.2-18-202.7-104.7L10.9 1736.5c-31.5-86.7 8.1-181.4 88-210.5L3555.6 267.9c80-29.1 171.2 18 202.7 104.7l1019.8 2801.8z"></path>
+  <path opacity=".2" fill="#FFFFFF" d="M24 1771.8c-31.5-86.7 8.1-181.4 88-210.5L3568.7 303.1c79.1-28.8 169 17.1 201.5 102l-11.9-32.6c-31.6-86.7-122.8-133.8-202.7-104.7L98.9 1526c-80 29.1-119.6 123.8-88 210.5l1019.8 2801.8c.3.9.9 1.7 1.3 2.7L24 1771.8z"></path>
+  <path fill="#4285F4" d="M5806.4 5192.2c0 92.1-75.4 167.5-167.5 167.5h-4727c-92.1 0-167.5-75.4-167.5-167.5V1619.1c0-92.1 75.4-167.5 167.5-167.5h4727c92.1 0 167.5 75.4 167.5 167.5v3573.1z"></path>
+  <path fill="#FFFFFF" d="M4903.8 2866H3489.4v-372.2h1414.4c41.1 0 74.4 33.3 74.4 74.4v223.3c0 41.1-33.3 74.5-74.4 74.5zM4903.8 4280.3H3489.4v-372.2h1414.4c41.1 0 74.4 33.3 74.4 74.4v223.3c0 41.2-33.3 74.5-74.4 74.5zM5127.1 3573.1H3489.4v-372.2h1637.7c41.1 0 74.4 33.3 74.4 74.4v223.3c0 41.2-33.3 74.5-74.4 74.5z"></path>
+  <path opacity=".2" fill="#1A237E" d="M5638.9 5322.5h-4727c-92.1 0-167.5-75.4-167.5-167.5v37.2c0 92.1 75.4 167.5 167.5 167.5h4727c92.1 0 167.5-75.4 167.5-167.5V5155c0 92.1-75.4 167.5-167.5 167.5z"></path>
+  <path opacity=".2" fill="#FFFFFF" d="M911.9 1488.8h4727c92.1 0 167.5 75.4 167.5 167.5v-37.2c0-92.1-75.4-167.5-167.5-167.5h-4727c-92.1 0-167.5 75.4-167.5 167.5v37.2c0-92.1 75.4-167.5 167.5-167.5z"></path>
+  <path fill="#FFFFFF" d="M2223.9 3238.2v335.7h481.7c-39.8 204.5-219.6 352.8-481.7 352.8-292.4 0-529.5-247.3-529.5-539.7s237.1-539.7 529.5-539.7c131.7 0 249.6 45.3 342.7 134v.2l254.9-254.9c-154.8-144.3-356.7-232.8-597.7-232.8-493.3 0-893.3 399.9-893.3 893.3s399.9 893.3 893.3 893.3c515.9 0 855.3-362.7 855.3-873 0-58.5-5.4-114.9-14.1-169.2h-841.1z"></path>
+  <g opacity=".2" fill="#1A237E">
+    <path d="M2233.2 3573.9v37.2h472.7c3.5-12.2 6.5-24.6 9-37.2h-481.7z"></path>
+    <path d="M2233.2 4280.3c-487.1 0-882.9-389.9-892.8-874.7-.1 6.2-.5 12.4-.5 18.6 0 493.4 399.9 893.3 893.3 893.3 515.9 0 855.3-362.7 855.3-873 0-4.1-.5-7.9-.5-12-11.1 497-347.4 847.8-854.8 847.8zM2575.9 2981.3c-93.1-88.6-211.1-134-342.7-134-292.4 0-529.5 247.3-529.5 539.7 0 6.3.7 12.4.9 18.6 9.9-284.2 242.4-521.1 528.6-521.1 131.7 0 249.6 45.3 342.7 134v.2l273.5-273.5c-6.4-6-13.5-11.3-20.1-17.1L2576 2981.5l-.1-.2z"></path>
+  </g>
+  <path opacity=".2" fill="#1A237E" d="M4978.2 2828.7v-37.2c0 41.1-33.3 74.4-74.4 74.4H3489.4v37.2h1414.4c41.1.1 74.4-33.2 74.4-74.4zM4903.8 4280.3H3489.4v37.2h1414.4c41.1 0 74.4-33.3 74.4-74.4v-37.2c0 41.1-33.3 74.4-74.4 74.4zM5127.1 3573.1H3489.4v37.2h1637.7c41.1 0 74.4-33.3 74.4-74.4v-37.2c0 41.1-33.3 74.4-74.4 74.4z"></path>
+  <radialgradient id="a" cx="1476.404" cy="434.236" r="6370.563" gradientunits="userSpaceOnUse">
+    <stop offset="0" stop-color="#fff" stop-opacity=".1"></stop>
+    <stop offset="1" stop-color="#fff" stop-opacity="0"></stop>
+  </radialgradient>
+  <path fill="url(#a)" d="M6438.6 1408.1l-1227.7-330.2v-912c0-91.2-75.2-165.9-167.1-165.9H1507c-91.9 0-167.1 74.7-167.1 165.9v908.4L98.9 1526c-80 29.1-119.6 123.8-88 210.5l733.5 2015.4v1440.3c0 92.1 75.4 167.5 167.5 167.5h4727c92.1 0 167.5-75.4 167.5-167.5v-826.9l738.3-2755.2c23.8-89.1-23.9-180-106.1-202z"></path>
+</symbol><symbol id="google_discover" viewbox="0 0 1024 1024">
+  <defs id="defs1"></defs>
+  <g id="g2">
+    <path style="fill:#4785f2" d="M 649.72106,772.75 C 559.51268,682.4125 479.06448,601.42598 470.94729,592.77997 440.57269,560.4265 431.29097,545.9722 428.06501,526 c -0.57745,-3.575 -1.0533,-16.97812 -1.05746,-29.78471 l -0.008,-23.2847 8.7012,-9.2153 c 4.78566,-5.06841 15.01734,-15.62779 22.73707,-23.46529 L 472.47413,426 H 748.23707 1024 v 85 85 H 872.25172 720.50344 l 108.9959,108.99934 108.99589,108.99933 -61.49457,61.50067 C 843.17865,909.3247 815.10789,937 814.6212,937 814.13451,937 739.92945,863.0875 649.72106,772.75 Z" id="path8"></path>
+    <path style="fill:#ed6c60" d="m 455.5,442 c 0.99549,-1.1 2.03498,-2 2.30998,-2 0.275,0 -0.31449,0.9 -1.30998,2 -0.99549,1.1 -2.03498,2 -2.30998,2 -0.275,0 0.31449,-0.9 1.30998,-2 z M 830.49819,317.25066 938.49522,209.00131 876.99999,147.49999 815.50476,85.998663 707.00067,194.49933 C 647.32342,254.1747 598.15985,303 597.74829,303 c -0.41156,0 -0.63725,-68.2875 -0.50154,-151.75 L 597.4935,-0.5 597.74999,150.99504 598.00648,302.49008 706.75561,193.74438 815.50474,84.998688 877.50057,147.00057 939.4964,209.00245 830.99878,317.25122 722.50116,425.5 Z M 427.48716,150 c 0,-82.775 0.11823,-116.6375 0.26274,-75.25 0.14452,41.3875 0.14452,109.1125 0,150.5 -0.14451,41.3875 -0.26274,7.525 -0.26274,-75.25 z M 128.5,167 c 2.70865,-2.75 5.14982,-5 5.42482,-5 0.275,0 -1.71617,2.25 -4.42482,5 -2.70865,2.75 -5.14982,5 -5.42482,5 -0.275,0 1.71617,-2.25 4.42482,-5 z m 40.45821,-40.25 C 173.10217,122.33481 174,121.54091 174,122.29179 c 0,0.16049 -2.1375,2.29799 -4.75,4.75 L 164.5,131.5 Z" id="path7"></path>
+    <path style="fill:#f9bb00" d="M 0,511.5 V 426 H 152.74828 305.49656 L 196.68588,317.18588 87.875196,208.37177 149.62347,146.62349 211.37175,84.875212 319.18588,192.68587 427,300.49653 v 86.48284 86.48285 L 365.26094,535.23111 303.52188,597 H 151.76094 0 Z" id="path6"></path>
+    <path style="fill:#9d628d" d="M 182.92431,912.25 180.5,909.5 l 2.75,2.42431 c 2.57029,2.26589 3.20859,3.07569 2.42431,3.07569 -0.17912,0 -1.41662,-1.2375 -2.75,-2.75 z M 299.5,848 c 8.78711,-8.8 16.20156,-16 16.47656,-16 0.275,0 -6.68945,7.2 -15.47656,16 -8.78711,8.8 -16.20156,16 -16.47656,16 -0.275,0 6.68945,-7.2 15.47656,-16 z m -185.62756,-4.75 c -1.24387,-1.58606 -1.2085,-1.62143 0.37756,-0.37756 1.66575,1.30637 2.19548,2.12756 1.37244,2.12756 -0.20765,0 -0.99515,-0.7875 -1.75,-1.75 z M 432,466.93739 c 0,-0.275 2.7,-3.17182 6,-6.43739 3.3,-3.26557 6,-5.71239 6,-5.43739 0,0.275 -2.7,3.17182 -6,6.43739 -3.3,3.26557 -6,5.71239 -6,5.43739 z m 32.97497,-34.18739 7.47497,-7.75 125.52503,0.24609 125.52503,0.24609 -125.48041,0.25781 -125.4804,0.2578 -7.5196,7.24611 L 457.5,440.5 Z" id="path5"></path>
+    <path style="fill:#ea4333" d="M 427.33363,343.02564 C 427.70013,271.87916 428,165.59301 428,106.8342 V 0 h 84.5 84.5 v 151.5 c 0,83.325 0.33673,151.5 0.74829,151.5 0.41156,0 49.57513,-48.8253 109.25238,-108.50067 L 815.50476,85.998663 876.99999,147.49999 938.49522,209.00131 830.49934,317.00066 722.50347,425 H 597.43892 472.37437 l -9.44782,9.75 c -5.19631,5.3625 -15.4804,16.02365 -22.85356,23.69144 l -13.40573,13.94145 z" id="path4"></path>
+    <path style="fill:#4bad63" d="m 427.24676,871.75 0.24676,-152.25 0.25646,151.74438 0.25645,151.74442 85.24678,0.2613 85.24679,0.2613 -85.75,0.2443 L 427,1024 Z m -219.84177,64 -1.90499,-2.25 2.29666,1.94721 2.29666,1.94722 30.70334,-30.44722 L 271.5,876.5 241.00615,907.25 C 224.23453,924.1625 210.24177,938 209.91114,938 c -0.33064,0 -1.45841,-1.0125 -2.50615,-2.25 z M 147.99423,877.25 115.5,844.5 148.25,876.99423 C 178.68668,907.19321 181.44997,910 180.74423,910 c -0.14067,0 -14.87817,-14.7375 -32.75,-32.75 z M 272,875.93739 c 0,-0.275 2.7,-3.17182 6,-6.43739 3.3,-3.26557 6,-5.71239 6,-5.43739 0,0.275 -2.7,3.17182 -6,6.43739 -3.3,3.26557 -6,5.71239 -6,5.43739 z M 89.722929,818.2283 86.039962,814.4566 195.26998,705.4783 304.5,596.5 195.74252,705.50919 86.985046,814.51838 l 3.74081,3.74081 C 92.783302,820.31664 94.227993,822 93.936281,822 c -0.291712,0 -2.187721,-1.69727 -4.213352,-3.7717 z M 538.49682,661.75 479.5,602.5 538.75,661.49682 C 593.82614,716.33762 598.44885,721 597.74682,721 c -0.13925,0 -26.80175,-26.6625 -59.25,-59.25 z m -71.04387,-72 -3.95295,-4.25 4.25,3.95295 c 2.3375,2.17412 4.25,4.08662 4.25,4.25 0,0.75658 -0.87085,-4.9e-4 -4.54705,-3.95295 z m -11.04796,-12 -1.90499,-2.25 2.25,1.90499 c 2.11444,1.79022 2.70524,2.59501 1.90499,2.59501 -0.18976,0 -1.20226,-1.0125 -2.25,-2.25 z m -5.53255,-6.5 c -1.24387,-1.58606 -1.2085,-1.62143 0.37756,-0.37756 1.66575,1.30637 2.19548,2.12756 1.37244,2.12756 -0.20765,0 -0.99515,-0.7875 -1.75,-1.75 z m -23.79349,-47.83333 c 0.048,-1.16495 0.28494,-1.4019 0.60416,-0.60417 0.28887,0.72187 0.25335,1.58438 -0.0789,1.91667 -0.33229,0.33229 -0.56864,-0.25834 -0.52522,-1.3125 z M 426.39994,502.5 c 10e-4,-8.25 0.15629,-11.49193 0.34419,-7.20429 0.1879,4.28763 0.18676,11.03763 -0.003,15 -0.1893,3.96236 -0.34304,0.45429 -0.34164,-7.79571 z" id="path3"></path>
+    <path style="fill:#37a551" d="M 428,871.25172 V 719.50344 l -108.90834,108.9049 -108.90834,108.90491 -3.84166,-3.0678 c -2.11291,-1.68729 -29.8777,-29.19684 -61.69953,-61.13233 L 86.784251,815.0486 256.61502,644.5243 C 350.02194,550.73594 426.58233,474 426.74922,474 c 0.16689,0 0.007,8.4375 -0.35511,18.75 -1.49814,42.65518 3.87367,56.02828 37.36174,93.01202 5.84568,6.45589 38.44203,39.65901 72.43633,73.78472 L 598,721.59349 V 872.29674 1023 h -85 -85 z" id="path2"></path>
+  </g>
+</symbol><symbol id="facebook" viewbox="0 0 24 24"><title>Facebook</title><path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></symbol><symbol id="x" viewbox="0 0 1200 1227">
+<path fill="currentColor" d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"></path>
+</symbol><symbol id="linkedin" viewbox="0 0 24 24"><title>LinkedIn</title><path fill="currentColor" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path></symbol><symbol id="instagram" viewbox="0 0 24 24"><title>Instagram</title><path fill="currentColor" d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"></path></symbol></svg><script>var rocket_beacon_data = {"ajax_url":"https:\/\/www.21news.be\/wp-admin\/admin-ajax.php","nonce":"d0be8b272a","url":"https:\/\/www.21news.be\/cannabis-cocaine-armes-et-cash-une-organisation-criminelle-neutralisee-a-bruxelles","is_mobile":false,"width_threshold":1600,"height_threshold":700,"delay":500,"debug":null,"status":{"atf":false,"lrc":false,"preload_fonts":true,"preconnect_external_domain":true},"elements":"img, video, picture, p, main, div, li, svg, section, header, span","lrc_threshold":1800,"preload_fonts_exclusions":["api.fontshare.com","cdn.fontshare.com"],"processed_extensions":["woff2","woff","ttf"],"external_font_exclusions":[],"preconnect_external_domain_elements":["link","script","iframe"],"preconnect_external_domain_exclusions":["static.cloudflareinsights.com","rel=\"profile\"","rel=\"preconnect\"","rel=\"dns-prefetch\"","rel=\"icon\""]}</script><script data-name="wpr-wpr-beacon" src="https://www.21news.be/wp-content/plugins/wp-rocket/assets/js/wpr-beacon.min.js" async></script></body>
+
+</html>
+
+<!-- This website is like a Rocket, isn't it? Performance optimized by WP Rocket. Learn more: https://wp-rocket.me - Debug: cached@1790568867 -->
