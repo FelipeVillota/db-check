@@ -1,0 +1,36 @@
+{
+ "label": "A",
+ "seed": 42,
+ "target_n": 110,
+ "drawn_n": 110,
+ "year": 2026,
+ "decision": "evidence",
+ "allocation": "equal",
+ "max_per_domain": 3,
+ "excluded_samples": [],
+ "eligible_rows": 1020,
+ "duplicate_urls_removed": 54,
+ "per_month": {
+  "2026-06": {
+   "eligible": 190,
+   "quota": 27,
+   "drawn": 27
+  },
+  "2026-07": {
+   "eligible": 283,
+   "quota": 27,
+   "drawn": 27
+  },
+  "2026-08": {
+   "eligible": 341,
+   "quota": 28,
+   "drawn": 28
+  },
+  "2026-09": {
+   "eligible": 206,
+   "quota": 28,
+   "drawn": 28
+  }
+ },
+ "created_at": "2026-10-07T08:50:42Z"
+}
