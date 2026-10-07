@@ -7,9 +7,8 @@
  "decision": "evidence",
  "allocation": "equal",
  "max_per_domain": 3,
- "excluded_samples": [
-  ""
- ],
+ "excluded_samples": [],
+ "resolver_version": 2,
  "eligible_rows": 1020,
  "duplicate_urls_removed": 54,
  "per_month": {
@@ -34,5 +33,5 @@
    "drawn": 28
   }
  },
- "created_at": "2026-10-07T10:20:13Z"
+ "created_at": "2026-10-07T10:31:44Z"
 }
