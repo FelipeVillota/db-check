@@ -481,5 +481,68 @@
   "http_status": 200,
   "bytes": 24786,
   "fetched_at": "2026-10-01T11:28:52Z"
+ },
+ "47875611713c8650": {
+  "url": "https://www.gazetadepalmeira.com.br/policial/policia-apreende-drogras-e-encontra-motocicleta-adulterada-em-palmeira/",
+  "final_url": "https://www.gazetadepalmeira.com.br/policial/policia-apreende-drogras-e-encontra-motocicleta-adulterada-em-palmeira/",
+  "http_status": 200,
+  "bytes": 33126,
+  "fetched_at": "2026-10-09T13:25:11Z"
+ },
+ "5fb73f48fcc768f2": {
+  "url": "https://allafrica.com/stories/202606150289.html",
+  "final_url": "https://allafrica.com/stories/202606150289.html",
+  "http_status": 200,
+  "bytes": 128353,
+  "fetched_at": "2026-10-09T13:25:24Z"
+ },
+ "25f57779f3272e1e": {
+  "url": "https://v9vitoriosa.com.br/homem-e-preso-com-papelotes-de-cocaina-no-bairro-residencial-integracao-em-uberlandia",
+  "final_url": "https://v9vitoriosa.com.br/homem-e-preso-com-papelotes-de-cocaina-no-bairro-residencial-integracao-em-uberlandia",
+  "http_status": 200,
+  "bytes": 219075,
+  "fetched_at": "2026-10-09T13:25:33Z"
+ },
+ "8710c1478b96ed3f": {
+  "url": "https://portalarauto.com.br/15-06-2026/jornalista-esportivo-da-regiao-metropolitana-trazia-cocaina-para-santa-cruz/",
+  "final_url": "https://portalarauto.com.br/15-06-2026/jornalista-esportivo-da-regiao-metropolitana-trazia-cocaina-para-santa-cruz/",
+  "http_status": 200,
+  "bytes": 365322,
+  "fetched_at": "2026-10-09T13:25:36Z"
+ },
+ "9a630629fb0898f1": {
+  "url": "https://journallecitoyen.com/articles/article_7838/",
+  "final_url": "https://journallecitoyen.com/articles/article_7838/",
+  "http_status": 200,
+  "bytes": 30973,
+  "fetched_at": "2026-10-09T13:25:39Z"
+ },
+ "fbe91a437ff237ae": {
+  "url": "https://www.victoriannews.com.au/news/nat-news/australias-biggest-ever-cocaine-bust/",
+  "final_url": "https://www.victoriannews.com.au/news/nat-news/australias-biggest-ever-cocaine-bust/",
+  "http_status": 200,
+  "bytes": 566373,
+  "fetched_at": "2026-10-09T13:25:49Z"
+ },
+ "42fd58e3e13e7376": {
+  "url": "https://g1.globo.com/ms/mato-grosso-do-sul/noticia/2026/06/28/insumo-capaz-de-produzir-22-toneladas-de-cocaina-e-apreendido-na-fronteira-com-a-bolivia.ghtml",
+  "final_url": "https://g1.globo.com/ms/mato-grosso-do-sul/noticia/2026/06/28/insumo-capaz-de-produzir-22-toneladas-de-cocaina-e-apreendido-na-fronteira-com-a-bolivia.ghtml",
+  "http_status": 200,
+  "bytes": 1231047,
+  "fetched_at": "2026-10-09T13:26:02Z"
+ },
+ "765b057357670e30": {
+  "url": "https://ouest-tribune.dz/tlemcen-saisie-de-plus-dun-kilogramme-de-cocaine-et-pres-de-3-kilogrammes-de-kif-traite/",
+  "final_url": "https://ouest-tribune.dz/tlemcen-saisie-de-plus-dun-kilogramme-de-cocaine-et-pres-de-3-kilogrammes-de-kif-traite/",
+  "http_status": 200,
+  "bytes": 92849,
+  "fetched_at": "2026-10-09T13:26:05Z"
+ },
+ "791cd8d0f255b11f": {
+  "url": "https://udgtv.com/tags/marina-mexico-decomiso-cocaina-oaxaca/187726",
+  "final_url": "https://udgtv.com/tags/marina-mexico-decomiso-cocaina-oaxaca/187726",
+  "http_status": 200,
+  "bytes": 83679,
+  "fetched_at": "2026-10-09T13:26:12Z"
  }
 }
